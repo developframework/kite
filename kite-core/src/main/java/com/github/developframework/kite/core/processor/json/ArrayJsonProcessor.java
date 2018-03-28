@@ -86,6 +86,7 @@ public class ArrayJsonProcessor extends ContainerJsonProcessor<ArrayKiteElement,
      * 空子标签处理
      * @param index 索引
      */
+    @SuppressWarnings("unchecked")
     private void empty(final int index) {
         final Optional<Object> objectOptional = jsonProcessContext.getDataModel().getData(ArrayExpression.fromObject((ObjectExpression) expression, index));
         if (!objectOptional.isPresent()) {

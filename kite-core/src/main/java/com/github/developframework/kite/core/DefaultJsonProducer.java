@@ -50,12 +50,17 @@ class DefaultJsonProducer implements JsonProducer{
         return null;
     }
 
-    public void printJson(JsonGenerator jsonGenerator, DataModel dataModel, String namespace, String templateId) {
+    @Override
+    public void outputJson(JsonGenerator jsonGenerator, DataModel dataModel, String namespace, String templateId, boolean isPretty) {
         JsonNode root = constructRootTree(dataModel, namespace, templateId);
         try {
-            kiteConfiguration.getObjectMapper().writeValue(jsonGenerator, root);
+            if(isPretty) {
+                kiteConfiguration.getObjectMapper().writerWithDefaultPrettyPrinter().writeValue(jsonGenerator, root);
+            } else {
+                kiteConfiguration.getObjectMapper().writeValue(jsonGenerator, root);
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new KiteException("produce json string failed.");
         }
     }
 
@@ -113,4 +118,5 @@ class DefaultJsonProducer implements JsonProducer{
         arrayProcessor.process(null);
         return rootNode;
     }
+
 }

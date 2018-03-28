@@ -9,5 +9,5 @@ import com.github.developframework.kite.core.data.DataModel;
  */
 public interface JsonProducer extends Producer {
 
-    void outputJson(JsonGenerator jsonGenerator, DataModel dataModel, String namespace, String templateId);
+    void outputJson(JsonGenerator jsonGenerator, DataModel dataModel, String namespace, String templateId, boolean isPretty);
 }

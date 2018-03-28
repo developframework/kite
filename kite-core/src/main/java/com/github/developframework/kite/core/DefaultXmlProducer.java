@@ -53,7 +53,23 @@ class DefaultXmlProducer implements XmlProducer {
             xmlWriter.close();
             return writer.toString();
         } catch (IOException e) {
-            return null;
+            throw new KiteException("produce xml string failed.");
+        }
+    }
+
+    @Override
+    public void outputXml(Writer writer, DataModel dataModel, String namespace, String templateId, boolean isPretty) {
+        Document document = constructDocument(dataModel, namespace, templateId);
+        try {
+            OutputFormat format = new OutputFormat();
+            format.setIndent(isPretty);
+            format.setNewlines(isPretty);
+            format.setSuppressDeclaration(true);
+            XMLWriter xmlWriter = new XMLWriter(writer, format);
+            xmlWriter.write(document);
+            xmlWriter.close();
+        } catch (IOException e) {
+            throw new KiteException("produce xml string failed.");
         }
     }
 
@@ -108,5 +124,4 @@ class DefaultXmlProducer implements XmlProducer {
         arrayProcessor.process(null);
         return document;
     }
-
 }

@@ -10,5 +10,5 @@ import java.io.Writer;
  */
 public interface XmlProducer extends Producer{
 
-    void outputXml(Writer writer, DataModel dataModel, String namespace, String templateId);
+    void outputXml(Writer writer, DataModel dataModel, String namespace, String templateId, boolean isPretty);
 }
