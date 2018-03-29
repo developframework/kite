@@ -41,11 +41,11 @@ public class ArrayXmlProcessor extends ContainerXmlProcessor<ArrayKiteElement, N
         Optional<Object> valueOptional = xmlProcessContext.getDataModel().getData(expression);
         if (valueOptional.isPresent()) {
             this.value = valueOptional.get();
-            this.node = ((Element) parentProcessor.getNode()).addElement(element.showName());
+            this.node = ((Element) parentProcessor.getNode()).addElement(element.showNameXML());
             return true;
         }
         if (!element.isNullHidden()) {
-            ((Element) parentProcessor.getNode()).addElement(element.showName());
+            ((Element) parentProcessor.getNode()).addElement(element.showNameXML());
         }
         return false;
     }
@@ -95,32 +95,7 @@ public class ArrayXmlProcessor extends ContainerXmlProcessor<ArrayKiteElement, N
         if (mapFunctionOptional.isPresent()) {
             object = mapFunctionOptional.get().apply(object, index);
         }
-
         ((Element)node).addElement(element.getXmlItemName()).addText(object.toString());
-
-//        if (object instanceof String) {
-//            node.add((String) object);
-//        } else if (object instanceof Integer) {
-//            node.add((Integer) object);
-//        } else if (object instanceof Long) {
-//            node.add((Long) object);
-//        } else if (object instanceof Short) {
-//            node.add((Short) object);
-//        } else if (object instanceof Boolean) {
-//            node.add((Boolean) object);
-//        } else if (object instanceof Float) {
-//            node.add((Float) object);
-//        } else if (object instanceof Double) {
-//            node.add((Double) object);
-//        } else if (object instanceof BigDecimal) {
-//            node.add((BigDecimal) object);
-//        } else if (object instanceof Character) {
-//            node.add((Character) object);
-//        } else if (object instanceof Byte) {
-//            node.add((Byte) object);
-//        } else {
-//            node.add(object.toString());
-//        }
     }
 
     /**

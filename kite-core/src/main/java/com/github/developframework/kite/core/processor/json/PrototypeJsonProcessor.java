@@ -31,7 +31,7 @@ public class PrototypeJsonProcessor extends ContentJsonProcessor<PrototypeKiteEl
             return true;
         }
         if (!element.isNullHidden()) {
-            node.putNull(element.showName());
+            node.putNull(element.showNameJSON());
         }
         return false;
     }
@@ -60,6 +60,6 @@ public class PrototypeJsonProcessor extends ContentJsonProcessor<PrototypeKiteEl
 
         ObjectMapper objectMapper = jsonProcessContext.getConfiguration().getObjectMapper();
         JsonNode jsonNode = objectMapper.valueToTree(convertValue);
-        node.set(element.showName(), jsonNode);
+        node.set(element.showNameJSON(), jsonNode);
     }
 }

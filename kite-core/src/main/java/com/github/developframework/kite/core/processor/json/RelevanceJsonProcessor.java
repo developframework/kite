@@ -37,11 +37,10 @@ public class RelevanceJsonProcessor extends ArrayJsonProcessor {
         Optional<Object> valueOptional = jsonProcessContext.getDataModel().getData(element.getDataDefinition().getExpression());
         if (valueOptional.isPresent()) {
             this.value = valueOptional.get();
-//            this.node = ((ObjectNode) parentProcessor.getNode()).putArray(element.showName());
             return true;
         }
         if (!element.isNullHidden()) {
-            ((ObjectNode) parentProcessor.getNode()).putNull(element.showName());
+            ((ObjectNode) parentProcessor.getNode()).putNull(element.showNameJSON());
         }
         return false;
     }
@@ -164,7 +163,7 @@ public class RelevanceJsonProcessor extends ArrayJsonProcessor {
      * @param arrayExpressions 表达式列表
      */
     private void generateArrayStructure(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor, List<ArrayExpression> arrayExpressions) {
-        this.node = ((ObjectNode) parentProcessor.getNode()).putArray(element.showName());
+        this.node = ((ObjectNode) parentProcessor.getNode()).putArray(element.showNameJSON());
         for (ArrayExpression childArrayExpression : arrayExpressions) {
             super.single(childArrayExpression, arrayExpressions.size());
         }

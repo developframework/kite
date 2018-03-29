@@ -45,7 +45,7 @@ public class LinkXmlProcessor extends ObjectXmlProcessor {
             return true;
         }
         if (!element.isNullHidden()) {
-            node.addElement(element.showName());
+            node.addElement(element.showNameXML());
         }
         return false;
     }

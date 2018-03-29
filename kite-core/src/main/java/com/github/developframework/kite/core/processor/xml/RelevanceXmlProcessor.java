@@ -37,11 +37,10 @@ public class RelevanceXmlProcessor extends ArrayXmlProcessor {
         Optional<Object> valueOptional = xmlProcessContext.getDataModel().getData(element.getDataDefinition().getExpression());
         if (valueOptional.isPresent()) {
             this.value = valueOptional.get();
-//            this.node = ((ObjectNode) parentProcessor.getNode()).putArray(element.showName());
             return true;
         }
         if (!element.isNullHidden()) {
-            ((Element) parentProcessor.getNode()).addElement(element.showName());
+            ((Element) parentProcessor.getNode()).addElement(element.showNameXML());
         }
         return false;
     }
@@ -164,7 +163,7 @@ public class RelevanceXmlProcessor extends ArrayXmlProcessor {
      * @param arrayExpressions 表达式列表
      */
     private void generateArrayStructure(ContentXmlProcessor<? extends KiteElement, ? extends Node> parentProcessor, List<ArrayExpression> arrayExpressions) {
-        this.node = ((Element) parentProcessor.getNode()).addElement(element.showName());
+        this.node = ((Element) parentProcessor.getNode()).addElement(element.showNameXML());
         for (ArrayExpression childArrayExpression : arrayExpressions) {
             super.single(childArrayExpression, arrayExpressions.size());
         }

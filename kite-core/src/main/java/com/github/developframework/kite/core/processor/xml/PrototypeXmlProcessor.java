@@ -27,7 +27,7 @@ public class PrototypeXmlProcessor extends ContentXmlProcessor<PrototypeKiteElem
             return true;
         }
         if (!element.isNullHidden()) {
-            ((Element)node).addElement(element.showName());
+            ((Element)node).addElement(element.showNameXML());
         }
         return false;
     }
@@ -56,6 +56,6 @@ public class PrototypeXmlProcessor extends ContentXmlProcessor<PrototypeKiteElem
 //
 //        ObjectMapper objectMapper = xmlProcessContext.getConfiguration().getObjectMapper();
 //        JsonNode jsonNode = objectMapper.valueToTree(convertValue);
-//        node.set(element.showName(), jsonNode);
+//        node.set(element.showNameXML(), jsonNode);
     }
 }

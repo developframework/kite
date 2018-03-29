@@ -1,6 +1,5 @@
 package com.github.developframework.kite.core.element;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.github.developframework.expression.ArrayExpression;
 import com.github.developframework.expression.Expression;
 import com.github.developframework.expression.ObjectExpression;
@@ -36,19 +35,27 @@ public abstract class ContentKiteElement extends KiteElement {
     }
 
     /**
-     * 生成显示名称
+     * 生成显示名称（json）
      * @return 显示名称
      */
-    public String showName() {
+    public String showNameJSON() {
         if (StringUtils.isNotBlank(alias)) {
             return alias;
         }
         final String expressionString = expressionString();
-        PropertyNamingStrategy strategy = configuration.getObjectMapper().getPropertyNamingStrategy();
-        if(strategy == null) {
-            return expressionString;
+        return configuration.getForJsonStrategy().propertyShowName(configuration, expressionString);
+    }
+
+    /**
+     * 生成显示名称（xml）
+     * @return 显示名称
+     */
+    public String showNameXML() {
+        if (StringUtils.isNotBlank(alias)) {
+            return alias;
         }
-        return strategy.nameForField(null, null, expressionString);
+        final String expressionString = expressionString();
+        return configuration.getForXmlStrategy().propertyShowName(configuration, expressionString);
     }
 
     private String expressionString() {

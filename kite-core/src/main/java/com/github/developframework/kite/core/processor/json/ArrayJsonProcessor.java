@@ -43,11 +43,11 @@ public class ArrayJsonProcessor extends ContainerJsonProcessor<ArrayKiteElement,
         Optional<Object> valueOptional = jsonProcessContext.getDataModel().getData(expression);
         if (valueOptional.isPresent()) {
             this.value = valueOptional.get();
-            this.node = ((ObjectNode) parentProcessor.getNode()).putArray(element.showName());
+            this.node = ((ObjectNode) parentProcessor.getNode()).putArray(element.showNameJSON());
             return true;
         }
         if (!element.isNullHidden()) {
-            ((ObjectNode) parentProcessor.getNode()).putNull(element.showName());
+            ((ObjectNode) parentProcessor.getNode()).putNull(element.showNameJSON());
         }
         return false;
     }

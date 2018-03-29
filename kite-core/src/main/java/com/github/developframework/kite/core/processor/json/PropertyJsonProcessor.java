@@ -31,7 +31,7 @@ public abstract class PropertyJsonProcessor extends ContentJsonProcessor<Propert
             return true;
         }
         if (!element.isNullHidden()) {
-            ((ObjectNode) parentProcessor.getNode()).putNull(element.showName());
+            ((ObjectNode) parentProcessor.getNode()).putNull(element.showNameJSON());
         }
         return false;
     }
@@ -59,7 +59,7 @@ public abstract class PropertyJsonProcessor extends ContentJsonProcessor<Propert
         final Object convertValue = convertValueOptional.orElse(value);
         Class<?> convertValueClass = convertValue.getClass();
         if (support(convertValueClass)) {
-            handle(this.node, convertValueClass, convertValue, element.showName());
+            handle(this.node, convertValueClass, convertValue, element.showNameJSON());
         }
     }
 

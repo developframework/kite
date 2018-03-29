@@ -31,7 +31,7 @@ public abstract class PropertyXmlProcessor extends ContentXmlProcessor<PropertyK
             return true;
         }
         if (!element.isNullHidden()) {
-            ((Element) parentProcessor.getNode()).addElement(element.showName());
+            ((Element) parentProcessor.getNode()).addElement(element.showNameXML());
         }
         return false;
     }
@@ -59,7 +59,7 @@ public abstract class PropertyXmlProcessor extends ContentXmlProcessor<PropertyK
         final Object convertValue = convertValueOptional.orElse(value);
         Class<?> convertValueClass = convertValue.getClass();
         if (support(convertValueClass)) {
-            handle(this.node, convertValueClass, convertValue, element.showName());
+            handle(this.node, convertValueClass, convertValue, element.showNameXML());
         }
     }
 

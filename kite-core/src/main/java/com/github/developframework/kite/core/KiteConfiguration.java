@@ -5,6 +5,9 @@ import com.github.developframework.kite.core.element.Template;
 import com.github.developframework.kite.core.element.TemplatePackage;
 import com.github.developframework.kite.core.exception.ResourceNotUniqueException;
 import com.github.developframework.kite.core.exception.TemplatePackageUndefinedException;
+import com.github.developframework.kite.core.strategy.DefaultXmlKitePropertyNamingStrategy;
+import com.github.developframework.kite.core.strategy.JacksonKitePropertyNamingStrategy;
+import com.github.developframework.kite.core.strategy.KitePropertyNamingStrategy;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +26,16 @@ public class KiteConfiguration {
 
     /* 模板包Map */
     private Map<String, TemplatePackage> templatePackages;
+
+    /* json节点的命名策略 */
+    @Getter
+    @Setter
+    private KitePropertyNamingStrategy forJsonStrategy = new JacksonKitePropertyNamingStrategy();
+
+    /* xml节点的命名策略 */
+    @Getter
+    @Setter
+    private KitePropertyNamingStrategy forXmlStrategy = new DefaultXmlKitePropertyNamingStrategy();
 
     public KiteConfiguration() {
         this.templatePackages = new HashMap<>();
