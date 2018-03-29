@@ -4,6 +4,7 @@ import com.github.developframework.kite.core.KiteFactory;
 import com.github.developframework.kite.core.exception.KiteException;
 import com.github.developframework.kite.spring.mvc.annotation.KiteNamespace;
 import com.github.developframework.kite.spring.mvc.annotation.TemplateId;
+import com.github.developframework.kite.spring.mvc.annotation.TemplateType;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
 
@@ -37,6 +38,15 @@ public abstract class AnnotationKiteReturnValueHandler<T> extends AbstractKiteRe
 
         if (methodParameter.hasMethodAnnotation(TemplateId.class)) {
             return methodParameter.getMethodAnnotation(TemplateId.class).value();
+        } else {
+            throw new KiteException("@TemplateId is not found in Class \"%s\" with Method \"%s\".", methodParameter.getContainingClass(), methodParameter.getMethod().getName());
+        }
+    }
+
+    @Override
+    protected TemplateType templateType(T returnValue, MethodParameter methodParameter) {
+        if (methodParameter.hasMethodAnnotation(TemplateId.class)) {
+            return methodParameter.getMethodAnnotation(TemplateId.class).type();
         } else {
             throw new KiteException("@TemplateId is not found in Class \"%s\" with Method \"%s\".", methodParameter.getContainingClass(), methodParameter.getMethod().getName());
         }

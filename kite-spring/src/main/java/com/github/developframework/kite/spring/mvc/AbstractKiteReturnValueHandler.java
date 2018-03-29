@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.github.developframework.kite.core.JsonProducer;
 import com.github.developframework.kite.core.KiteFactory;
+import com.github.developframework.kite.core.XmlProducer;
 import com.github.developframework.kite.core.data.DataModel;
+import com.github.developframework.kite.spring.mvc.annotation.TemplateType;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpOutputMessage;
@@ -16,6 +18,7 @@ import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 
 /**
@@ -65,12 +68,24 @@ public abstract class AbstractKiteReturnValueHandler<T> implements HandlerMethod
         T t = (T) returnValue;
         mavContainer.setRequestHandled(true);
         final HttpOutputMessage outputMessage = this.createOutputMessage(webRequest);
-        final JsonProducer jsonProducer = kiteFactory.getJsonProducer();
-        JsonEncoding encoding = this.getJsonEncoding(outputMessage.getHeaders().getContentType());
-        JsonGenerator generator = kiteFactory.getObjectMapper().getFactory().createGenerator(outputMessage.getBody(), encoding);
         final String namespace = namespace(t, methodParameter);
         final String templateId = templateId(t, methodParameter);
-        jsonProducer.outputJson(generator, dataModel(t, methodParameter), namespace, templateId, false);
+        final TemplateType templateType = templateType(t, methodParameter);
+        final DataModel dataModel = dataModel(t, methodParameter);
+        switch(templateType) {
+            case JSON: {
+                final JsonProducer jsonProducer = kiteFactory.getJsonProducer();
+                JsonEncoding encoding = this.getJsonEncoding(outputMessage.getHeaders().getContentType());
+                JsonGenerator generator = kiteFactory.getObjectMapper().getFactory().createGenerator(outputMessage.getBody(), encoding);
+                jsonProducer.outputJson(generator, dataModel, namespace, templateId, false);
+            }break;
+            case XML:{
+                final XmlProducer xmlProducer = kiteFactory.getXmlProducer();
+                outputMessage.getHeaders().setContentType(MediaType.APPLICATION_XML);
+                OutputStreamWriter writer = new OutputStreamWriter(outputMessage.getBody(), "utf-8");
+                xmlProducer.outputXml(writer, dataModel, namespace, templateId, false);
+            }break;
+        }
     }
 
     /**
@@ -97,6 +112,14 @@ public abstract class AbstractKiteReturnValueHandler<T> implements HandlerMethod
      * @return
      */
     protected abstract String templateId(T returnValue, MethodParameter methodParameter);
+
+    /**
+     * 取得 template type
+     * @param returnValue
+     * @param methodParameter
+     * @return
+     */
+    protected abstract TemplateType templateType(T returnValue, MethodParameter methodParameter);
 
     /**
      * 取得 dataModel

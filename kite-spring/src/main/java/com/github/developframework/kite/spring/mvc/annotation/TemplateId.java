@@ -14,4 +14,6 @@ import java.lang.annotation.Target;
 public @interface TemplateId {
 
     String value();
+
+    TemplateType type() default TemplateType.JSON;
 }

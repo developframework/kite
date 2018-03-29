@@ -2,6 +2,7 @@ package com.github.developframework.kite.spring.mvc;
 
 import com.github.developframework.kite.core.KiteFactory;
 import com.github.developframework.kite.core.data.DataModel;
+import com.github.developframework.kite.spring.mvc.annotation.TemplateType;
 import com.github.developframework.kite.spring.mvc.response.KiteResponse;
 import org.springframework.core.MethodParameter;
 
@@ -29,6 +30,11 @@ public final class KiteResponseReturnValueHandler extends AbstractKiteReturnValu
     @Override
     protected String templateId(KiteResponse returnValue, MethodParameter methodParameter) {
         return returnValue.getTemplateId();
+    }
+
+    @Override
+    protected TemplateType templateType(KiteResponse returnValue, MethodParameter methodParameter) {
+        return returnValue.getTemplateType();
     }
 
     @Override
