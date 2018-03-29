@@ -70,7 +70,7 @@ public abstract class AbstractKiteReturnValueHandler<T> implements HandlerMethod
         JsonGenerator generator = kiteFactory.getObjectMapper().getFactory().createGenerator(outputMessage.getBody(), encoding);
         final String namespace = namespace(t, methodParameter);
         final String templateId = templateId(t, methodParameter);
-        jsonProducer.outputJson(generator, dataModel(t, methodParameter), namespace, templateId);
+        jsonProducer.outputJson(generator, dataModel(t, methodParameter), namespace, templateId, false);
     }
 
     /**
