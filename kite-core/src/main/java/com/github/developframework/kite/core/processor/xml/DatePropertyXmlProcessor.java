@@ -1,13 +1,9 @@
 package com.github.developframework.kite.core.processor.xml;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.element.PropertyKiteElement;
-import com.github.developframework.kite.core.processor.json.JsonProcessContext;
-import com.github.developframework.kite.core.processor.json.PropertyJsonProcessor;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
-import org.dom4j.Node;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -59,7 +55,7 @@ public class DatePropertyXmlProcessor extends PropertyXmlProcessor {
             parentNode.addElement(showName);
             return;
         }
-        parentNode.addElement(showName).addText(dateFormat.format(date));
+        this.elementAddContent(parentNode, showName, dateFormat.format(date));
     }
 
     protected java.util.Date transformDate(Class<?> clazz, Object value) {

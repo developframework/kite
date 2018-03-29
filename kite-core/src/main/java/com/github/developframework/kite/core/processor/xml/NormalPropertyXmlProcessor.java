@@ -22,23 +22,6 @@ public class NormalPropertyXmlProcessor extends PropertyXmlProcessor {
 
     @Override
     protected void handle(Element parentNode, Class<?> clazz, Object value, String showName) {
-        parentNode.addElement(showName).addText(value.toString());
-//        if (clazz == String.class) {
-//            parentNode.put(showName, (String) value);
-//        } else if (clazz == Integer.class) {
-//            parentNode.put(showName, (Integer) value);
-//        } else if (clazz == Long.class) {
-//            parentNode.put(showName, (Long) value);
-//        } else if (clazz == Boolean.class) {
-//            parentNode.put(showName, (Boolean) value);
-//        } else if (clazz == Float.class) {
-//            parentNode.put(showName, (Float) value);
-//        } else if (clazz == Double.class) {
-//            parentNode.put(showName, (Double) value);
-//        } else if (clazz == BigDecimal.class) {
-//            parentNode.put(showName, (BigDecimal) value);
-//        } else {
-//            parentNode.put(showName, value.toString());
-//        }
+        this.elementAddContent(parentNode, showName, value.toString());
     }
 }

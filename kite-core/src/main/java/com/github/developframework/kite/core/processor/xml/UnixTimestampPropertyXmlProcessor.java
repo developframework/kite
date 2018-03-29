@@ -23,6 +23,6 @@ public class UnixTimestampPropertyXmlProcessor extends DatePropertyXmlProcessor 
             parentNode.addElement(showName);
             return;
         }
-        parentNode.addElement(showName).addText(String.valueOf(date.getTime() / 1000));
+        this.elementAddContent(parentNode, showName, String.valueOf(date.getTime() / 1000));
     }
 }

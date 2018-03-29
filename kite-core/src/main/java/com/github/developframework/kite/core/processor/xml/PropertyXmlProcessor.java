@@ -80,4 +80,18 @@ public abstract class PropertyXmlProcessor extends ContentXmlProcessor<PropertyK
      * @param showName    显示的名称
      */
     protected abstract void handle(Element parentNode, Class<?> sourceClass, Object value, String showName);
+
+    /**
+     * 给节点增加内容
+     * @param node 节点
+     * @param showName 展示名称
+     * @param value 值
+     */
+    protected void elementAddContent(Element node, String showName, String value) {
+        if (element.isXmlCdata()) {
+            node.addElement(showName).addCDATA(value);
+        } else {
+            node.addElement(showName).addText(value);
+        }
+    }
 }

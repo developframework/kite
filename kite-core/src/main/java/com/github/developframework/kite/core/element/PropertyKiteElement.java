@@ -2,7 +2,9 @@ package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.data.DataDefinition;
+import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
 
@@ -15,6 +17,8 @@ public abstract class PropertyKiteElement extends ContentKiteElement {
 
     @Setter
     protected String converterValue;
+    @Getter
+    protected boolean isXmlCdata;
 
     public PropertyKiteElement(KiteConfiguration configuration, String namespace, String templateId, DataDefinition dataDefinition, String alias) {
         super(configuration, namespace, templateId, dataDefinition, alias);
@@ -22,6 +26,10 @@ public abstract class PropertyKiteElement extends ContentKiteElement {
 
     public Optional<String> getConverterValue() {
         return Optional.ofNullable(converterValue);
+    }
+
+    public void setXmlCdata(String xmlCdataStr) {
+        this.isXmlCdata = StringUtils.isBlank(xmlCdataStr) ? false : new Boolean(xmlCdataStr).booleanValue();
     }
 
     @Override

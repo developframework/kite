@@ -51,6 +51,6 @@ public class BooleanPropertyXmlProcessor extends PropertyXmlProcessor {
             parentNode.addElement(showName);
             return;
         }
-        parentNode.addElement(showName).addText(String.valueOf(v));
+        this.elementAddContent(parentNode, showName, String.valueOf(v));
     }
 }

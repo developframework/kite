@@ -4,6 +4,7 @@ import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.element.NormalPropertyKiteElement;
 import com.github.developframework.kite.core.element.PropertyKiteElement;
+import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.Attributes;
 
 /**
@@ -30,6 +31,7 @@ class PropertyElementSaxParser extends ContentElementSaxParser<PropertyKiteEleme
     protected void addOtherAttributes(PropertyKiteElement element, Attributes attributes) {
         element.setNullHidden(attributes.getValue("null-hidden"));
         element.setConverterValue(attributes.getValue("converter"));
+        element.setXmlCdata(attributes.getValue("xml-cdata"));
     }
 
     @Override
