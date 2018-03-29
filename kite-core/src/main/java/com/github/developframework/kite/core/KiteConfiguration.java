@@ -29,12 +29,10 @@ public class KiteConfiguration {
 
     /* json节点的命名策略 */
     @Getter
-    @Setter
     private KitePropertyNamingStrategy forJsonStrategy = new JacksonKitePropertyNamingStrategy();
 
     /* xml节点的命名策略 */
     @Getter
-    @Setter
     private KitePropertyNamingStrategy forXmlStrategy = new DefaultXmlKitePropertyNamingStrategy();
 
     public KiteConfiguration() {
@@ -74,5 +72,17 @@ public class KiteConfiguration {
      */
     public Template extractTemplate(String namespace, String templateId) {
         return getTemplatePackageByNamespace(namespace).getTemplateById(templateId);
+    }
+
+    public void setForJsonStrategy(KitePropertyNamingStrategy forJsonStrategy) {
+        if(forJsonStrategy != null) {
+            this.forJsonStrategy = forJsonStrategy;
+        }
+    }
+
+    public void setForXmlStrategy(KitePropertyNamingStrategy forXmlStrategy) {
+        if(forXmlStrategy != null) {
+            this.forXmlStrategy = forXmlStrategy;
+        }
     }
 }

@@ -13,11 +13,7 @@ public class KiteProperties {
 
     private String locations = "classpath*:kite/*.xml";
 
-    private ObjectMapperProperties objectmapper;
+    private KiteJsonProperties json;
 
-    @Getter
-    @Setter
-    public static class ObjectMapperProperties {
-        private boolean usedefault;
-    }
+    private KiteXmlProperties xml;
 }
