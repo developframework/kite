@@ -1,6 +1,5 @@
 package com.github.developframework.kite.core.processor.xml;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.processor.Processor;

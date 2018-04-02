@@ -16,7 +16,7 @@ import java.util.Optional;
 public class HashDataModel implements DataModel{
 
     @Getter
-    private Map<String, Object> dataMap = new HashMap<String, Object>();
+    private Map<String, Object> dataMap = new HashMap<>();
 
     public HashDataModel() {
     }

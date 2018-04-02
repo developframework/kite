@@ -4,7 +4,6 @@ import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.element.NormalPropertyKiteElement;
 import com.github.developframework.kite.core.element.PropertyKiteElement;
-import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.Attributes;
 
 /**
