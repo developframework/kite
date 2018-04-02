@@ -6,7 +6,7 @@
 
     <groupId>com.github.developframework</groupId>
     <artifactId>kite</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1</version>
     <modules>
         <module>kite-core</module>
         <module>kite-spring</module>
