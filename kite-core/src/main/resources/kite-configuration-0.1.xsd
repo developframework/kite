@@ -4,7 +4,7 @@
 	<xs:element name="kite-configuration">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="template-package" minOccurs="1" maxOccurs="unbounded">
+				<xs:element name="template-package" maxOccurs="unbounded">
 					<xs:complexType>
 						<xs:sequence>
 							<xs:element name="template" minOccurs="0" maxOccurs="unbounded">
@@ -142,7 +142,7 @@
 							<xs:attribute name="condition" type="xs:string" use="required" />
 						</xs:complexType>
 					</xs:element>
-					<xs:choice minOccurs="0" maxOccurs="1">
+					<xs:choice minOccurs="0">
 						<xs:element name="else">
 							<xs:complexType>
 								<xs:group ref="elementGroup"></xs:group>
