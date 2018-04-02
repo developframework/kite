@@ -19,7 +19,6 @@
         <dependency>
             <groupId>com.github.developframework</groupId>
             <artifactId>kite-spring</artifactId>
-            <version>${parent.version}</version>
         </dependency>
     </dependencies>
 
