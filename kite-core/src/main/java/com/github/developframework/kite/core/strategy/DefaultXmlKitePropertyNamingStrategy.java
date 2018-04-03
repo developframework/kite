@@ -4,7 +4,7 @@ import com.github.developframework.kite.core.KiteConfiguration;
 
 /**
  * 默认的xml节点命名规则
- * AbcDef => abc-def
+ * AbcDef  abc-def
  * @author qiuzhenhao
  */
 public class DefaultXmlKitePropertyNamingStrategy implements KitePropertyNamingStrategy{
