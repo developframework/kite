@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.data.DataDefinition;
+import com.github.developframework.kite.core.exception.KiteException;
 import com.github.developframework.kite.core.processor.json.ArrayJsonProcessor;
 import com.github.developframework.kite.core.processor.json.JsonProcessContext;
 import com.github.developframework.kite.core.processor.json.JsonProcessor;
@@ -13,6 +14,7 @@ import com.github.developframework.kite.core.processor.xml.XmlProcessContext;
 import com.github.developframework.kite.core.processor.xml.XmlProcessor;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Node;
 
 import java.util.Optional;
@@ -30,7 +32,6 @@ public class ArrayKiteElement extends ContainerKiteElement{
     @Setter
     private String mapFunctionValue;
     @Setter
-    @Getter
     private String xmlItemName;
 
     public ArrayKiteElement(KiteConfiguration configuration, String namespace, String templateId, DataDefinition dataDefinition, String alias) {
@@ -62,5 +63,12 @@ public class ArrayKiteElement extends ContainerKiteElement{
 
     public Optional<String> getMapFunctionValueOptional() {
         return Optional.ofNullable(mapFunctionValue);
+    }
+
+    public String getXmlItemName() {
+        if(StringUtils.isBlank(xmlItemName)) {
+            throw new KiteException("\"xml-item\" is undefined in template \"%s : %s\".", namespace, templateId);
+        }
+        return xmlItemName;
     }
 }

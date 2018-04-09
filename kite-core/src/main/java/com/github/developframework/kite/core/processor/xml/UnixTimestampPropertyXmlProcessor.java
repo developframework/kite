@@ -2,9 +2,6 @@ package com.github.developframework.kite.core.processor.xml;
 
 import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.element.PropertyKiteElement;
-import org.dom4j.Element;
-
-import java.util.Objects;
 
 /**
  * unix时间戳型属性节点处理器

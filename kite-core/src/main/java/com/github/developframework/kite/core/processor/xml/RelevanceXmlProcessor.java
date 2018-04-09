@@ -151,7 +151,7 @@ public class RelevanceXmlProcessor extends ArrayXmlProcessor {
         Expression targetExpression = arrayExpressions.get(0);
         final DataDefinition dataDefinition = new DataDefinition(null, targetExpression);
         final ProxyObjectKiteElement proxyObjectElement = new ProxyObjectKiteElement(xmlProcessContext.getConfiguration(), element, dataDefinition);
-        proxyObjectElement.copyChildElement(element);
+        proxyObjectElement.setAlias(element.getXmlItemName());
         XmlProcessor<? extends KiteElement, ? extends Node> processor = proxyObjectElement.createXmlProcessor(xmlProcessContext, null, targetExpression);
         processor.process(parentProcessor);
     }

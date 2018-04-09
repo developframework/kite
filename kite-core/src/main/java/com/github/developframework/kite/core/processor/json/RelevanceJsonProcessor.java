@@ -151,7 +151,6 @@ public class RelevanceJsonProcessor extends ArrayJsonProcessor {
         Expression targetExpression = arrayExpressions.get(0);
         final DataDefinition dataDefinition = new DataDefinition(null, targetExpression);
         final ProxyObjectKiteElement proxyObjectElement = new ProxyObjectKiteElement(jsonProcessContext.getConfiguration(), element, dataDefinition);
-        proxyObjectElement.copyChildElement(element);
         JsonProcessor<? extends KiteElement, ? extends JsonNode> processor = proxyObjectElement.createJsonProcessor(jsonProcessContext, null, targetExpression);
         processor.process(parentProcessor);
     }

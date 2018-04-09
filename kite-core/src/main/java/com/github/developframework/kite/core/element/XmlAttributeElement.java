@@ -16,7 +16,7 @@ import org.dom4j.Node;
 /**
  * @author qiuzhenhao
  */
-public class XmlAttributeElement extends ContentKiteElement{
+public class XmlAttributeElement extends ContentKiteElement {
 
     public XmlAttributeElement(KiteConfiguration configuration, String namespace, String templateId, DataDefinition dataDefinition, String alias) {
         super(configuration, namespace, templateId, dataDefinition, alias);
@@ -24,11 +24,13 @@ public class XmlAttributeElement extends ContentKiteElement{
 
     @Override
     public JsonProcessor<? extends KiteElement, ? extends JsonNode> createJsonProcessor(JsonProcessContext jsonProcessContext, ObjectNode parentNode, Expression parentExpression) {
-        return new XmlAttributeJsonProcessor(jsonProcessContext, this, JsonProcessor.childExpression(this, parentExpression.getParentExpression()));
+        Expression expression = parentExpression.getParentExpression() == null ? parentExpression : parentExpression.getParentExpression();
+        return new XmlAttributeJsonProcessor(jsonProcessContext, this, JsonProcessor.childExpression(this, expression));
     }
 
     @Override
     public XmlProcessor<? extends KiteElement, ? extends Node> createXmlProcessor(XmlProcessContext xmlProcessContext, Node parentNode, Expression parentExpression) {
-        return new XmlAttributeXmlProcessor(xmlProcessContext, this, XmlProcessor.childExpression(this, parentExpression.getParentExpression()));
+        Expression expression = parentExpression.getParentExpression() == null ? parentExpression : parentExpression.getParentExpression();
+        return new XmlAttributeXmlProcessor(xmlProcessContext, this, XmlProcessor.childExpression(this, expression));
     }
 }

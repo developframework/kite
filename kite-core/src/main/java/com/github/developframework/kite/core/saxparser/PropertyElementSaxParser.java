@@ -2,7 +2,6 @@ package com.github.developframework.kite.core.saxparser;
 
 import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.data.DataDefinition;
-import com.github.developframework.kite.core.element.ContainerKiteElement;
 import com.github.developframework.kite.core.element.NormalPropertyKiteElement;
 import com.github.developframework.kite.core.element.PropertyKiteElement;
 import org.xml.sax.Attributes;

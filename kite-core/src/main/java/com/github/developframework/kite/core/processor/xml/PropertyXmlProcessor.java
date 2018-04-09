@@ -4,7 +4,6 @@ import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.dynamic.PropertyConverter;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.element.PropertyKiteElement;
-import com.github.developframework.kite.core.element.XmlAttributeElement;
 import com.github.developframework.kite.core.exception.InvalidArgumentsException;
 import com.github.developframework.kite.core.exception.KiteException;
 import org.dom4j.Element;

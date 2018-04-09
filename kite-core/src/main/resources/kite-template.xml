@@ -4,6 +4,12 @@
 	https://github.com/developframework/kite/schema kite-configuration-0.2.xsd">
 
     <template-package namespace="kite-template">
+        
+        <template id="xx">
+            <property data="">
+                <xml-attribute data=""/>
+            </property>
+        </template>
 
     </template-package>
 

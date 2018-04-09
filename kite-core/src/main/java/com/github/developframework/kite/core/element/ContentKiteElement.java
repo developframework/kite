@@ -9,9 +9,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * 内容节点基类
  *
@@ -22,7 +19,7 @@ public abstract class ContentKiteElement extends KiteElement {
 
     @Setter
     protected DataDefinition dataDefinition;
-
+    @Setter
     protected String alias;
 
     protected boolean nullHidden;

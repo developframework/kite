@@ -2,15 +2,8 @@ package com.github.developframework.kite.core.processor.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.developframework.expression.Expression;
-import com.github.developframework.kite.core.JsonProducer;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.element.XmlAttributeElement;
-import com.github.developframework.kite.core.processor.xml.ContentXmlProcessor;
-import com.github.developframework.kite.core.processor.xml.XmlProcessContext;
-import org.dom4j.Element;
-import org.dom4j.Node;
-
-import java.util.Optional;
 
 /**
  * XML属性Json处理器（不处理）

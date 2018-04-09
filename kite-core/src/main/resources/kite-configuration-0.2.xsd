@@ -4,19 +4,22 @@
 	<xs:element name="kite-configuration">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="template-package" maxOccurs="unbounded">
+				<xs:element name="template-package" minOccurs="0" maxOccurs="unbounded">
 					<xs:complexType>
 						<xs:sequence>
 							<xs:element name="template" minOccurs="0" maxOccurs="unbounded">
 								<xs:complexType>
-									<xs:group ref="elementGroup" />
-									<xs:attribute name="id" type="xs:string" use="required" />
-									<xs:attribute name="data" type="xs:string" />
-									<xs:attribute name="for-class" type="xs:string" />
-									<xs:attribute name="extend" type="xs:string" />
-									<xs:attribute name="map-function" type="xs:string" />
-									<xs:attribute name="xml-root" type="xs:string" />
-									<xs:attribute name="xml-item" type="xs:string" />
+									<xs:complexContent>
+										<xs:extension base="contentElementType">
+											<xs:group ref="childElementGroup"/>
+											<xs:attribute name="id" type="xs:string" use="required" />
+											<xs:attribute name="data" type="xs:string" />
+											<xs:attribute name="for-class" type="xs:string" />
+											<xs:attribute name="extend" type="xs:string" />
+											<xs:attribute name="xml-root" type="xs:string" />
+											<xs:attributeGroup ref="arrayTypeElementAttributeGroup"/>
+										</xs:extension>
+									</xs:complexContent>
 								</xs:complexType>
 							</xs:element>
 						</xs:sequence>
@@ -26,83 +29,114 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:attributeGroup name="attrGroupForElement">
+
+	<!-- 内容节点属性组 -->
+	<xs:attributeGroup name="contentElementAttributeGroup">
 		<xs:attribute name="data" type="xs:string" use="required" />
 		<xs:attribute name="alias" type="xs:string" />
 		<xs:attribute name="null-hidden" type="xs:boolean" default="true" />
 	</xs:attributeGroup>
-	<xs:attributeGroup name="attrGroupForPropertyElement">
-		<xs:attributeGroup ref="attrGroupForElement"></xs:attributeGroup>
+
+	<!-- 容器节点属性组 -->
+	<xs:attributeGroup name="containerElementAttributeGroup">
+		<xs:attributeGroup ref="contentElementAttributeGroup" />
+		<xs:attribute name="for-class" type="xs:string" />
+	</xs:attributeGroup>
+
+	<!-- 数组类型的节点属性组 -->
+	<xs:attributeGroup name="arrayTypeElementAttributeGroup">
+		<xs:attribute name="map-function" type="xs:string" />
+		<xs:attribute name="xml-item" type="xs:string" />
+	</xs:attributeGroup>
+
+	<!-- 值节点属性组 -->
+	<xs:attributeGroup name="propertyElementAttributeGroup">
+		<xs:attributeGroup ref="contentElementAttributeGroup" />
 		<xs:attribute name="converter" type="xs:string" />
 		<xs:attribute name="xml-cdata" type="xs:boolean" />
 	</xs:attributeGroup>
-	<xs:complexType name="containerElementType">
-		<xs:group ref="elementGroup"></xs:group>
-		<xs:attributeGroup ref="attrGroupForElement" />
-		<xs:attribute name="for-class" type="xs:string" />
+
+	<!-- 内容节点类型 -->
+	<xs:complexType name="contentElementType">
+		<xs:sequence>
+			<xs:element name="xml-attribute" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attributeGroup ref="contentElementAttributeGroup" />
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
 	</xs:complexType>
-	<xs:group name="elementGroup">
+
+	<!-- 容器节点类型 -->
+	<xs:complexType name="containerElementType">
+		<xs:complexContent>
+			<xs:extension base="contentElementType">
+				<xs:group ref="childElementGroup"/>
+				<xs:attributeGroup ref="containerElementAttributeGroup"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- 值节点类型 -->
+	<xs:complexType name="propertyElementType">
+		<xs:complexContent>
+			<xs:extension base="contentElementType">
+				<xs:attributeGroup ref="propertyElementAttributeGroup" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- 子节点组 -->
+	<xs:group name="childElementGroup">
 		<xs:sequence>
 			<xs:choice minOccurs="0" maxOccurs="unbounded">
-				<xs:element name="xml-attribute">
-					<xs:complexType>
-						<xs:attributeGroup ref="attrGroupForElement" />
-					</xs:complexType>
-				</xs:element>
+
+				<!-- property -->
 				<xs:element name="property">
 					<xs:complexType>
-						<xs:sequence>
-							<xs:element name="xml-attribute" minOccurs="0">
-								<xs:complexType>
-									<xs:attributeGroup ref="attrGroupForElement" />
-								</xs:complexType>
-							</xs:element>
-						</xs:sequence>
-						<xs:attributeGroup ref="attrGroupForPropertyElement" />
+						<xs:complexContent>
+							<xs:extension base="propertyElementType"/>
+						</xs:complexContent>
 					</xs:complexType>
 				</xs:element>
+
+				<!-- property-date -->
 				<xs:element name="property-date">
 					<xs:complexType>
-						<xs:sequence>
-							<xs:element name="xml-attribute" minOccurs="0">
-								<xs:complexType>
-									<xs:attributeGroup ref="attrGroupForElement" />
-								</xs:complexType>
-							</xs:element>
-						</xs:sequence>
-						<xs:attributeGroup ref="attrGroupForPropertyElement" />
-						<xs:attribute name="pattern" type="xs:string" />
+						<xs:complexContent>
+							<xs:extension base="propertyElementType">
+								<xs:attribute name="pattern" type="xs:string" />
+							</xs:extension>
+						</xs:complexContent>
 					</xs:complexType>
 				</xs:element>
+
+				<!-- property-boolean -->
 				<xs:element name="property-boolean">
 					<xs:complexType>
-						<xs:sequence>
-							<xs:element name="xml-attribute" minOccurs="0">
-								<xs:complexType>
-									<xs:attributeGroup ref="attrGroupForElement" />
-								</xs:complexType>
-							</xs:element>
-						</xs:sequence>
-						<xs:attributeGroup ref="attrGroupForPropertyElement" />
+						<xs:complexContent>
+							<xs:extension base="propertyElementType" />
+						</xs:complexContent>
 					</xs:complexType>
 				</xs:element>
+
+				<!-- property-unixtimestamp -->
 				<xs:element name="property-unixtimestamp">
 					<xs:complexType>
-						<xs:sequence>
-							<xs:element name="xml-attribute" minOccurs="0">
-								<xs:complexType>
-									<xs:attributeGroup ref="attrGroupForElement" />
-								</xs:complexType>
-							</xs:element>
-						</xs:sequence>
-						<xs:attributeGroup ref="attrGroupForPropertyElement" />
+						<xs:complexContent>
+							<xs:extension base="propertyElementType" />
+						</xs:complexContent>
 					</xs:complexType>
 				</xs:element>
+
+				<!-- property-ignore -->
 				<xs:element name="property-ignore">
 					<xs:complexType>
 						<xs:attribute name="name" type="xs:string" use="required" />
 					</xs:complexType>
 				</xs:element>
+
+				<!-- object -->
 				<xs:element name="object">
 					<xs:complexType>
 						<xs:complexContent>
@@ -110,12 +144,27 @@
 						</xs:complexContent>
 					</xs:complexType>
 				</xs:element>
+
+				<!-- object-virtual -->
 				<xs:element name="object-virtual">
 					<xs:complexType>
-						<xs:group ref="elementGroup"></xs:group>
+						<xs:group ref="childElementGroup"></xs:group>
 						<xs:attribute name="alias" type="xs:string" use="required" />
 					</xs:complexType>
 				</xs:element>
+
+				<!-- array -->
+				<xs:element name="array">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="containerElementType">
+								<xs:attributeGroup ref="arrayTypeElementAttributeGroup"/>
+							</xs:extension>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+
+				<!-- link -->
 				<xs:element name="link">
 					<xs:complexType>
 						<xs:complexContent>
@@ -123,12 +172,13 @@
 						</xs:complexContent>
 					</xs:complexType>
 				</xs:element>
+
+				<!-- relevance -->
 				<xs:element name="relevance">
 					<xs:complexType>
 						<xs:complexContent>
 							<xs:extension base="containerElementType">
 								<xs:attribute name="rel-function" type="xs:string" use="required"/>
-								<xs:attribute name="map-function" type="xs:string" />
 								<xs:attribute name="type">
 									<xs:simpleType>
 										<xs:restriction base="xs:string">
@@ -138,47 +188,46 @@
 										</xs:restriction>
 									</xs:simpleType>
 								</xs:attribute>
+								<xs:attributeGroup ref="arrayTypeElementAttributeGroup" />
 							</xs:extension>
 						</xs:complexContent>
 					</xs:complexType>
 				</xs:element>
-				<xs:element name="array">
-					<xs:complexType>
-						<xs:complexContent>
-							<xs:extension base="containerElementType">
-								<xs:attribute name="map-function" type="xs:string" />
-								<xs:attribute name="xml-item" type="xs:string" />
-							</xs:extension>
-						</xs:complexContent>
-					</xs:complexType>
-				</xs:element>
+
+				<!-- include -->
 				<xs:element name="include">
 					<xs:complexType>
 						<xs:attribute name="namespace" type="xs:string" />
 						<xs:attribute name="id" type="xs:string" use="required" />
 					</xs:complexType>
 				</xs:element>
+
+				<!-- extend-port -->
 				<xs:element name="extend-port">
 					<xs:complexType>
 						<xs:attribute name="port-name" type="xs:string" use="required" />
 					</xs:complexType>
 				</xs:element>
+
+				<!-- prototype -->
 				<xs:element name="prototype">
 					<xs:complexType>
-						<xs:attributeGroup ref="attrGroupForPropertyElement" />
+						<xs:attributeGroup ref="propertyElementAttributeGroup" />
 					</xs:complexType>
 				</xs:element>
+
+				<!-- if & else -->
 				<xs:sequence>
 					<xs:element name="if">
 						<xs:complexType>
-							<xs:group ref="elementGroup"></xs:group>
+							<xs:group ref="childElementGroup"></xs:group>
 							<xs:attribute name="condition" type="xs:string" use="required" />
 						</xs:complexType>
 					</xs:element>
 					<xs:choice minOccurs="0">
 						<xs:element name="else">
 							<xs:complexType>
-								<xs:group ref="elementGroup"></xs:group>
+								<xs:group ref="childElementGroup"></xs:group>
 							</xs:complexType>
 						</xs:element>
 					</xs:choice>

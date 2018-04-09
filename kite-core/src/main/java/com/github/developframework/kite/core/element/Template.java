@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.KiteConfiguration;
+import com.github.developframework.kite.core.exception.KiteException;
 import com.github.developframework.kite.core.processor.json.JsonProcessContext;
 import com.github.developframework.kite.core.processor.json.JsonProcessor;
 import com.github.developframework.kite.core.processor.json.TemplateJsonProcessor;
@@ -18,14 +19,15 @@ import java.util.Optional;
  *
  * @author qiuzhenhao
  */
-@Getter
 public class Template extends ObjectKiteElement {
 
     /* 扩展口 */
     @Setter
+    @Getter
     private Extend extend;
 
     @Setter
+    @Getter
     private String mapFunctionValue;
 
     @Setter
@@ -77,5 +79,19 @@ public class Template extends ObjectKiteElement {
                 this.templateId = front;
             }
         }
+    }
+
+    public String getXmlRootName() {
+        if(StringUtils.isBlank(xmlRootName)) {
+            throw new KiteException("\"xml-root\" is undefined in template \"%s : %s\".", namespace, templateId);
+        }
+        return xmlRootName;
+    }
+
+    public String getXmlItemName() {
+        if(StringUtils.isBlank(xmlItemName)) {
+            throw new KiteException("\"xml-item\" is undefined in template \"%s : %s\".", namespace, templateId);
+        }
+        return xmlItemName;
     }
 }

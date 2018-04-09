@@ -3,13 +3,11 @@ package com.github.developframework.kite.core.processor.xml;
 import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.element.PropertyKiteElement;
 import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Element;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 /**

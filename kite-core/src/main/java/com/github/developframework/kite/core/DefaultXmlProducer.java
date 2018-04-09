@@ -114,7 +114,8 @@ class DefaultXmlProducer implements XmlProducer {
     private Document constructRootArrayNodeTree(XmlProcessContext xmlProcessContext, Template template, Object value) {
         Document document = DocumentHelper.createDocument();
         Element rootNode = document.addElement(template.getXmlRootName());
-        Element arrayNode = rootNode.addElement(template.getDataDefinition().getExpression().toString());
+        String arrayNodeName = kiteConfiguration.getForXmlStrategy().propertyShowName(kiteConfiguration, template.getDataDefinition().getExpression().toString());
+        Element arrayNode = rootNode.addElement(arrayNodeName);
         ArrayKiteElement arrayElement = new ArrayKiteElement(kiteConfiguration, template.getNamespace(), template.getTemplateId(), template.getDataDefinition(), null);
         arrayElement.setXmlItemName(template.getXmlItemName());
         arrayElement.setMapFunctionValue(template.getMapFunctionValue());
