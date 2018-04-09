@@ -1,0 +1,189 @@
+<xs:schema xmlns="https://github.com/developframework/kite/schema"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="https://github.com/developframework/kite/schema"
+	elementFormDefault="qualified">
+	<xs:element name="kite-configuration">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="template-package" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="template" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:group ref="elementGroup" />
+									<xs:attribute name="id" type="xs:string" use="required" />
+									<xs:attribute name="data" type="xs:string" />
+									<xs:attribute name="for-class" type="xs:string" />
+									<xs:attribute name="extend" type="xs:string" />
+									<xs:attribute name="map-function" type="xs:string" />
+									<xs:attribute name="xml-root" type="xs:string" />
+									<xs:attribute name="xml-item" type="xs:string" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="namespace" type="xs:string" use="required" />
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:attributeGroup name="attrGroupForElement">
+		<xs:attribute name="data" type="xs:string" use="required" />
+		<xs:attribute name="alias" type="xs:string" />
+		<xs:attribute name="null-hidden" type="xs:boolean" default="true" />
+	</xs:attributeGroup>
+	<xs:attributeGroup name="attrGroupForPropertyElement">
+		<xs:attributeGroup ref="attrGroupForElement"></xs:attributeGroup>
+		<xs:attribute name="converter" type="xs:string" />
+		<xs:attribute name="xml-cdata" type="xs:boolean" />
+	</xs:attributeGroup>
+	<xs:complexType name="containerElementType">
+		<xs:group ref="elementGroup"></xs:group>
+		<xs:attributeGroup ref="attrGroupForElement" />
+		<xs:attribute name="for-class" type="xs:string" />
+	</xs:complexType>
+	<xs:group name="elementGroup">
+		<xs:sequence>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="xml-attribute">
+					<xs:complexType>
+						<xs:attributeGroup ref="attrGroupForElement" />
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="property">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="xml-attribute" minOccurs="0">
+								<xs:complexType>
+									<xs:attributeGroup ref="attrGroupForElement" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attributeGroup ref="attrGroupForPropertyElement" />
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="property-date">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="xml-attribute" minOccurs="0">
+								<xs:complexType>
+									<xs:attributeGroup ref="attrGroupForElement" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attributeGroup ref="attrGroupForPropertyElement" />
+						<xs:attribute name="pattern" type="xs:string" />
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="property-boolean">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="xml-attribute" minOccurs="0">
+								<xs:complexType>
+									<xs:attributeGroup ref="attrGroupForElement" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attributeGroup ref="attrGroupForPropertyElement" />
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="property-unixtimestamp">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="xml-attribute" minOccurs="0">
+								<xs:complexType>
+									<xs:attributeGroup ref="attrGroupForElement" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attributeGroup ref="attrGroupForPropertyElement" />
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="property-ignore">
+					<xs:complexType>
+						<xs:attribute name="name" type="xs:string" use="required" />
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="object">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="containerElementType" />
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="object-virtual">
+					<xs:complexType>
+						<xs:group ref="elementGroup"></xs:group>
+						<xs:attribute name="alias" type="xs:string" use="required" />
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="link">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="containerElementType" />
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="relevance">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="containerElementType">
+								<xs:attribute name="rel-function" type="xs:string" use="required"/>
+								<xs:attribute name="map-function" type="xs:string" />
+								<xs:attribute name="type">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="auto" />
+											<xs:enumeration value="single" />
+											<xs:enumeration value="multiple" />
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+							</xs:extension>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="array">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="containerElementType">
+								<xs:attribute name="map-function" type="xs:string" />
+								<xs:attribute name="xml-item" type="xs:string" />
+							</xs:extension>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="include">
+					<xs:complexType>
+						<xs:attribute name="namespace" type="xs:string" />
+						<xs:attribute name="id" type="xs:string" use="required" />
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="extend-port">
+					<xs:complexType>
+						<xs:attribute name="port-name" type="xs:string" use="required" />
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="prototype">
+					<xs:complexType>
+						<xs:attributeGroup ref="attrGroupForPropertyElement" />
+					</xs:complexType>
+				</xs:element>
+				<xs:sequence>
+					<xs:element name="if">
+						<xs:complexType>
+							<xs:group ref="elementGroup"></xs:group>
+							<xs:attribute name="condition" type="xs:string" use="required" />
+						</xs:complexType>
+					</xs:element>
+					<xs:choice minOccurs="0">
+						<xs:element name="else">
+							<xs:complexType>
+								<xs:group ref="elementGroup"></xs:group>
+							</xs:complexType>
+						</xs:element>
+					</xs:choice>
+				</xs:sequence>
+			</xs:choice>
+		</xs:sequence>
+	</xs:group>
+</xs:schema>

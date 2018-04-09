@@ -21,7 +21,7 @@ public class NormalPropertyXmlProcessor extends PropertyXmlProcessor {
     }
 
     @Override
-    protected void handle(Element parentNode, Class<?> clazz, Object value, String showName) {
-        this.elementAddContent(parentNode, showName, value.toString());
+    protected void handle(Class<?> clazz, Object value) {
+        this.elementAddContent(value.toString());
     }
 }

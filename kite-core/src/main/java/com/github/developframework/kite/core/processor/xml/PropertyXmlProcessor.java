@@ -4,11 +4,13 @@ import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.dynamic.PropertyConverter;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.element.PropertyKiteElement;
+import com.github.developframework.kite.core.element.XmlAttributeElement;
 import com.github.developframework.kite.core.exception.InvalidArgumentsException;
 import com.github.developframework.kite.core.exception.KiteException;
 import org.dom4j.Element;
 import org.dom4j.Node;
 
+import java.util.Iterator;
 import java.util.Optional;
 
 /**
@@ -16,7 +18,7 @@ import java.util.Optional;
  *
  * @author qiuzhenhao
  */
-public abstract class PropertyXmlProcessor extends ContentXmlProcessor<PropertyKiteElement, Element> {
+public abstract class PropertyXmlProcessor extends ContainerXmlProcessor<PropertyKiteElement, Element> {
 
     public PropertyXmlProcessor(XmlProcessContext xmlProcessContext, PropertyKiteElement element, Expression parentExpression) {
         super(xmlProcessContext, element, parentExpression);
@@ -27,11 +29,11 @@ public abstract class PropertyXmlProcessor extends ContentXmlProcessor<PropertyK
         Optional<Object> valueOptional = xmlProcessContext.getDataModel().getData(expression);
         if (valueOptional.isPresent()) {
             this.value = valueOptional.get();
-            this.node = (Element) parentProcessor.getNode();
+            this.node = ((Element) parentProcessor.getNode()).addElement(element.showNameXML());
             return true;
         }
         if (!element.isNullHidden()) {
-            ((Element) parentProcessor.getNode()).addElement(element.showNameXML());
+            this.node = ((Element) parentProcessor.getNode()).addElement(element.showNameXML());
         }
         return false;
     }
@@ -59,7 +61,7 @@ public abstract class PropertyXmlProcessor extends ContentXmlProcessor<PropertyK
         final Object convertValue = convertValueOptional.orElse(value);
         Class<?> convertValueClass = convertValue.getClass();
         if (support(convertValueClass)) {
-            handle(this.node, convertValueClass, convertValue, element.showNameXML());
+            handle(convertValueClass, convertValue);
         }
     }
 
@@ -74,24 +76,25 @@ public abstract class PropertyXmlProcessor extends ContentXmlProcessor<PropertyK
     /**
      * 属性具体处理
      *
-     * @param parentNode  父树节点
      * @param sourceClass sourceClass
      * @param value       值
-     * @param showName    显示的名称
      */
-    protected abstract void handle(Element parentNode, Class<?> sourceClass, Object value, String showName);
+    protected abstract void handle(Class<?> sourceClass, Object value);
 
     /**
      * 给节点增加内容
-     * @param node 节点
-     * @param showName 展示名称
      * @param value 值
      */
-    protected void elementAddContent(Element node, String showName, String value) {
+    protected void elementAddContent(String value) {
         if (element.isXmlCdata()) {
-            node.addElement(showName).addCDATA(value);
+            node.addCDATA(value);
         } else {
-            node.addElement(showName).addText(value);
+            node.addText(value);
+        }
+        for (Iterator<KiteElement> iterator = element.childElementIterator(); iterator.hasNext();) {
+            final KiteElement childKiteElement = iterator.next();
+            final XmlProcessor<? extends KiteElement, ? extends Node> childXmlProcessor = childKiteElement.createXmlProcessor(xmlProcessContext, node, expression);
+            childXmlProcessor.process(this);
         }
     }
 }

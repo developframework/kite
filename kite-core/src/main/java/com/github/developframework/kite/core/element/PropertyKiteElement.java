@@ -13,7 +13,7 @@ import java.util.Optional;
  *
  * @author qiuzhenhao
  */
-public abstract class PropertyKiteElement extends ContentKiteElement {
+public abstract class PropertyKiteElement extends ContainerKiteElement {
 
     @Setter
     protected String converterValue;

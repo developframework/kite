@@ -40,6 +40,7 @@ class ConfigurationSaxParseHandler extends DefaultHandler{
         registerElementSaxParser(new VirtualObjectElementSaxParser(configuration));
         registerElementSaxParser(new UnixTimestampPropertyElementSaxParser(configuration));
         registerElementSaxParser(new BooleanPropertyElementSaxParser(configuration));
+        registerElementSaxParser(new XmlAttributeElementSaxParser(configuration));
         registerElementSaxParser(new ExtendPortElementSaxParser(configuration));
         registerElementSaxParser(new IgnorePropertyElementSaxParser(configuration));
         registerElementSaxParser(new PrototypeElementSaxParser(configuration));

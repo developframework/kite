@@ -37,7 +37,7 @@ public class BooleanPropertyXmlProcessor extends PropertyXmlProcessor {
     }
 
     @Override
-    protected void handle(Element parentNode, Class<?> clazz, Object value, String showName) {
+    protected void handle(Class<?> clazz, Object value) {
         boolean v;
         if (clazz == Boolean.class) {
             v = ((Boolean) value).booleanValue();
@@ -48,9 +48,8 @@ public class BooleanPropertyXmlProcessor extends PropertyXmlProcessor {
         } else if (clazz == Short.class) {
             v = ((Short) value).shortValue() != 0;
         } else {
-            parentNode.addElement(showName);
             return;
         }
-        this.elementAddContent(parentNode, showName, String.valueOf(v));
+        this.elementAddContent(String.valueOf(v));
     }
 }

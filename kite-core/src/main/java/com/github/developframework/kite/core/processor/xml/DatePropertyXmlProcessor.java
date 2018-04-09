@@ -49,13 +49,9 @@ public class DatePropertyXmlProcessor extends PropertyXmlProcessor {
     }
 
     @Override
-    protected void handle(Element parentNode, Class<?> clazz, Object value, String showName) {
+    protected void handle(Class<?> clazz, Object value) {
         java.util.Date date = transformDate(clazz, value);
-        if (Objects.isNull(date)) {
-            parentNode.addElement(showName);
-            return;
-        }
-        this.elementAddContent(parentNode, showName, dateFormat.format(date));
+        this.elementAddContent(dateFormat.format(date));
     }
 
     protected java.util.Date transformDate(Class<?> clazz, Object value) {
