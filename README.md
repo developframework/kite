@@ -241,6 +241,7 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 - `<array>`
 - `<property>`
 - `<prototype>`
+- `<xml-attribute>`
 
 功能型标签
 
@@ -343,6 +344,16 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 | alias       | 别名，你可以重新定义显示名                            | 否    |
 | converter   | 类型转换器全限定类名或expression表达式。详见[5.1.1节](#chapter511) | 否    |
 | null-hidden | true时表示表达式取的值为null时隐藏该节点，默认为false        | 否    |
+
+###### f) xml-attribute
+
+在输出xml时，提供配置xml节点的属性。
+
+| 属性        | 功能                                                  | 是否必须 |
+| ----------- | ----------------------------------------------------- | -------- |
+| data        | 取值表达式                                            | 是       |
+| alias       | 别名，你可以重新定义显示名                            | 否       |
+| null-hidden | true时表示表达式取的值为null时隐藏该节点，默认为false | 否       |
 
 ##### **3.2.2.2. 功能型标签**
 
@@ -528,8 +539,9 @@ public class SchoolClass {
 }
 ```
 
-### <a name="chapter41">**4.1. 简单输出模型对象Json**</a>
+### <a name="chapter41">**4.1. 简单输出模型对象**</a>
 
+#### **4.1.1. json**
 ```xml
 <!-- /kite/kite-student.xml --> 
 <!-- 忽略kite-configuration -->
@@ -559,6 +571,34 @@ System.out.println(json);
 ```json
 {"id":1,"name":"Peter","classId":1,"birthday":"Sun Jan 01 00:00:00 CST 1995"}
 ```
+
+#### **4.1.2. xml**
+
+```xml
+<template-package namespace="kite-student">
+  <template id="student-detail" data="student" xml-root="student">
+    <xml-attribute data="id"/>
+    <property data="name"/>
+    <property data="classId"/>
+    <property data="birthday"/>
+  </template>
+</template-package>
+```
+
++ `xml-root` 申明了xml的根节点名称
++ `<xml-attribute>` 设定了节点的属性
+
+执行结果：
+
+```xml
+<student id="1">
+  <name>Peter</name>
+  <class-id>1</class-id>
+  <birthday>Sun Jan 01 00:00:00 CST 1995</birthday>
+</student>
+```
+
+
 
 ### 4.2. 使用alias修改显示名称
 
@@ -675,7 +715,9 @@ Student student = new Student(1, "Peter", 1, null);
 {"id":1,"name":"Peter","classId":1}
 ```
 
-### <a name="chapter46">**4.6. 简单输出数组模型Json**</a>
+### <a name="chapter46">**4.6. 简单输出数组模型**</a>
+
+#### **4.6.1. json**
 
 利用`array` 标签构造一个数组结构：
 
@@ -737,6 +779,36 @@ String json = jsonProducer.produce(dataModel, "kite-student", "student-list", tr
   "classId" : 1,
   "birthday" : "1996-05-20"
 } ]
+```
+
+#### **4.6.2. xml**
+
+```xml
+<template id="student-list" data="students" xml-root="xml" xml-item="student">
+    <xml-attribute data="id"/>
+    <property data="name"/>
+    <property data="classId"/>
+    <property-date data="birthday" pattern="yyyy-MM-dd"/>
+</template>
+```
+
++ `xml-item` 设定数组每项元素的节点名称
+
+```xml
+<xml>
+  <students>
+    <student id="1">
+      <name>Peter</name>
+      <class-id>1</class-id>
+      <birthday>1995-01-01</birthday>
+    </student>
+    <student id="2">
+      <name>John</name>
+      <class-id>1</class-id>
+      <birthday>1996-05-20</birthday>
+    </student>
+  </students>
+</xml>
 ```
 
 ### <a name="chapter47">**4.7. 使用Jackson原型实体**</a>
@@ -918,7 +990,7 @@ dataModel.putData("birthday", "1995-01-01");
 
 Kite框架的继承的概念，在`<template>`标签可以添加属性`extend`指定继承的template和继承的端口。继承的概念可以理解为反向include，调用子template视图，会优先从父template开始构造结构，当遇到匹配端口名的`<extend-port>`标签时才会构造子template视图。
 
-**注意：**假如单独调用了有`<extend-port>`标签的父template视图或者端口没有与之对应的子template实现，则`<extend-port>`标签被忽略。
+** 注意：** 假如单独调用了有`<extend-port>`标签的父template视图或者端口没有与之对应的子template实现，则`<extend-port>`标签被忽略。
 
 ```xml
 <template-package namespace="kite-student">
@@ -949,7 +1021,7 @@ Student peter = new Student(1, "Peter", 1, "1995-01-01");
 dataModel.putData("student", peter);
 dataModel.putData("otherData", "I'm other data.");
 // 这里调用的子视图模板
-String json = jsonProducer.produce(dataModel, "jsonview-student", "student-detail", true);
+String json = jsonProducer.produce(dataModel, "kite-student", "student-detail", true);
 ```
 
 ```json
@@ -977,7 +1049,7 @@ String json = jsonProducer.produce(dataModel, "jsonview-student", "student-detai
 假如每个学生实例都有一个账户实例，并且又都一对一对应了一个成绩值。
 
 ```xml
-<template-package namespace="jsonview-student">
+<template-package namespace="kite-student">
 
   <template id="student-list" data="students">
     <property data="id"/>
@@ -987,14 +1059,14 @@ String json = jsonProducer.produce(dataModel, "jsonview-student", "student-detai
     <!-- 一对一对应accounts数组每项 -->
     <link data="#accounts" alias="account">
       <!-- 引用另一个命名空间的模板 -->
-      <include id="account-detail" namespace="jsonview-account"/>
+      <include id="account-detail" namespace="kite-account"/>
     </link>
     <!-- 一对一对应scores数组每项 -->
     <link data="#scores" alias="score"/>
   </template>
 </template-package>
 
-<template-package namespace="jsonview-account">
+<template-package namespace="kite-account">
 
   <template id="account-detail">
     <property data="username"/>
@@ -1077,20 +1149,20 @@ dataModel.putData("schoolClasses", schoolClasses);
 
 
 ```xml
-<template-package namespace="jsonview-student">
+<template-package namespace="kite-student">
   <template id="student-detail">
     <property data="name"/>
     <property-date data="birthday" pattern="yyyy-MM-dd"/>
   </template>
 </template-package>
 
-<template-package namespace="jsonview-class">
+<template-package namespace="kite-class">
   <template id="class-list" data="schoolClasses">
     <property data="id" />
     <property data="className" />
     <!-- 关联学生列表 -->
     <relevance data="#students" rel-function="rel-function">
-      <include id="student-detail" namespace="jsonview-student" />
+      <include id="student-detail" namespace="kite-student" />
     </relevance>
   </template>
 </template-package>
@@ -1208,14 +1280,14 @@ Kite框架使用slf4j-api日志接口，提供内部日志打印功能。可以�
 
 ```xml
 <configuration scan="true" scanPeriod="60 seconds" debug="false">
-	<contextName>jsonview-log</contextName>
+	<contextName>kite-log</contextName>
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
 			<pattern>%d{HH:mm:ss.SSS} %-5level - %msg%n
 			</pattern>
 		</encoder>
 	</appender>
-	<logger name="com.github.developframework.jsonview" level="INFO" additivity="false">
+	<logger name="com.github.developframework.kite" level="INFO" additivity="false">
 		<appender-ref ref="STDOUT" />
 	</logger>
 </configuration>
