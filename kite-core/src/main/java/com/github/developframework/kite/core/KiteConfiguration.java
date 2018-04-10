@@ -35,6 +35,10 @@ public class KiteConfiguration {
     @Getter
     private KitePropertyNamingStrategy forXmlStrategy = new DefaultXmlKitePropertyNamingStrategy();
 
+    @Getter
+    @Setter
+    private boolean xmlSuppressDeclaration = true;
+
     public KiteConfiguration() {
         this.templatePackages = new HashMap<>();
     }

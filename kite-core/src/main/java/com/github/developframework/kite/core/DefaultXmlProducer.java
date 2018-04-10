@@ -47,7 +47,7 @@ class DefaultXmlProducer implements XmlProducer {
             OutputFormat format = new OutputFormat();
             format.setIndent(isPretty);
             format.setNewlines(isPretty);
-            format.setSuppressDeclaration(true);
+            format.setSuppressDeclaration(kiteConfiguration.isXmlSuppressDeclaration());
             Writer writer = new StringWriter();
             XMLWriter xmlWriter = new XMLWriter(writer, format);
             xmlWriter.write(document);
@@ -65,7 +65,7 @@ class DefaultXmlProducer implements XmlProducer {
             OutputFormat format = new OutputFormat();
             format.setIndent(isPretty);
             format.setNewlines(isPretty);
-            format.setSuppressDeclaration(true);
+            format.setSuppressDeclaration(kiteConfiguration.isXmlSuppressDeclaration());
             XMLWriter xmlWriter = new XMLWriter(writer, format);
             xmlWriter.write(document);
             xmlWriter.close();

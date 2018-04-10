@@ -76,6 +76,10 @@ public class KiteComponentAutoConfiguration {
 
         kiteConfiguration.setForXmlStrategy(getKitePropertyNamingStrategy(xmlNamingStrategy));
         log.info("The \"{}\" is activate on XmlProducer.", kiteConfiguration.getForXmlStrategy().getClass().getSimpleName());
+
+        if(kiteProperties.getXml().getSuppressDeclaration() != null) {
+            kiteConfiguration.setXmlSuppressDeclaration(kiteProperties.getXml().getSuppressDeclaration().booleanValue());
+        }
     }
 
     private KitePropertyNamingStrategy getKitePropertyNamingStrategy(String namingStrategyValue) {
