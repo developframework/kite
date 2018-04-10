@@ -990,7 +990,9 @@ dataModel.putData("birthday", "1995-01-01");
 
 Kite框架的继承的概念，在`<template>`标签可以添加属性`extend`指定继承的template和继承的端口。继承的概念可以理解为反向include，调用子template视图，会优先从父template开始构造结构，当遇到匹配端口名的`<extend-port>`标签时才会构造子template视图。
 
-** 注意：** 假如单独调用了有`<extend-port>`标签的父template视图或者端口没有与之对应的子template实现，则`<extend-port>`标签被忽略。
+**注意：**
+
+假如单独调用了有`<extend-port>`标签的父template视图或者端口没有与之对应的子template实现，则`<extend-port>`标签被忽略。
 
 ```xml
 <template-package namespace="kite-student">
