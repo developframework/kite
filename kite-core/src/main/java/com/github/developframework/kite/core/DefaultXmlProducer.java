@@ -9,6 +9,7 @@ import com.github.developframework.kite.core.processor.xml.ArrayTemplateXmlProce
 import com.github.developframework.kite.core.processor.xml.ArrayXmlProcessor;
 import com.github.developframework.kite.core.processor.xml.TemplateXmlProcessor;
 import com.github.developframework.kite.core.processor.xml.XmlProcessContext;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -103,19 +104,33 @@ class DefaultXmlProducer implements XmlProducer {
 
     private Document constructRootObjectNodeTree(XmlProcessContext xmlProcessContext, Template template, Object value) {
         Document document = DocumentHelper.createDocument();
-        Element rootNode = document.addElement(template.getXmlRootName());
+        String xmlRootName = template.getXmlRootName();
+        String objNodeName = kiteConfiguration.getForXmlStrategy().propertyShowName(kiteConfiguration, template.getDataDefinition().getExpression().toString());
+        Element objNode;
+        if(StringUtils.isBlank(xmlRootName)) {
+            objNode = document.addElement(objNodeName);
+        } else {
+            Element rootNode = document.addElement(xmlRootName);
+            objNode = rootNode.addElement(objNodeName);
+        }
         TemplateXmlProcessor templateProcessor = new TemplateXmlProcessor(xmlProcessContext, template, template.getDataDefinition().getExpression());
         templateProcessor.setValue(value);
-        templateProcessor.setNode(rootNode);
+        templateProcessor.setNode(objNode);
         templateProcessor.process(null);
         return document;
     }
 
     private Document constructRootArrayNodeTree(XmlProcessContext xmlProcessContext, Template template, Object value) {
         Document document = DocumentHelper.createDocument();
-        Element rootNode = document.addElement(template.getXmlRootName());
+        String xmlRootName = template.getXmlRootName();
         String arrayNodeName = kiteConfiguration.getForXmlStrategy().propertyShowName(kiteConfiguration, template.getDataDefinition().getExpression().toString());
-        Element arrayNode = rootNode.addElement(arrayNodeName);
+        Element arrayNode;
+        if(StringUtils.isBlank(xmlRootName)) {
+            arrayNode = document.addElement(arrayNodeName);
+        } else {
+            Element rootNode = document.addElement(xmlRootName);
+            arrayNode = rootNode.addElement(arrayNodeName);
+        }
         ArrayKiteElement arrayElement = new ArrayKiteElement(kiteConfiguration, template.getNamespace(), template.getTemplateId(), template.getDataDefinition(), null);
         arrayElement.setXmlItemName(template.getXmlItemName());
         arrayElement.setMapFunctionValue(template.getMapFunctionValue());
