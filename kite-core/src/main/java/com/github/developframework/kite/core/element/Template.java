@@ -31,6 +31,7 @@ public class Template extends ObjectKiteElement {
     private String mapFunctionValue;
 
     @Setter
+    @Getter
     private String xmlRootName;
 
     @Setter
@@ -81,12 +82,12 @@ public class Template extends ObjectKiteElement {
         }
     }
 
-    public String getXmlRootName() {
-        if(StringUtils.isBlank(xmlRootName)) {
-            throw new KiteException("\"xml-root\" is undefined in template \"%s : %s\".", namespace, templateId);
-        }
-        return xmlRootName;
-    }
+//    public String getXmlRootName() {
+//        if(StringUtils.isBlank(xmlRootName)) {
+//            throw new KiteException("\"xml-root\" is undefined in template \"%s : %s\".", namespace, templateId);
+//        }
+//        return xmlRootName;
+//    }
 
     public String getXmlItemName() {
         if(StringUtils.isBlank(xmlItemName)) {
