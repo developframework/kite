@@ -7,8 +7,6 @@ import lombok.Setter;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Set;
-
 /**
  * KiteFactory 的 FactoryBean
  * @author qiuzhenhao
@@ -17,7 +15,7 @@ public class KiteFactoryFactoryBean implements FactoryBean<KiteFactory>  {
 
     @Getter
     @Setter
-    private Set<String> configs;
+    private String[] configs;
 
     @Autowired
     private ObjectMapper objectMapper;

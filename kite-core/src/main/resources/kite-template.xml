@@ -1,16 +1,10 @@
 <kite-configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                         xmlns="https://github.com/developframework/kite/schema"
                         xsi:schemaLocation="
-	https://github.com/developframework/kite/schema kite-configuration-0.2.xsd">
+	https://github.com/developframework/kite/schema kite-configuration-0.3.xsd">
 
     <template-package namespace="kite-template">
         
-        <template id="xx">
-            <property data="">
-                <xml-attribute data=""/>
-            </property>
-        </template>
-
     </template-package>
 
 </kite-configuration>

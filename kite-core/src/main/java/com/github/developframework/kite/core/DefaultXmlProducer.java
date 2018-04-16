@@ -82,7 +82,7 @@ class DefaultXmlProducer implements XmlProducer {
 
         DataDefinition templateDataDefinition = template.getDataDefinition();
 
-        if (templateDataDefinition != null) {
+        if (templateDataDefinition != DataDefinition.EMPTY_DATA_DEFINITION) {
             Optional<Object> rootObjectOptional = dataModel.getData(templateDataDefinition.getExpression());
             if (rootObjectOptional.isPresent()) {
                 Object rootObject = rootObjectOptional.get();
@@ -111,7 +111,11 @@ class DefaultXmlProducer implements XmlProducer {
             objNode = document.addElement(objNodeName);
         } else {
             Element rootNode = document.addElement(xmlRootName);
-            objNode = rootNode.addElement(objNodeName);
+            if(template.getDataDefinition() != DataDefinition.EMPTY_DATA_DEFINITION) {
+                objNode = rootNode.addElement(objNodeName);
+            } else {
+                objNode = rootNode;
+            }
         }
         TemplateXmlProcessor templateProcessor = new TemplateXmlProcessor(xmlProcessContext, template, template.getDataDefinition().getExpression());
         templateProcessor.setValue(value);

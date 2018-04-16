@@ -34,13 +34,9 @@ public class KiteFactory {
         kiteConfiguration.setObjectMapper(objectMapper);
     }
 
-    public KiteFactory(ObjectMapper objectMapper, Set<String> configs) {
+    public KiteFactory(ObjectMapper objectMapper, Set<ConfigurationSource> sources) {
         Objects.requireNonNull(objectMapper);
-        Objects.requireNonNull(configs);
-        Set<ConfigurationSource> sources = new HashSet<>();
-        for (String config : configs) {
-            sources.add(new FileConfigurationSource(config));
-        }
+        Objects.requireNonNull(sources);
         KiteConfigurationSaxReader reader = new KiteConfigurationSaxReader(sources);
         kiteConfiguration = reader.readConfiguration();
         kiteConfiguration.setObjectMapper(objectMapper);

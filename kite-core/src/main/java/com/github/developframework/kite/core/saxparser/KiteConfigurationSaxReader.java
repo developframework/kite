@@ -64,7 +64,6 @@ public class KiteConfigurationSaxReader {
             saxParser.parse(is, handler);
             is.close();
         } catch (Exception e) {
-            e.printStackTrace();
             throw new KiteParseXmlException("Kite Framework parse configuration source \"%s\" happened error: %s", source.getSourceName(), e.getMessage());
         }
     }
