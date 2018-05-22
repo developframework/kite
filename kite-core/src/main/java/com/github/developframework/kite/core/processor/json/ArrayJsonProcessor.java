@@ -26,7 +26,7 @@ import java.util.Optional;
 @Slf4j
 public class ArrayJsonProcessor extends ContainerJsonProcessor<ArrayKiteElement, ArrayNode> {
 
-    private Optional<MapFunction> mapFunctionOptional;
+    protected Optional<MapFunction> mapFunctionOptional;
 
     public ArrayJsonProcessor(JsonProcessContext jsonProcessContext, ArrayKiteElement element, Expression parentExpression) {
         super(jsonProcessContext, element, parentExpression);
@@ -60,7 +60,7 @@ public class ArrayJsonProcessor extends ContainerJsonProcessor<ArrayKiteElement,
         } else if (value instanceof List<?>) {
             size = ((List<?>) value).size();
         } else {
-            throw new InvalidArgumentsException("data", expression.toString(), "Data must be array or List type.");
+            throw new InvalidArgumentsException("data", expression.toString(), "Data must be array or List type, the value class is " + value.getClass().getName());
         }
         for (int i = 0; i < size; i++) {
             single(ArrayExpression.fromObject((ObjectExpression) expression, i), size);
@@ -74,7 +74,7 @@ public class ArrayJsonProcessor extends ContainerJsonProcessor<ArrayKiteElement,
      */
     protected final void single(ArrayExpression arrayExpression, int size) {
         if (element.isChildElementEmpty() || mapFunctionOptional.isPresent()) {
-            empty(arrayExpression.getIndex());
+            empty(arrayExpression);
         } else {
             final ObjectInArrayJsonProcessor childProcessor = new ObjectInArrayJsonProcessor(jsonProcessContext, element.getItemObjectElement(), arrayExpression, size);
             childProcessor.process(this);
@@ -84,11 +84,11 @@ public class ArrayJsonProcessor extends ContainerJsonProcessor<ArrayKiteElement,
 
     /**
      * 空子标签处理
-     * @param index 索引
+     * @param arrayExpression 数组表达式
      */
     @SuppressWarnings("unchecked")
-    private void empty(final int index) {
-        final Optional<Object> objectOptional = jsonProcessContext.getDataModel().getData(ArrayExpression.fromObject((ObjectExpression) expression, index));
+    private void empty(ArrayExpression arrayExpression) {
+        final Optional<Object> objectOptional = jsonProcessContext.getDataModel().getData(arrayExpression);
         if (!objectOptional.isPresent()) {
             node.addNull();
             return;
@@ -96,7 +96,7 @@ public class ArrayJsonProcessor extends ContainerJsonProcessor<ArrayKiteElement,
         Object object = objectOptional.get();
 
         if (mapFunctionOptional.isPresent()) {
-            object = mapFunctionOptional.get().apply(object, index);
+            object = mapFunctionOptional.get().apply(object, arrayExpression.getIndex());
         }
 
         if (object instanceof String) {

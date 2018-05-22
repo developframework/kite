@@ -52,7 +52,7 @@ public class RelevanceKiteElement extends ArrayKiteElement {
         if (StringUtils.isNotBlank(relevanceTypeValue)) {
             this.relevanceType = RelevanceType.valueOf(relevanceTypeValue.toUpperCase());
         } else {
-            this.relevanceType = RelevanceType.AUTO;
+            this.relevanceType = RelevanceType.MULTIPLE;
         }
     }
 

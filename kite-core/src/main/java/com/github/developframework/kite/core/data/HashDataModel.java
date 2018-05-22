@@ -67,4 +67,11 @@ public class HashDataModel implements DataModel{
         return dataModel;
     }
 
+    /**
+     * 生成一个构造器
+     * @return
+     */
+    public static final DataModelBuilder builder() {
+        return new DataModelBuilder(HashDataModel.class);
+    }
 }

@@ -18,7 +18,7 @@ public class FileConfigurationSource implements ConfigurationSource{
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
+    public InputStream getInputStream() {
         InputStream is = this.getClass().getResourceAsStream(filename);
         if (is == null) {
             throw new ConfigurationSourceException(filename);

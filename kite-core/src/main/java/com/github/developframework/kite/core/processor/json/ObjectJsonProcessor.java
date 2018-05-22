@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.element.ObjectKiteElement;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Iterator;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import java.util.Optional;
  *
  * @author qiuzhenhao
  */
+@Slf4j
 public class ObjectJsonProcessor extends ContainerJsonProcessor<ObjectKiteElement, ObjectNode> {
 
     public ObjectJsonProcessor(JsonProcessContext jsonProcessContext, ObjectKiteElement element, Expression parentExpression) {

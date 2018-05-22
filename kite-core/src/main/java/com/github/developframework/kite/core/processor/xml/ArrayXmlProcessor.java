@@ -58,7 +58,7 @@ public class ArrayXmlProcessor extends ContainerXmlProcessor<ArrayKiteElement, N
         } else if (value instanceof List<?>) {
             size = ((List<?>) value).size();
         } else {
-            throw new InvalidArgumentsException("data", expression.toString(), "Data must be array or List type.");
+            throw new InvalidArgumentsException("data", expression.toString(), "Data must be array or List type, the value class is " + value.getClass().getName());
         }
         for (int i = 0; i < size; i++) {
             single(ArrayExpression.fromObject((ObjectExpression) expression, i), size);
@@ -72,7 +72,7 @@ public class ArrayXmlProcessor extends ContainerXmlProcessor<ArrayKiteElement, N
      */
     protected final void single(ArrayExpression arrayExpression, int size) {
         if (element.isChildElementEmpty() || mapFunctionOptional.isPresent()) {
-            empty(arrayExpression.getIndex());
+            empty(arrayExpression);
         } else {
             final ObjectInArrayXmlProcessor childProcessor = new ObjectInArrayXmlProcessor(xmlProcessContext, element.getItemObjectElement(), arrayExpression, size);
             childProcessor.process(this);
@@ -82,10 +82,10 @@ public class ArrayXmlProcessor extends ContainerXmlProcessor<ArrayKiteElement, N
 
     /**
      * 空子标签处理
-     * @param index 索引
+     * @param arrayExpression 索引
      */
-    private void empty(final int index) {
-        final Optional<Object> objectOptional = xmlProcessContext.getDataModel().getData(ArrayExpression.fromObject((ObjectExpression) expression, index));
+    private void empty(final ArrayExpression arrayExpression) {
+        final Optional<Object> objectOptional = xmlProcessContext.getDataModel().getData(arrayExpression);
         if (!objectOptional.isPresent()) {
 //            node.addNull();
             return;
@@ -93,7 +93,7 @@ public class ArrayXmlProcessor extends ContainerXmlProcessor<ArrayKiteElement, N
         Object object = objectOptional.get();
 
         if (mapFunctionOptional.isPresent()) {
-            object = mapFunctionOptional.get().apply(object, index);
+            object = mapFunctionOptional.get().apply(object, arrayExpression.getIndex());
         }
         ((Element)node).addElement(element.getXmlItemName()).addText(object.toString());
     }
