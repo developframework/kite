@@ -34,7 +34,7 @@
 	<xs:attributeGroup name="contentElementAttributeGroup">
 		<xs:attribute name="data" type="xs:string" use="required" />
 		<xs:attribute name="alias" type="xs:string" />
-		<xs:attribute name="null-hidden" type="xs:boolean" default="true" />
+		<xs:attribute name="null-hidden" type="xs:boolean" default="false" />
 	</xs:attributeGroup>
 
 	<!-- 容器节点属性组 -->
