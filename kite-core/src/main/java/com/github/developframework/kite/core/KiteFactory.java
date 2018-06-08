@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.github.developframework.kite.core.saxparser.KiteConfigurationSaxReader;
 import lombok.Getter;
+import lombok.NonNull;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -22,9 +22,7 @@ public class KiteFactory {
         this(new ObjectMapper(), configs);
     }
 
-    public KiteFactory(ObjectMapper objectMapper, String... configs) {
-        Objects.requireNonNull(objectMapper);
-        Objects.requireNonNull(configs);
+    public KiteFactory(@NonNull ObjectMapper objectMapper, @NonNull String... configs) {
         Set<ConfigurationSource> sources = new HashSet<>();
         for (String config : configs) {
             sources.add(new FileConfigurationSource(config));
@@ -34,17 +32,13 @@ public class KiteFactory {
         kiteConfiguration.setObjectMapper(objectMapper);
     }
 
-    public KiteFactory(ObjectMapper objectMapper, Set<ConfigurationSource> sources) {
-        Objects.requireNonNull(objectMapper);
-        Objects.requireNonNull(sources);
+    public KiteFactory(@NonNull ObjectMapper objectMapper, @NonNull Set<ConfigurationSource> sources) {
         KiteConfigurationSaxReader reader = new KiteConfigurationSaxReader(sources);
         kiteConfiguration = reader.readConfiguration();
         kiteConfiguration.setObjectMapper(objectMapper);
     }
 
-    public KiteFactory(ObjectMapper objectMapper, KiteConfiguration kiteConfiguration) {
-        Objects.requireNonNull(kiteConfiguration);
-        Objects.requireNonNull(objectMapper);
+    public KiteFactory(@NonNull ObjectMapper objectMapper, @NonNull KiteConfiguration kiteConfiguration) {
         kiteConfiguration.setObjectMapper(objectMapper);
         this.kiteConfiguration = kiteConfiguration;
     }
