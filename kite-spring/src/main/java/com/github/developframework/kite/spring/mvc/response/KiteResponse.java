@@ -10,7 +10,7 @@ import lombok.Getter;
  * @author qiuzhenhao
  */
 @Getter
-public class KiteResponse {
+public abstract class KiteResponse {
 
     /* 命名空间 */
     protected String namespace;

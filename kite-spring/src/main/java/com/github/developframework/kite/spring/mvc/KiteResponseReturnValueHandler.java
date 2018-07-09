@@ -4,6 +4,7 @@ import com.github.developframework.kite.core.KiteFactory;
 import com.github.developframework.kite.core.data.DataModel;
 import com.github.developframework.kite.spring.mvc.annotation.TemplateType;
 import com.github.developframework.kite.spring.mvc.response.KiteResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.MethodParameter;
 
 /**
@@ -11,7 +12,7 @@ import org.springframework.core.MethodParameter;
  *
  * @author qiuzhenhao
  */
-public final class KiteResponseReturnValueHandler extends AbstractKiteReturnValueHandler<KiteResponse> {
+public final class KiteResponseReturnValueHandler extends AnnotationKiteReturnValueHandler<KiteResponse> {
 
     public KiteResponseReturnValueHandler(KiteFactory kiteFactory) {
         super(kiteFactory);
@@ -24,17 +25,32 @@ public final class KiteResponseReturnValueHandler extends AbstractKiteReturnValu
 
     @Override
     protected String namespace(KiteResponse returnValue, MethodParameter methodParameter) {
-        return returnValue.getNamespace();
+        String tempNamespace =  returnValue.getNamespace();
+        if(StringUtils.isNotBlank(tempNamespace)) {
+            return tempNamespace;
+        } else {
+            return super.namespace(returnValue, methodParameter);
+        }
     }
 
     @Override
     protected String templateId(KiteResponse returnValue, MethodParameter methodParameter) {
-        return returnValue.getTemplateId();
+        String tempTemplateId =  returnValue.getTemplateId();
+        if(StringUtils.isNotBlank(tempTemplateId)) {
+            return tempTemplateId;
+        } else {
+            return super.templateId(returnValue, methodParameter);
+        }
     }
 
     @Override
     protected TemplateType templateType(KiteResponse returnValue, MethodParameter methodParameter) {
-        return returnValue.getTemplateType();
+        TemplateType tempTemplateType =  returnValue.getTemplateType();
+        if(tempTemplateType != null) {
+            return tempTemplateType;
+        } else {
+            return super.templateType(returnValue, methodParameter);
+        }
     }
 
     @Override
