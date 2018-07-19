@@ -4,7 +4,7 @@
 
     <groupId>com.github.developframework</groupId>
     <artifactId>kite</artifactId>
-    <version>0.5</version>
+    <version>0.6-SNAPSHOT</version>
     <modules>
         <module>kite-core</module>
         <module>kite-spring</module>
@@ -42,7 +42,7 @@
         <connection>scm:git:git@github.com:developframework/kite.git</connection>
         <developerConnection>scm:git:git@github.com:developframework/kite.git</developerConnection>
         <url>https://github.com/developframework/kite</url>
-        <tag>0.5</tag>
+        <tag>${project.version}</tag>
     </scm>
 
     <properties>
