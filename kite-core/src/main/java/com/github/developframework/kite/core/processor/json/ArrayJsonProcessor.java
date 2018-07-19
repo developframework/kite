@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * 数组节点处理器
@@ -59,8 +60,10 @@ public class ArrayJsonProcessor extends ContainerJsonProcessor<ArrayKiteElement,
             size = ((Object[]) value).length;
         } else if (value instanceof List<?>) {
             size = ((List<?>) value).size();
+        } else if (value instanceof Set<?>) {
+            size = ((Set<?>) value).size();
         } else {
-            throw new InvalidArgumentsException("data", expression.toString(), "Data must be array or List type, the value class is " + value.getClass().getName());
+            throw new InvalidArgumentsException("data", expression.toString(), "Data must be array or List/Set type, the value class is " + value.getClass().getName());
         }
         for (int i = 0; i < size; i++) {
             single(ArrayExpression.fromObject((ObjectExpression) expression, i), size);

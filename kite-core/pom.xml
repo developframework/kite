@@ -16,6 +16,7 @@
         <dependency>
             <groupId>com.github.developframework</groupId>
             <artifactId>expression</artifactId>
+            <version>${version.expression}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

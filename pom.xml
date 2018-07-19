@@ -46,7 +46,8 @@
     </scm>
 
     <properties>
-        <version.develop-framework>0.2</version.develop-framework>
+        <version.develop-framework>0.3</version.develop-framework>
+        <version.expression>1.2.1</version.expression>
     </properties>
 
     <dependencyManagement>
