@@ -148,7 +148,7 @@
 				<!-- object-virtual -->
 				<xs:element name="object-virtual">
 					<xs:complexType>
-						<xs:group ref="childElementGroup"></xs:group>
+						<xs:group ref="childElementGroup"/>
 						<xs:attribute name="alias" type="xs:string" use="required" />
 					</xs:complexType>
 				</xs:element>
@@ -220,14 +220,14 @@
 				<xs:sequence>
 					<xs:element name="if">
 						<xs:complexType>
-							<xs:group ref="childElementGroup"></xs:group>
+							<xs:group ref="childElementGroup"/>
 							<xs:attribute name="condition" type="xs:string" use="required" />
 						</xs:complexType>
 					</xs:element>
 					<xs:choice minOccurs="0">
 						<xs:element name="else">
 							<xs:complexType>
-								<xs:group ref="childElementGroup"></xs:group>
+								<xs:group ref="childElementGroup"/>
 							</xs:complexType>
 						</xs:element>
 					</xs:choice>

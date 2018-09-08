@@ -15,12 +15,12 @@
 ### 2.1. 加载KiteFactory
 
 ```xml
-<bean id="jsonviewFactory" class="com.github.developframework.jsonview.spring.JsonviewFactoryFactoryBean">
+<bean id="kiteFactory" class="com.github.developframework.kite.spring.KiteFactoryFactoryBean">
     <property name="configs">
         <set>
-            <value>/jsonview/jsonview-student.xml</value>
-            <value>/jsonview/jsonview-account.xml</value>
-            <value>/jsonview/jsonview-class.xml</value>
+            <value>/kite/kite-student.xml</value>
+            <value>/jsonview/kite-account.xml</value>
+            <value>/kite/kite-class.xml</value>
         </set>
     </property>
 </bean>
@@ -40,7 +40,7 @@ kitekite<beans xmlns="http://www.springframework.org/schema/beans"
 		https://github.com/developframework/kite/schema
 		https://github.com/developframework/kite/schema/kite-spring.xsd">
 
-    <jsonview:scan id="kiteFactory" locations="classpath:kite/*.xml" />
+    <kite:scan id="kiteFactory" locations="classpath:kite/*.xml" />
 </beans>
 ```
 
@@ -54,8 +54,8 @@ kitekite<beans xmlns="http://www.springframework.org/schema/beans"
 ```xml
 <mvc:annotation-driven>
     <mvc:return-value-handlers>
-        <bean class="com.github.developframework.jsonview.spring.mvc.DataModelReturnValueHandler" />
-        <bean class="com.github.developframework.jsonview.spring.mvc.JsonviewResponseReturnValueHandler" />
+        <bean class="com.github.developframework.kite.spring.mvc.DataModelReturnValueHandler" />
+        <bean class="com.github.developframework.kite.spring.mvc.KiteResponseReturnValueHandler" />
     </mvc:return-value-handlers>
 </mvc:annotation-driven>
 ```
@@ -69,8 +69,8 @@ Controller方法以`KiteResponse`对象返回将会被交由` KiteResponseReturn
 public class HelloController {
     
     @GetMapping("/hello")
-    public JsonviewResponse hello() {
-        JsonviewResponse res = new EmptyJsonviewResponse("kite-demo", "hello-view");
+    public KiteResponse hello() {
+        KiteResponse res = new EmptyKiteResponse("kite-demo", "hello-view");
         res.putData("sayHello", "Hello kite-spring!");
         return res;
     }

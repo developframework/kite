@@ -1,5 +1,6 @@
 package com.github.developframework.kite.core.exception;
 
+import develop.toolkit.exception.FormatRuntimeException;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -7,15 +8,15 @@ import lombok.extern.slf4j.Slf4j;
  * @author qiuzhenhao
  */
 @Slf4j
-public class KiteException extends RuntimeException{
+public class KiteException extends FormatRuntimeException {
 
     public KiteException(String message) {
         super(message);
         log.error(super.getMessage());
     }
 
-    public KiteException(String format, Object... objs) {
-        super(String.format(format, objs));
+	public KiteException(String format, Object... parameters) {
+		super(format, parameters);
         log.error(super.getMessage());
     }
 }

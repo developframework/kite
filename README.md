@@ -50,7 +50,7 @@ System.out.println(xml);
 <kite-configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                         xmlns="https://github.com/developframework/kite/schema"
                         xsi:schemaLocation="
-	https://github.com/developframework/kite/schema kite-configuration-0.1.xsd">
+	https://github.com/developframework/kite/schema kite-configuration.xsd">
 
     <template-package namespace="kite-demo">
 
