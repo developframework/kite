@@ -1,4 +1,4 @@
 target
 .idea
 *.iml
-*/src/test/java
+*/src/test/*
