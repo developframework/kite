@@ -44,10 +44,10 @@ public abstract class PropertyKiteElement extends ContainerKiteElement {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof PropertyKiteElement) {
-            PropertyKiteElement otherPropertyElement = (PropertyKiteElement) obj;
-            return dataDefinition.equals(otherPropertyElement.dataDefinition);
+        if (!(obj instanceof PropertyKiteElement)) {
+            return false;
         }
-        return false;
+        PropertyKiteElement otherPropertyElement = (PropertyKiteElement) obj;
+        return dataDefinition.equals(otherPropertyElement.dataDefinition);
     }
 }
