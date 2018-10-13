@@ -67,7 +67,7 @@ public abstract class ContentKiteElement extends KiteElement {
             ArrayExpression arrayExpression = ((ArrayExpression) expression);
             return arrayExpression.getPropertyName() + "_" + arrayExpression.getIndex();
         } else {
-            return "aaa";
+            throw new IllegalStateException();
         }
     }
 
