@@ -31,7 +31,9 @@ public class ObjectJsonProcessor extends ContainerJsonProcessor<ObjectKiteElemen
             return true;
         }
         if (!element.isNullHidden()) {
-            node.putNull(element.showNameJSON());
+            // since version 0.7 修改 修复当data值为null时出现NullPointerException
+            ((ObjectNode) parentProcessor.getNode()).putNull(element.showNameJSON());
+//            node.putNull(element.showNameJSON());
         }
         return false;
     }

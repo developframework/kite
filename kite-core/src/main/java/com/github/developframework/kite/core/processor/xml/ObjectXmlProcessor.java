@@ -29,7 +29,9 @@ public class ObjectXmlProcessor extends ContainerXmlProcessor<ObjectKiteElement,
             return true;
         }
         if (!element.isNullHidden()) {
-            node.addElement(element.showNameXML());
+            // since version 0.7 修改 修复当data值为null时出现NullPointerException
+            ((Element) parentProcessor.getNode()).addElement(element.showNameXML());
+//            node.addElement(element.showNameXML());
         }
         return false;
     }

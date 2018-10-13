@@ -7,7 +7,8 @@ import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.data.DataDefinition;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * 内容节点基类
@@ -31,7 +32,7 @@ public abstract class ContentKiteElement extends KiteElement {
     }
 
     public void setNullHidden(String nullHiddenStr) {
-        this.nullHidden = StringUtils.isBlank(nullHiddenStr) ? false : new Boolean(nullHiddenStr).booleanValue();
+        this.nullHidden = isNotBlank(nullHiddenStr) && Boolean.parseBoolean(nullHiddenStr);
     }
 
     /**
@@ -39,7 +40,7 @@ public abstract class ContentKiteElement extends KiteElement {
      * @return 显示名称
      */
     public String showNameJSON() {
-        if (StringUtils.isNotBlank(alias)) {
+        if (isNotBlank(alias)) {
             return alias;
         }
         final String expressionString = expressionString();
@@ -51,7 +52,7 @@ public abstract class ContentKiteElement extends KiteElement {
      * @return 显示名称
      */
     public String showNameXML() {
-        if (StringUtils.isNotBlank(alias)) {
+        if (isNotBlank(alias)) {
             return alias;
         }
         final String expressionString = expressionString();
