@@ -38,10 +38,22 @@ public abstract class PropertyJsonProcessor extends ContentJsonProcessor<Propert
 
     @Override
     protected void handleCoreLogic(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
-        // 经过converter转化后的值
-        Optional<Object> convertValueOptional = element.getConverterValue().map(converterValue -> {
+        final Object convertValue = getConvertValue(value);
+        Class<?> convertValueClass = convertValue.getClass();
+        if (support(convertValueClass)) {
+            handle(this.node, convertValueClass, convertValue, element.showNameJSON());
+        }
+    }
+
+    /**
+     * 获取经过converter转化后的值
+     *
+     * @return
+     */
+    protected Object getConvertValue(Object dataValue) {
+        return element.getConverterValue().map(converterValue -> {
             Optional<Object> converterOptional = jsonProcessContext.getDataModel().getData(converterValue);
-            Object obj = converterOptional.orElseGet(() -> {
+            Object converter = converterOptional.orElseGet(() -> {
                 try {
                     return Class.forName(converterValue).newInstance();
                 } catch (ClassNotFoundException e) {
@@ -50,17 +62,12 @@ public abstract class PropertyJsonProcessor extends ContentJsonProcessor<Propert
                     throw new KiteException("Can't new converter instance.");
                 }
             });
-            if (obj instanceof PropertyConverter) {
-                return ((PropertyConverter) obj).convert(value);
+            if (converter instanceof PropertyConverter) {
+                return ((PropertyConverter) converter).convert(dataValue);
             } else {
                 throw new InvalidArgumentsException("converter", converterValue, "It's not a PropertyConverter instance.");
             }
-        });
-        final Object convertValue = convertValueOptional.orElse(value);
-        Class<?> convertValueClass = convertValue.getClass();
-        if (support(convertValueClass)) {
-            handle(this.node, convertValueClass, convertValue, element.showNameJSON());
-        }
+        }).orElse(dataValue);
     }
 
     /**
