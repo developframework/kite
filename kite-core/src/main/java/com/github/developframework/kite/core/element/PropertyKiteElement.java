@@ -4,9 +4,10 @@ import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.data.DataDefinition;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * 属性节点
@@ -29,7 +30,7 @@ public abstract class PropertyKiteElement extends ContainerKiteElement {
     }
 
     public void setXmlCdata(String xmlCdataStr) {
-        this.isXmlCdata = StringUtils.isBlank(xmlCdataStr) ? false : new Boolean(xmlCdataStr).booleanValue();
+        this.isXmlCdata = isNotBlank(xmlCdataStr) && Boolean.parseBoolean(xmlCdataStr);
     }
 
     @Override
