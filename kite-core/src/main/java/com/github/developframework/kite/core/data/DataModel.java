@@ -33,6 +33,24 @@ public interface DataModel extends Serializable {
     Optional<Object> getData(String expressionValue);
 
     /**
+     * 从Object获得数据
+     *
+     * @param object     对象
+     * @param expression 表达式定义
+     * @return
+     */
+    Optional<Object> getData(Object object, Expression expression);
+
+    /**
+     * 从Object获得数据
+     *
+     * @param object          对象
+     * @param expressionValue 表达式字符串
+     * @return
+     */
+    Optional<Object> getData(Object object, String expressionValue);
+
+    /**
      * 获得数据 如果没有抛出异常
      * @param expression 表达式定义
      * @return 数据值
@@ -40,10 +58,28 @@ public interface DataModel extends Serializable {
     Object getDataRequired(Expression expression);
 
     /**
+     * 从Object获得数据 如果没有抛出异常
+     *
+     * @param object     对象
+     * @param expression 表达式定义
+     * @return
+     */
+    Object getDataRequired(Object object, Expression expression);
+
+    /**
      * 获得数据 如果没有抛出异常
      * @param expressionValue 表达式字符串
      * @return 数据值
      */
     Object getDataRequired(String expressionValue);
+
+    /**
+     * 从Object获得数据 如果没有抛出异常
+     *
+     * @param object          对象
+     * @param expressionValue 表达式字符串
+     * @return
+     */
+    Object getDataRequired(Object object, String expressionValue);
 
 }

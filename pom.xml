@@ -121,6 +121,13 @@
                 <artifactId>kite-spring-boot-starter</artifactId>
                 <version>0.7-SNAPSHOT</version>
             </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.12</version>
+                <optional>true</optional>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
