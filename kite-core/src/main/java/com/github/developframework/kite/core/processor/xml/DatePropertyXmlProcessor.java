@@ -1,6 +1,5 @@
 package com.github.developframework.kite.core.processor.xml;
 
-import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.element.PropertyKiteElement;
 import org.apache.commons.lang3.StringUtils;
 
@@ -18,7 +17,7 @@ public class DatePropertyXmlProcessor extends PropertyXmlProcessor {
 
     private DateFormat dateFormat;
     // 支持的类型集合
-    private static final Set<Class<?>> ACCEPT_CLASS_SET = new HashSet<>(9);
+    private static final Set<Class<?>> ACCEPT_CLASS_SET = new HashSet<>();
 
     static {
         ACCEPT_CLASS_SET.add(java.util.Date.class);
@@ -32,12 +31,12 @@ public class DatePropertyXmlProcessor extends PropertyXmlProcessor {
         ACCEPT_CLASS_SET.add(Instant.class);
     }
 
-    public DatePropertyXmlProcessor(XmlProcessContext context, PropertyKiteElement element, Expression parentExpression) {
-        this(context, element, parentExpression, null);
+    public DatePropertyXmlProcessor(XmlProcessContext context, PropertyKiteElement element) {
+        this(context, element, null);
     }
 
-    public DatePropertyXmlProcessor(XmlProcessContext context, PropertyKiteElement element, Expression parentExpression, String pattern) {
-        super(context, element, parentExpression);
+    public DatePropertyXmlProcessor(XmlProcessContext context, PropertyKiteElement element, String pattern) {
+        super(context, element);
         dateFormat = new SimpleDateFormat(StringUtils.isBlank(pattern) ? "yyyy-MM-dd HH:mm:ss" : pattern);
     }
 

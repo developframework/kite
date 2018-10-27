@@ -1,21 +1,16 @@
 package com.github.developframework.kite.core.processor.xml;
 
-import com.github.developframework.expression.ArrayExpression;
-import com.github.developframework.expression.Expression;
-import com.github.developframework.expression.ObjectExpression;
 import com.github.developframework.kite.core.data.DataModel;
 import com.github.developframework.kite.core.dynamic.MapFunction;
 import com.github.developframework.kite.core.element.ArrayKiteElement;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.exception.InvalidArgumentsException;
 import com.github.developframework.kite.core.exception.KiteException;
+import com.github.developframework.kite.core.utils.KiteUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
-import org.dom4j.Node;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * 数组节点处理器
@@ -23,12 +18,12 @@ import java.util.Set;
  * @author qiuzhenhao
  */
 @Slf4j
-public class ArrayXmlProcessor extends ContainerXmlProcessor<ArrayKiteElement, Node> {
+public class ArrayXmlProcessor extends ContainerXmlProcessor<ArrayKiteElement, Element> {
 
     private Optional<MapFunction> mapFunctionOptional;
 
-    public ArrayXmlProcessor(XmlProcessContext xmlProcessContext, ArrayKiteElement element, Expression parentExpression) {
-        super(xmlProcessContext, element, parentExpression);
+    public ArrayXmlProcessor(XmlProcessContext xmlProcessContext, ArrayKiteElement element) {
+        super(xmlProcessContext, element);
         this.mapFunctionOptional = mapFunction(element.getMapFunctionValueOptional(), xmlProcessContext.getDataModel());
         if (mapFunctionOptional.isPresent()) {
             if (!element.isChildElementEmpty()) {
@@ -38,67 +33,49 @@ public class ArrayXmlProcessor extends ContainerXmlProcessor<ArrayKiteElement, N
     }
 
     @Override
-    protected boolean prepare(ContentXmlProcessor<? extends KiteElement, ? extends Node> parentProcessor) {
-        Optional<Object> valueOptional = xmlProcessContext.getDataModel().getData(expression);
+    protected boolean prepare(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
+        Optional<Object> valueOptional = getDataValue(parentProcessor);
         if (valueOptional.isPresent()) {
-            this.value = valueOptional.get();
-            this.node = ((Element) parentProcessor.getNode()).addElement(element.showNameXML());
+            this.value = KiteUtils.objectToArray(valueOptional.get(), element);
+            this.node = parentProcessor.getNode().addElement(element.showNameXML());
             return true;
         }
         if (!element.isNullHidden()) {
-            ((Element) parentProcessor.getNode()).addElement(element.showNameXML());
+            parentProcessor.getNode().addElement(element.showNameXML());
         }
         return false;
     }
 
     @Override
-    protected void handleCoreLogic(ContentXmlProcessor<? extends KiteElement, ? extends Node> parentProcessor) {
-        int size;
-        if (value.getClass().isArray()) {
-            size = ((Object[]) value).length;
-        } else if (value instanceof List<?>) {
-            size = ((List<?>) value).size();
-        } else if (value instanceof Set<?>) {
-            size = ((Set<?>) value).size();
-        } else {
-            throw new InvalidArgumentsException("data", expression.toString(), "Data must be array or List/Set type, the value class is " + value.getClass().getName());
-        }
-        for (int i = 0; i < size; i++) {
-            single(ArrayExpression.fromObject((ObjectExpression) expression, i), size);
-        }
-    }
-
-    /**
-     * 处理单一元素
-     * @param arrayExpression 表达式
-     * @param size 总数量
-     */
-    protected final void single(ArrayExpression arrayExpression, int size) {
-        if (element.isChildElementEmpty() || mapFunctionOptional.isPresent()) {
-            empty(arrayExpression);
-        } else {
-            final ObjectInArrayXmlProcessor childProcessor = new ObjectInArrayXmlProcessor(xmlProcessContext, element.getItemObjectElement(), arrayExpression, size);
-            childProcessor.process(this);
-//            ((Element)node).add(childProcessor.getNode());
+    protected void handleCoreLogic(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
+        Object[] array = (Object[]) value;
+        for (int i = 0; i < array.length; i++) {
+            if (element.isChildElementEmpty() || mapFunctionOptional.isPresent()) {
+                empty(array[i], i);
+            } else {
+                final ObjectInArrayXmlProcessor childProcessor = new ObjectInArrayXmlProcessor(xmlProcessContext, element.getItemObjectElement(), i, array.length);
+                childProcessor.setValue(array[i]);
+                childProcessor.process(this);
+            }
         }
     }
 
     /**
      * 空子标签处理
-     * @param arrayExpression 索引
+     * @param itemValue 数组元素值
      */
-    private void empty(final ArrayExpression arrayExpression) {
-        final Optional<Object> objectOptional = xmlProcessContext.getDataModel().getData(arrayExpression);
-        if (!objectOptional.isPresent()) {
-//            node.addNull();
+    @SuppressWarnings("unchecked")
+    private void empty(Object itemValue, int index) {
+        if (itemValue == null) {
+            node.addElement(element.getXmlItemName());
             return;
         }
-        Object object = objectOptional.get();
 
         if (mapFunctionOptional.isPresent()) {
-            object = mapFunctionOptional.get().apply(object, arrayExpression.getIndex());
+            itemValue = mapFunctionOptional.get().apply(itemValue, index);
         }
-        ((Element)node).addElement(element.getXmlItemName()).addText(object.toString());
+
+        node.addElement(element.getXmlItemName()).addText(itemValue.toString());
     }
 
     /**

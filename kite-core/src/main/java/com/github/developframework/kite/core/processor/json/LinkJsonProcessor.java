@@ -1,16 +1,13 @@
 package com.github.developframework.kite.core.processor.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.developframework.expression.ArrayExpression;
-import com.github.developframework.expression.Expression;
-import com.github.developframework.expression.ObjectExpression;
 import com.github.developframework.kite.core.element.ContentKiteElement;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.element.LinkKiteElement;
-import com.github.developframework.kite.core.exception.InvalidArgumentsException;
 import com.github.developframework.kite.core.exception.LinkSizeNotEqualException;
+import com.github.developframework.kite.core.utils.KiteUtils;
+import lombok.Setter;
 
-import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -20,28 +17,23 @@ import java.util.Optional;
  */
 public class LinkJsonProcessor extends ObjectJsonProcessor {
 
-    public LinkJsonProcessor(JsonProcessContext jsonProcessContext, LinkKiteElement element, Expression parentExpression) {
-        super(jsonProcessContext, element, parentExpression);
+    @Setter
+    private int index;
+
+    public LinkJsonProcessor(JsonProcessContext jsonProcessContext, LinkKiteElement element) {
+        super(jsonProcessContext, element);
     }
 
     @Override
     protected boolean prepare(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
-        final ObjectInArrayJsonProcessor objectInArrayProcessor = (ObjectInArrayJsonProcessor) parentProcessor;
-        Optional<Object> valueOptional = jsonProcessContext.getDataModel().getData(expression);
+        index = ((ObjectInArrayJsonProcessor) parentProcessor).getIndex();
+        Optional<Object> valueOptional = getDataValue(parentProcessor);
         if (valueOptional.isPresent()) {
-            this.value = valueOptional.get();
-            int size;
-            if (value.getClass().isArray()) {
-                size = ((Object[]) value).length;
-            } else if (value instanceof Collection<?>) {
-                size = ((Collection<?>) value).size();
-            } else {
-                throw new InvalidArgumentsException("data", expression.toString(), "Data must be array or List type.");
-            }
-
-            if (size != objectInArrayProcessor.getSize()) {
+            Object[] array = KiteUtils.objectToArray(valueOptional.get(), element);
+            if (array.length != ((ObjectInArrayJsonProcessor) parentProcessor).getSize()) {
                 throw new LinkSizeNotEqualException(element.getNamespace(), element.getTemplateId());
             }
+            value = array[index];
             return true;
         }
         if (!element.isNullHidden()) {
@@ -52,11 +44,9 @@ public class LinkJsonProcessor extends ObjectJsonProcessor {
 
     @Override
     protected void handleCoreLogic(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
-        final ObjectInArrayJsonProcessor objectInArrayProcessor = (ObjectInArrayJsonProcessor) parentProcessor;
-        final ArrayExpression arrayExpression = (ArrayExpression) objectInArrayProcessor.getExpression();
-        ArrayExpression targetExpression = new ArrayExpression(((ObjectExpression) expression).getPropertyName(), arrayExpression.getIndex());
         ContentKiteElement contentElement = ((LinkKiteElement) element).createProxyContentElement();
-        JsonProcessor<? extends KiteElement, ? extends JsonNode> nextProcessor = contentElement.createJsonProcessor(jsonProcessContext, objectInArrayProcessor.node, targetExpression);
+        JsonProcessor<? extends KiteElement, ? extends JsonNode> nextProcessor = contentElement.createJsonProcessor(jsonProcessContext, ((ObjectInArrayJsonProcessor) parentProcessor).node);
+        nextProcessor.setValue(value);
         nextProcessor.process(parentProcessor);
     }
 }

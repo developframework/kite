@@ -2,7 +2,6 @@ package com.github.developframework.kite.core.processor.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.element.ObjectKiteElement;
 
@@ -13,8 +12,8 @@ import com.github.developframework.kite.core.element.ObjectKiteElement;
  */
 public class VirtualObjectJsonProcessor extends ObjectJsonProcessor {
 
-    public VirtualObjectJsonProcessor(JsonProcessContext context, ObjectKiteElement element, Expression parentExpression) {
-        super(context, element, parentExpression);
+    public VirtualObjectJsonProcessor(JsonProcessContext context, ObjectKiteElement element) {
+        super(context, element);
     }
 
     @Override

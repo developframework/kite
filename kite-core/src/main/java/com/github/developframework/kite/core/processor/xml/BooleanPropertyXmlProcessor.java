@@ -1,6 +1,5 @@
 package com.github.developframework.kite.core.processor.xml;
 
-import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.element.PropertyKiteElement;
 
 import java.util.HashSet;
@@ -13,7 +12,7 @@ import java.util.Set;
 public class BooleanPropertyXmlProcessor extends PropertyXmlProcessor {
 
     /* 允许类型列表 */
-    private static final Set<Class<?>> ACCEPT_CLASS_SET = new HashSet<>(8);
+    private static final Set<Class<?>> ACCEPT_CLASS_SET = new HashSet<>();
 
     static {
         ACCEPT_CLASS_SET.add(boolean.class);
@@ -26,8 +25,8 @@ public class BooleanPropertyXmlProcessor extends PropertyXmlProcessor {
         ACCEPT_CLASS_SET.add(Short.class);
     }
 
-    public BooleanPropertyXmlProcessor(XmlProcessContext xmlProcessContext, PropertyKiteElement element, Expression parentExpression) {
-        super(xmlProcessContext, element, parentExpression);
+    public BooleanPropertyXmlProcessor(XmlProcessContext xmlProcessContext, PropertyKiteElement element) {
+        super(xmlProcessContext, element);
     }
 
     @Override
@@ -39,13 +38,13 @@ public class BooleanPropertyXmlProcessor extends PropertyXmlProcessor {
     protected void handle(Class<?> clazz, Object value) {
         boolean v;
         if (clazz == Boolean.class) {
-            v = ((Boolean) value).booleanValue();
+            v = ((Boolean) value);
         } else if (clazz == Integer.class) {
-            v = ((Integer) value).intValue() != 0;
+            v = ((Integer) value) != 0;
         } else if (clazz == Long.class) {
-            v = ((Long) value).longValue() != 0;
+            v = ((Long) value) != 0;
         } else if (clazz == Short.class) {
-            v = ((Short) value).shortValue() != 0;
+            v = ((Short) value) != 0;
         } else {
             return;
         }

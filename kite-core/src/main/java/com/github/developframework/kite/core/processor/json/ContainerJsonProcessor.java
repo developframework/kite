@@ -1,7 +1,6 @@
 package com.github.developframework.kite.core.processor.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.element.ContainerKiteElement;
 
 /**
@@ -11,7 +10,7 @@ import com.github.developframework.kite.core.element.ContainerKiteElement;
  */
 public abstract class ContainerJsonProcessor<ELEMENT extends ContainerKiteElement, NODE extends JsonNode> extends ContentJsonProcessor<ELEMENT, NODE> {
 
-    public ContainerJsonProcessor(JsonProcessContext jsonProcessContext, ELEMENT element, Expression parentExpression) {
-        super(jsonProcessContext, element, parentExpression);
+    public ContainerJsonProcessor(JsonProcessContext jsonProcessContext, ELEMENT element) {
+        super(jsonProcessContext, element);
     }
 }

@@ -2,7 +2,6 @@ package com.github.developframework.kite.core.element;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.processor.json.JsonProcessContext;
@@ -14,7 +13,7 @@ import com.github.developframework.kite.core.processor.xml.XmlProcessor;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Node;
+import org.dom4j.Element;
 
 /**
  * 关联节点
@@ -34,13 +33,13 @@ public class RelevanceKiteElement extends ArrayKiteElement {
     }
 
     @Override
-    public JsonProcessor<? extends KiteElement, ? extends JsonNode> createJsonProcessor(JsonProcessContext context, ObjectNode parentNode, Expression parentExpression) {
-        return new RelevanceJsonProcessor(context, this, parentExpression);
+    public JsonProcessor<? extends KiteElement, ? extends JsonNode> createJsonProcessor(JsonProcessContext context, ObjectNode parentNode) {
+        return new RelevanceJsonProcessor(context, this);
     }
 
     @Override
-    public XmlProcessor<? extends KiteElement, ? extends Node> createXmlProcessor(XmlProcessContext context, Node parentNode, Expression parentExpression) {
-        return new RelevanceXmlProcessor(context, this, parentExpression);
+    public XmlProcessor<? extends KiteElement, ? extends Element> createXmlProcessor(XmlProcessContext context, Element parentNode) {
+        return new RelevanceXmlProcessor(context, this);
     }
 
     /**
@@ -53,6 +52,28 @@ public class RelevanceKiteElement extends ArrayKiteElement {
             this.relevanceType = RelevanceType.valueOf(relevanceTypeValue.toUpperCase());
         } else {
             this.relevanceType = RelevanceType.MULTIPLE;
+        }
+    }
+
+    public ContentKiteElement createProxyObjectElement() {
+        if (isChildElementEmpty()) {
+            // 如果没有子节点，视为普通属性节点处理
+            return new ProxyNormalPropertyKiteElement(configuration, namespace, templateId, dataDefinition, alias);
+        } else {
+            // 如果有子节点，视为数组节点处理
+            return new ObjectKiteElement(configuration, this, dataDefinition);
+        }
+    }
+
+    public ContentKiteElement createProxyArrayElement() {
+        if (isChildElementEmpty()) {
+            // 如果没有子节点，视为普通属性节点处理
+            return new ProxyNormalPropertyKiteElement(configuration, namespace, templateId, dataDefinition, alias);
+        } else {
+            // 如果有子节点，视为数组节点处理
+            ArrayKiteElement arrayKiteElement = new ArrayKiteElement(configuration, this, dataDefinition);
+            arrayKiteElement.setXmlItemName(getXmlItemName());
+            return arrayKiteElement;
         }
     }
 

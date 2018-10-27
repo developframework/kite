@@ -2,7 +2,6 @@ package com.github.developframework.kite.core.element;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.processor.json.JsonProcessContext;
@@ -11,7 +10,7 @@ import com.github.developframework.kite.core.processor.json.VirtualObjectJsonPro
 import com.github.developframework.kite.core.processor.xml.VirtualObjectXmlProcessor;
 import com.github.developframework.kite.core.processor.xml.XmlProcessContext;
 import com.github.developframework.kite.core.processor.xml.XmlProcessor;
-import org.dom4j.Node;
+import org.dom4j.Element;
 
 /**
  * 虚拟对象节点
@@ -24,12 +23,12 @@ public class VirtualObjectKiteElement extends ObjectKiteElement {
     }
 
     @Override
-    public JsonProcessor<? extends KiteElement, ? extends JsonNode> createJsonProcessor(JsonProcessContext context, ObjectNode parentNode, Expression parentExpression) {
-        return new VirtualObjectJsonProcessor(context, this, parentExpression);
+    public JsonProcessor<? extends KiteElement, ? extends JsonNode> createJsonProcessor(JsonProcessContext context, ObjectNode parentNode) {
+        return new VirtualObjectJsonProcessor(context, this);
     }
 
     @Override
-    public XmlProcessor<? extends KiteElement, ? extends Node> createXmlProcessor(XmlProcessContext context, Node parentNode, Expression parentExpression) {
-        return new VirtualObjectXmlProcessor(context, this, parentExpression);
+    public XmlProcessor<? extends KiteElement, ? extends Element> createXmlProcessor(XmlProcessContext context, Element parentNode) {
+        return new VirtualObjectXmlProcessor(context, this);
     }
 }

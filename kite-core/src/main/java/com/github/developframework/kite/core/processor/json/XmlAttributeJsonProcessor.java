@@ -1,7 +1,6 @@
 package com.github.developframework.kite.core.processor.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.element.XmlAttributeElement;
 
@@ -12,8 +11,8 @@ import com.github.developframework.kite.core.element.XmlAttributeElement;
 public class XmlAttributeJsonProcessor extends ContentJsonProcessor<XmlAttributeElement, JsonNode>{
 
 
-    public XmlAttributeJsonProcessor(JsonProcessContext jsonProcessContext, XmlAttributeElement element, Expression parentExpression) {
-        super(jsonProcessContext, element, parentExpression);
+    public XmlAttributeJsonProcessor(JsonProcessContext jsonProcessContext, XmlAttributeElement element) {
+        super(jsonProcessContext, element);
     }
 
     @Override

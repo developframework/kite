@@ -1,7 +1,6 @@
 package com.github.developframework.kite.core.processor.json;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.element.PropertyKiteElement;
 
 import java.math.BigDecimal;
@@ -12,8 +11,8 @@ import java.math.BigDecimal;
  */
 public class NormalPropertyJsonProcessor extends PropertyJsonProcessor {
 
-    public NormalPropertyJsonProcessor(JsonProcessContext context, PropertyKiteElement element, Expression parentExpression) {
-        super(context, element, parentExpression);
+    public NormalPropertyJsonProcessor(JsonProcessContext context, PropertyKiteElement element) {
+        super(context, element);
     }
 
     @Override

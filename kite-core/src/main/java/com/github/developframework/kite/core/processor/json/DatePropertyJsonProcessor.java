@@ -1,12 +1,10 @@
 package com.github.developframework.kite.core.processor.json;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.element.PropertyKiteElement;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.*;
 import java.util.HashSet;
 import java.util.Objects;
@@ -16,11 +14,14 @@ import java.util.Set;
  * 日期时间类型属性节点处理器
  * @author qiuzhenhao
  */
-public class DatePropertyJsonProcessor extends PropertyJsonProcessor{
+public class DatePropertyJsonProcessor extends PropertyJsonProcessor {
 
-    private DateFormat dateFormat;
     // 支持的类型集合
-    private static final Set<Class<?>> ACCEPT_CLASS_SET = new HashSet<>(9);
+    private static final Set<Class<?>> ACCEPT_CLASS_SET = new HashSet<>();
+
+    private static final String DEFAULT_PATTERN = "yyyy-MM-dd HH:mm:ss";
+
+    private String pattern;
 
     static {
         ACCEPT_CLASS_SET.add(java.util.Date.class);
@@ -34,14 +35,13 @@ public class DatePropertyJsonProcessor extends PropertyJsonProcessor{
         ACCEPT_CLASS_SET.add(Instant.class);
     }
 
-    public DatePropertyJsonProcessor(JsonProcessContext context, PropertyKiteElement element, Expression parentExpression) {
-        this(context, element, parentExpression, null);
+    public DatePropertyJsonProcessor(JsonProcessContext context, PropertyKiteElement element) {
+        this(context, element, null);
     }
 
-    public DatePropertyJsonProcessor(JsonProcessContext context, PropertyKiteElement element, Expression parentExpression, String pattern) {
-        super(context, element, parentExpression);
-        dateFormat = new SimpleDateFormat(StringUtils.isBlank(pattern) ? "yyyy-MM-dd HH:mm:ss" : pattern);
-
+    public DatePropertyJsonProcessor(JsonProcessContext context, PropertyKiteElement element, String pattern) {
+        super(context, element);
+        this.pattern = StringUtils.isBlank(pattern) ? DEFAULT_PATTERN : pattern;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class DatePropertyJsonProcessor extends PropertyJsonProcessor{
             parentNode.putNull(showName);
             return;
         }
-        parentNode.put(showName, dateFormat.format(date));
+        parentNode.put(showName, DateFormatUtils.format(date, pattern));
     }
 
     protected java.util.Date transformDate(Class<?> clazz, Object value) {

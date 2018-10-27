@@ -1,7 +1,6 @@
 package com.github.developframework.kite.core.processor.json;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.element.PropertyKiteElement;
 
 import java.util.Objects;
@@ -12,8 +11,8 @@ import java.util.Objects;
  */
 public class UnixTimestampPropertyJsonProcessor extends DatePropertyJsonProcessor {
 
-    public UnixTimestampPropertyJsonProcessor(JsonProcessContext context, PropertyKiteElement element, Expression parentExpression) {
-        super(context, element, parentExpression);
+    public UnixTimestampPropertyJsonProcessor(JsonProcessContext context, PropertyKiteElement element) {
+        super(context, element);
     }
 
     @Override

@@ -101,7 +101,7 @@ class DefaultJsonProducer implements JsonProducer{
 
     private ObjectNode constructRootObjectNodeTree(JsonProcessContext jsonProcessContext, Template template, Object value) {
         ObjectNode rootNode = kiteConfiguration.getObjectMapper().createObjectNode();
-        TemplateJsonProcessor templateProcessor = new TemplateJsonProcessor(jsonProcessContext, template, template.getDataDefinition().getExpression());
+        TemplateJsonProcessor templateProcessor = new TemplateJsonProcessor(jsonProcessContext, template);
         templateProcessor.setValue(value);
         templateProcessor.setNode(rootNode);
         templateProcessor.process(null);

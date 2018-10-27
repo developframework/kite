@@ -2,12 +2,10 @@ package com.github.developframework.kite.core.processor.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.dynamic.PropertyConverter;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.element.PropertyKiteElement;
-import com.github.developframework.kite.core.exception.InvalidArgumentsException;
-import com.github.developframework.kite.core.exception.KiteException;
+import com.github.developframework.kite.core.utils.KiteUtils;
 
 import java.util.Optional;
 
@@ -18,16 +16,20 @@ import java.util.Optional;
  */
 public abstract class PropertyJsonProcessor extends ContentJsonProcessor<PropertyKiteElement, ObjectNode> {
 
-    public PropertyJsonProcessor(JsonProcessContext jsonProcessContext, PropertyKiteElement element, Expression parentExpression) {
-        super(jsonProcessContext, element, parentExpression);
+    public PropertyJsonProcessor(JsonProcessContext jsonProcessContext, PropertyKiteElement element) {
+        super(jsonProcessContext, element);
     }
 
     @Override
     protected boolean prepare(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
-        Optional<Object> valueOptional = jsonProcessContext.getDataModel().getData(expression);
+        Optional<Object> valueOptional = getDataValue(parentProcessor);
         if (valueOptional.isPresent()) {
-            this.value = valueOptional.get();
-            this.node = (ObjectNode) parentProcessor.getNode();
+            value = valueOptional.get();
+            if (element.getConverterValue().isPresent()) {
+                PropertyConverter converter = KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), element.getConverterValue().get(), PropertyConverter.class, "converter");
+                value = converter.convert(value);
+            }
+            node = (ObjectNode) parentProcessor.getNode();
             return true;
         }
         if (!element.isNullHidden()) {
@@ -38,36 +40,10 @@ public abstract class PropertyJsonProcessor extends ContentJsonProcessor<Propert
 
     @Override
     protected void handleCoreLogic(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
-        final Object convertValue = getConvertValue(value);
-        Class<?> convertValueClass = convertValue.getClass();
-        if (support(convertValueClass)) {
-            handle(this.node, convertValueClass, convertValue, element.showNameJSON());
+        Class<?> valueClass = value.getClass();
+        if (support(valueClass)) {
+            handle(node, valueClass, value, element.showNameJSON());
         }
-    }
-
-    /**
-     * 获取经过converter转化后的值
-     *
-     * @return
-     */
-    protected Object getConvertValue(Object dataValue) {
-        return element.getConverterValue().map(converterValue -> {
-            Optional<Object> converterOptional = jsonProcessContext.getDataModel().getData(converterValue);
-            Object converter = converterOptional.orElseGet(() -> {
-                try {
-                    return Class.forName(converterValue).newInstance();
-                } catch (ClassNotFoundException e) {
-                    throw new InvalidArgumentsException("converter", converterValue, "Class not found, and it's also not a expression.");
-                } catch (IllegalAccessException | InstantiationException e) {
-                    throw new KiteException("Can't new converter instance.");
-                }
-            });
-            if (converter instanceof PropertyConverter) {
-                return ((PropertyConverter) converter).convert(dataValue);
-            } else {
-                throw new InvalidArgumentsException("converter", converterValue, "It's not a PropertyConverter instance.");
-            }
-        }).orElse(dataValue);
     }
 
     /**

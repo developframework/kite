@@ -1,10 +1,11 @@
 package com.github.developframework.kite.core.processor.xml;
 
-import com.github.developframework.expression.Expression;
+import com.github.developframework.kite.core.dynamic.PropertyConverter;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.element.PrototypeKiteElement;
+import com.github.developframework.kite.core.exception.KiteException;
+import com.github.developframework.kite.core.utils.KiteUtils;
 import org.dom4j.Element;
-import org.dom4j.Node;
 
 import java.util.Optional;
 
@@ -13,49 +14,31 @@ import java.util.Optional;
  *
  * @author qiuzhenhao
  */
-public class PrototypeXmlProcessor extends ContentXmlProcessor<PrototypeKiteElement, Node>{
+public class PrototypeXmlProcessor extends ContentXmlProcessor<PrototypeKiteElement, Element> {
 
-    public PrototypeXmlProcessor(XmlProcessContext xmlProcessContext, PrototypeKiteElement element, Expression parentExpression) {
-        super(xmlProcessContext, element, parentExpression);
+    public PrototypeXmlProcessor(XmlProcessContext xmlProcessContext, PrototypeKiteElement element) {
+        super(xmlProcessContext, element);
     }
 
     @Override
-    protected boolean prepare(ContentXmlProcessor<? extends KiteElement, ? extends Node> parentProcessor) {
-        Optional<Object> valueOptional = xmlProcessContext.getDataModel().getData(expression);
+    protected boolean prepare(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
+        Optional<Object> valueOptional = getDataValue(parentProcessor);
         if(valueOptional.isPresent()) {
-            this.value = valueOptional.get();
+            value = valueOptional.get();
+            if (element.getConverterValue().isPresent()) {
+                PropertyConverter converter = KiteUtils.getComponentInstance(xmlProcessContext.getDataModel(), element.getConverterValue().get(), PropertyConverter.class, "converter");
+                value = converter.convert(value);
+            }
             return true;
         }
         if (!element.isNullHidden()) {
-            ((Element)node).addElement(element.showNameXML());
+            node.addElement(element.showNameXML());
         }
         return false;
     }
 
     @Override
-    protected void handleCoreLogic(ContentXmlProcessor<? extends KiteElement, ? extends Node> parentProcessor) {
-//        // 经过converter转化后的值
-//        Optional<Object> convertValueOptional = element.getConverterValue().map(converterValue -> {
-//            Optional<Object> converterOptional = xmlProcessContext.getDataModel().getData(converterValue);
-//            Object obj = converterOptional.orElseGet(() -> {
-//                try {
-//                    return Class.forName(converterValue).newInstance();
-//                } catch (ClassNotFoundException e) {
-//                    throw new InvalidArgumentsException("converter", converterValue, "Class not found, and it's also not a expression.");
-//                } catch (IllegalAccessException | InstantiationException e) {
-//                    throw new KiteException("Can't new converter instance.");
-//                }
-//            });
-//            if (obj instanceof PropertyConverter) {
-//                return ((PropertyConverter) obj).convert(value);
-//            } else {
-//                throw new InvalidArgumentsException("converter", converterValue, "It's not a PropertyConverter instance.");
-//            }
-//        });
-//        final Object convertValue = convertValueOptional.orElse(value);
-//
-//        ObjectMapper objectMapper = xmlProcessContext.getConfiguration().getObjectMapper();
-//        JsonNode jsonNode = objectMapper.valueToTree(convertValue);
-//        node.set(element.showNameXML(), jsonNode);
+    protected void handleCoreLogic(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
+        throw new KiteException("xml not support prototype");
     }
 }

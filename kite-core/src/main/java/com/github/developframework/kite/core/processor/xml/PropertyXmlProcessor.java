@@ -1,13 +1,10 @@
 package com.github.developframework.kite.core.processor.xml;
 
-import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.dynamic.PropertyConverter;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.element.PropertyKiteElement;
-import com.github.developframework.kite.core.exception.InvalidArgumentsException;
-import com.github.developframework.kite.core.exception.KiteException;
+import com.github.developframework.kite.core.utils.KiteUtils;
 import org.dom4j.Element;
-import org.dom4j.Node;
 
 import java.util.Iterator;
 import java.util.Optional;
@@ -19,48 +16,33 @@ import java.util.Optional;
  */
 public abstract class PropertyXmlProcessor extends ContainerXmlProcessor<PropertyKiteElement, Element> {
 
-    public PropertyXmlProcessor(XmlProcessContext xmlProcessContext, PropertyKiteElement element, Expression parentExpression) {
-        super(xmlProcessContext, element, parentExpression);
+    public PropertyXmlProcessor(XmlProcessContext xmlProcessContext, PropertyKiteElement element) {
+        super(xmlProcessContext, element);
     }
 
     @Override
-    protected boolean prepare(ContentXmlProcessor<? extends KiteElement, ? extends Node> parentProcessor) {
-        Optional<Object> valueOptional = xmlProcessContext.getDataModel().getData(expression);
+    protected boolean prepare(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
+        Optional<Object> valueOptional = getDataValue(parentProcessor);
         if (valueOptional.isPresent()) {
-            this.value = valueOptional.get();
-            this.node = ((Element) parentProcessor.getNode()).addElement(element.showNameXML());
+            value = valueOptional.get();
+            if (element.getConverterValue().isPresent()) {
+                PropertyConverter converter = KiteUtils.getComponentInstance(xmlProcessContext.getDataModel(), element.getConverterValue().get(), PropertyConverter.class, "converter");
+                value = converter.convert(value);
+            }
+            this.node = parentProcessor.getNode().addElement(element.showNameXML());
             return true;
         }
         if (!element.isNullHidden()) {
-            this.node = ((Element) parentProcessor.getNode()).addElement(element.showNameXML());
+            this.node = parentProcessor.getNode().addElement(element.showNameXML());
         }
         return false;
     }
 
     @Override
-    protected void handleCoreLogic(ContentXmlProcessor<? extends KiteElement, ? extends Node> parentProcessor) {
-        // 经过converter转化后的值
-        Optional<Object> convertValueOptional = element.getConverterValue().map(converterValue -> {
-            Optional<Object> converterOptional = xmlProcessContext.getDataModel().getData(converterValue);
-            Object obj = converterOptional.orElseGet(() -> {
-                try {
-                    return Class.forName(converterValue).newInstance();
-                } catch (ClassNotFoundException e) {
-                    throw new InvalidArgumentsException("converter", converterValue, "Class not found, and it's also not a expression.");
-                } catch (IllegalAccessException | InstantiationException e) {
-                    throw new KiteException("Can't new converter instance.");
-                }
-            });
-            if (obj instanceof PropertyConverter) {
-                return ((PropertyConverter) obj).convert(value);
-            } else {
-                throw new InvalidArgumentsException("converter", converterValue, "It's not a PropertyConverter instance.");
-            }
-        });
-        final Object convertValue = convertValueOptional.orElse(value);
-        Class<?> convertValueClass = convertValue.getClass();
-        if (support(convertValueClass)) {
-            handle(convertValueClass, convertValue);
+    protected void handleCoreLogic(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
+        Class<?> valueClass = value.getClass();
+        if (support(valueClass)) {
+            handle(valueClass, value);
         }
     }
 
@@ -92,7 +74,7 @@ public abstract class PropertyXmlProcessor extends ContainerXmlProcessor<Propert
         }
         for (Iterator<KiteElement> iterator = element.childElementIterator(); iterator.hasNext();) {
             final KiteElement childKiteElement = iterator.next();
-            final XmlProcessor<? extends KiteElement, ? extends Node> childXmlProcessor = childKiteElement.createXmlProcessor(xmlProcessContext, node, expression);
+            final XmlProcessor<? extends KiteElement, ? extends Element> childXmlProcessor = childKiteElement.createXmlProcessor(xmlProcessContext, node);
             childXmlProcessor.process(this);
         }
     }

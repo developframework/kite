@@ -14,7 +14,7 @@ public class ArrayTemplateJsonProcessor extends ArrayJsonProcessor {
 
 
     public ArrayTemplateJsonProcessor(JsonProcessContext processContext, Template template, ArrayKiteElement arrayElement) {
-        super(processContext, arrayElement, template.getDataDefinition().getExpression());
+        super(processContext, arrayElement);
         element.copyChildElement(template);
     }
 

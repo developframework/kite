@@ -2,7 +2,6 @@ package com.github.developframework.kite.core.element;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.processor.json.IfJsonProcessor;
 import com.github.developframework.kite.core.processor.json.JsonProcessContext;
@@ -12,7 +11,7 @@ import com.github.developframework.kite.core.processor.xml.XmlProcessContext;
 import com.github.developframework.kite.core.processor.xml.XmlProcessor;
 import lombok.Getter;
 import lombok.Setter;
-import org.dom4j.Node;
+import org.dom4j.Element;
 
 import java.util.Optional;
 
@@ -34,13 +33,13 @@ public class IfKiteElement extends ContainerFunctionalKiteElement {
     }
 
     @Override
-    public JsonProcessor<? extends KiteElement, ? extends JsonNode> createJsonProcessor(JsonProcessContext context, ObjectNode parentNode, Expression parentExpression) {
-        return new IfJsonProcessor(context, this, parentNode, parentExpression);
+    public JsonProcessor<? extends KiteElement, ? extends JsonNode> createJsonProcessor(JsonProcessContext context, ObjectNode parentNode) {
+        return new IfJsonProcessor(context, this, parentNode);
     }
 
     @Override
-    public XmlProcessor<? extends KiteElement, ? extends Node> createXmlProcessor(XmlProcessContext context, Node parentNode, Expression parentExpression) {
-        return new IfXmlProcessor(context, this, parentNode, parentExpression);
+    public XmlProcessor<? extends KiteElement, ? extends Element> createXmlProcessor(XmlProcessContext context, Element parentNode) {
+        return new IfXmlProcessor(context, this, parentNode);
     }
 
     public Optional<ElseKiteElement> getElseElement() {

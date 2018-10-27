@@ -1,7 +1,6 @@
 package com.github.developframework.kite.core.processor.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.element.ExtendPortKiteElement;
 import com.github.developframework.kite.core.element.KiteElement;
 
@@ -11,8 +10,8 @@ import com.github.developframework.kite.core.element.KiteElement;
  */
 public class ExtendPortJsonProcessor extends FunctionalJsonProcessor<ExtendPortKiteElement, JsonNode> {
 
-    public ExtendPortJsonProcessor(JsonProcessContext jsonProcessContext, ExtendPortKiteElement element, JsonNode node, Expression parentExpression) {
-        super(jsonProcessContext, element, node, parentExpression);
+    public ExtendPortJsonProcessor(JsonProcessContext jsonProcessContext, ExtendPortKiteElement element, JsonNode node) {
+        super(jsonProcessContext, element, node);
     }
 
     @Override

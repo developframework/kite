@@ -3,21 +3,17 @@ package com.github.developframework.kite.core.processor.json;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.expression.ArrayExpression;
-import com.github.developframework.expression.Expression;
-import com.github.developframework.expression.ObjectExpression;
 import com.github.developframework.kite.core.data.DataModel;
 import com.github.developframework.kite.core.dynamic.MapFunction;
 import com.github.developframework.kite.core.element.ArrayKiteElement;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.exception.InvalidArgumentsException;
 import com.github.developframework.kite.core.exception.KiteException;
+import com.github.developframework.kite.core.utils.KiteUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * 数组节点处理器
@@ -29,8 +25,8 @@ public class ArrayJsonProcessor extends ContainerJsonProcessor<ArrayKiteElement,
 
     protected Optional<MapFunction> mapFunctionOptional;
 
-    public ArrayJsonProcessor(JsonProcessContext jsonProcessContext, ArrayKiteElement element, Expression parentExpression) {
-        super(jsonProcessContext, element, parentExpression);
+    public ArrayJsonProcessor(JsonProcessContext jsonProcessContext, ArrayKiteElement element) {
+        super(jsonProcessContext, element);
         this.mapFunctionOptional = mapFunction(element.getMapFunctionValueOptional(), jsonProcessContext.getDataModel());
         if (mapFunctionOptional.isPresent()) {
             if (!element.isChildElementEmpty()) {
@@ -41,9 +37,9 @@ public class ArrayJsonProcessor extends ContainerJsonProcessor<ArrayKiteElement,
 
     @Override
     protected boolean prepare(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
-        Optional<Object> valueOptional = jsonProcessContext.getDataModel().getData(expression);
+        Optional<Object> valueOptional = getDataValue(parentProcessor);
         if (valueOptional.isPresent()) {
-            this.value = valueOptional.get();
+            this.value = KiteUtils.objectToArray(valueOptional.get(), element);
             this.node = ((ObjectNode) parentProcessor.getNode()).putArray(element.showNameJSON());
             return true;
         }
@@ -55,75 +51,56 @@ public class ArrayJsonProcessor extends ContainerJsonProcessor<ArrayKiteElement,
 
     @Override
     protected void handleCoreLogic(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
-        int size;
-        if (value.getClass().isArray()) {
-            size = ((Object[]) value).length;
-        } else if (value instanceof List<?>) {
-            size = ((List<?>) value).size();
-        } else if (value instanceof Set<?>) {
-            size = ((Set<?>) value).size();
-        } else {
-            throw new InvalidArgumentsException("data", expression.toString(), "Data must be array or List/Set type, the value class is " + value.getClass().getName());
-        }
-        for (int i = 0; i < size; i++) {
-            single(ArrayExpression.fromObject((ObjectExpression) expression, i), size);
-        }
-    }
-
-    /**
-     * 处理单一元素
-     * @param arrayExpression 表达式
-     * @param size 总数量
-     */
-    protected final void single(ArrayExpression arrayExpression, int size) {
-        if (element.isChildElementEmpty() || mapFunctionOptional.isPresent()) {
-            empty(arrayExpression);
-        } else {
-            final ObjectInArrayJsonProcessor childProcessor = new ObjectInArrayJsonProcessor(jsonProcessContext, element.getItemObjectElement(), arrayExpression, size);
-            childProcessor.process(this);
-            node.add(childProcessor.getNode());
+        Object[] array = (Object[]) value;
+        for (int i = 0; i < array.length; i++) {
+            if (element.isChildElementEmpty() || mapFunctionOptional.isPresent()) {
+                empty(array[i], i);
+            } else {
+                final ObjectInArrayJsonProcessor childProcessor = new ObjectInArrayJsonProcessor(jsonProcessContext, element.getItemObjectElement(), i, array.length);
+                childProcessor.setValue(array[i]);
+                childProcessor.process(this);
+                node.add(childProcessor.getNode());
+            }
         }
     }
 
     /**
      * 空子标签处理
-     * @param arrayExpression 数组表达式
+     * @param itemValue 数组元素值
      */
     @SuppressWarnings("unchecked")
-    private void empty(ArrayExpression arrayExpression) {
-        final Optional<Object> objectOptional = jsonProcessContext.getDataModel().getData(arrayExpression);
-        if (!objectOptional.isPresent()) {
+    private void empty(Object itemValue, int index) {
+        if (itemValue == null) {
             node.addNull();
             return;
         }
-        Object object = objectOptional.get();
 
         if (mapFunctionOptional.isPresent()) {
-            object = mapFunctionOptional.get().apply(object, arrayExpression.getIndex());
+            itemValue = mapFunctionOptional.get().apply(itemValue, index);
         }
 
-        if (object instanceof String) {
-            node.add((String) object);
-        } else if (object instanceof Integer) {
-            node.add((Integer) object);
-        } else if (object instanceof Long) {
-            node.add((Long) object);
-        } else if (object instanceof Short) {
-            node.add((Short) object);
-        } else if (object instanceof Boolean) {
-            node.add((Boolean) object);
-        } else if (object instanceof Float) {
-            node.add((Float) object);
-        } else if (object instanceof Double) {
-            node.add((Double) object);
-        } else if (object instanceof BigDecimal) {
-            node.add((BigDecimal) object);
-        } else if (object instanceof Character) {
-            node.add((Character) object);
-        } else if (object instanceof Byte) {
-            node.add((Byte) object);
+        if (itemValue instanceof String) {
+            node.add((String) itemValue);
+        } else if (itemValue instanceof Integer) {
+            node.add((Integer) itemValue);
+        } else if (itemValue instanceof Long) {
+            node.add((Long) itemValue);
+        } else if (itemValue instanceof Short) {
+            node.add((Short) itemValue);
+        } else if (itemValue instanceof Boolean) {
+            node.add((Boolean) itemValue);
+        } else if (itemValue instanceof Float) {
+            node.add((Float) itemValue);
+        } else if (itemValue instanceof Double) {
+            node.add((Double) itemValue);
+        } else if (itemValue instanceof BigDecimal) {
+            node.add((BigDecimal) itemValue);
+        } else if (itemValue instanceof Character) {
+            node.add((Character) itemValue);
+        } else if (itemValue instanceof Byte) {
+            node.add((Byte) itemValue);
         } else {
-            node.add(object.toString());
+            node.add(itemValue.toString());
         }
     }
 

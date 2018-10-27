@@ -2,7 +2,6 @@ package com.github.developframework.kite.core.processor.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.element.DuplicateTemplateKiteElement;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.element.Template;
@@ -16,8 +15,8 @@ import java.util.Optional;
  */
 public class TemplateJsonProcessor extends ObjectJsonProcessor {
 
-    public TemplateJsonProcessor(JsonProcessContext jsonProcessContext, Template template, Expression parentExpression) {
-        super(jsonProcessContext, template, parentExpression);
+    public TemplateJsonProcessor(JsonProcessContext jsonProcessContext, Template template) {
+        super(jsonProcessContext, template);
     }
 
     @Override
@@ -37,12 +36,13 @@ public class TemplateJsonProcessor extends ObjectJsonProcessor {
             final ExtendPortJsonProcessor.ExtendCallback callback = parentProcessorInCallback -> {
                 // 复制一个副本节点进行回调处理
                 DuplicateTemplateKiteElement duplicateTemplateElement = ((Template) this.element).createDuplicateTemplateKiteElement();
-                JsonProcessor<? extends KiteElement, ? extends JsonNode> processor = duplicateTemplateElement.createJsonProcessor(jsonProcessContext, (ObjectNode) parentProcessorInCallback.node, parentProcessorInCallback.expression);
+                JsonProcessor<? extends KiteElement, ? extends JsonNode> processor = duplicateTemplateElement.createJsonProcessor(jsonProcessContext, (ObjectNode) parentProcessorInCallback.node);
+                processor.value = parentProcessorInCallback.value;
                 processor.process(parentProcessorInCallback);
             };
             jsonProcessContext.pushExtendCallback(extend.getPort(), callback);
-            JsonProcessor<? extends KiteElement, ? extends JsonNode> extendTemplateJsonProcessor = extendTemplate.createJsonProcessor(jsonProcessContext, node, expression);
-            extendTemplateJsonProcessor.process(parentProcessor);
+            JsonProcessor<? extends KiteElement, ? extends JsonNode> nextProcessor = extendTemplate.createJsonProcessor(jsonProcessContext, node);
+            nextProcessor.process(parentProcessor);
         } else {
             super.handleCoreLogic(parentProcessor);
         }

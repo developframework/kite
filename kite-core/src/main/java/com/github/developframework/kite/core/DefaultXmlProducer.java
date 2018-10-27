@@ -108,7 +108,11 @@ class DefaultXmlProducer implements XmlProducer {
         String objNodeName = kiteConfiguration.getForXmlStrategy().propertyShowName(kiteConfiguration, template.getDataDefinition().getExpression().toString());
         Element objNode;
         if(StringUtils.isBlank(xmlRootName)) {
-            objNode = document.addElement(objNodeName);
+            if (StringUtils.isBlank(objNodeName)) {
+                throw new KiteException("\"data\" or \"xml-root\" is undefined in template \"%s : %s\".", template.getNamespace(), template.getTemplateId());
+            } else {
+                objNode = document.addElement(objNodeName);
+            }
         } else {
             Element rootNode = document.addElement(xmlRootName);
             if(template.getDataDefinition() != DataDefinition.EMPTY_DATA_DEFINITION) {
@@ -117,7 +121,7 @@ class DefaultXmlProducer implements XmlProducer {
                 objNode = rootNode;
             }
         }
-        TemplateXmlProcessor templateProcessor = new TemplateXmlProcessor(xmlProcessContext, template, template.getDataDefinition().getExpression());
+        TemplateXmlProcessor templateProcessor = new TemplateXmlProcessor(xmlProcessContext, template);
         templateProcessor.setValue(value);
         templateProcessor.setNode(objNode);
         templateProcessor.process(null);
@@ -130,7 +134,11 @@ class DefaultXmlProducer implements XmlProducer {
         String arrayNodeName = kiteConfiguration.getForXmlStrategy().propertyShowName(kiteConfiguration, template.getDataDefinition().getExpression().toString());
         Element arrayNode;
         if(StringUtils.isBlank(xmlRootName)) {
-            arrayNode = document.addElement(arrayNodeName);
+            if (StringUtils.isBlank(arrayNodeName)) {
+                throw new KiteException("\"data\" or \"xml-root\" is undefined in template \"%s : %s\".", template.getNamespace(), template.getTemplateId());
+            } else {
+                arrayNode = document.addElement(arrayNodeName);
+            }
         } else {
             Element rootNode = document.addElement(xmlRootName);
             arrayNode = rootNode.addElement(arrayNodeName);

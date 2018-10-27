@@ -1,6 +1,5 @@
 package com.github.developframework.kite.core.processor.xml;
 
-import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.element.PropertyKiteElement;
 
 /**
@@ -9,8 +8,8 @@ import com.github.developframework.kite.core.element.PropertyKiteElement;
  */
 public class NormalPropertyXmlProcessor extends PropertyXmlProcessor {
 
-    public NormalPropertyXmlProcessor(XmlProcessContext context, PropertyKiteElement element, Expression parentExpression) {
-        super(context, element, parentExpression);
+    public NormalPropertyXmlProcessor(XmlProcessContext context, PropertyKiteElement element) {
+        super(context, element);
     }
 
     @Override

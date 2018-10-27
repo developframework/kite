@@ -2,7 +2,6 @@ package com.github.developframework.kite.core;
 
 import com.github.developframework.kite.core.exception.ConfigurationSourceException;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 /**

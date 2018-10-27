@@ -2,15 +2,18 @@ package com.github.developframework.kite.core.element;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.exception.KiteException;
 import com.github.developframework.kite.core.processor.json.JsonProcessContext;
 import com.github.developframework.kite.core.processor.json.JsonProcessor;
 import com.github.developframework.kite.core.processor.json.TemplateJsonProcessor;
+import com.github.developframework.kite.core.processor.xml.TemplateXmlProcessor;
+import com.github.developframework.kite.core.processor.xml.XmlProcessContext;
+import com.github.developframework.kite.core.processor.xml.XmlProcessor;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import org.dom4j.Element;
 
 import java.util.Optional;
 
@@ -23,7 +26,6 @@ public class Template extends ObjectKiteElement {
 
     /* 扩展口 */
     @Setter
-    @Getter
     private Extend extend;
 
     @Setter
@@ -31,7 +33,6 @@ public class Template extends ObjectKiteElement {
     private String mapFunctionValue;
 
     @Setter
-    @Getter
     private String xmlRootName;
 
     @Setter
@@ -42,8 +43,15 @@ public class Template extends ObjectKiteElement {
     }
 
     @Override
-    public JsonProcessor<? extends KiteElement, ? extends JsonNode> createJsonProcessor(JsonProcessContext jsonProcessContext, ObjectNode parentNode, Expression parentExpression) {
-        TemplateJsonProcessor templateProcessor = new TemplateJsonProcessor(jsonProcessContext, this, JsonProcessor.childExpression(this, parentExpression));
+    public JsonProcessor<? extends KiteElement, ? extends JsonNode> createJsonProcessor(JsonProcessContext jsonProcessContext, ObjectNode parentNode) {
+        TemplateJsonProcessor templateProcessor = new TemplateJsonProcessor(jsonProcessContext, this);
+        templateProcessor.setNode(parentNode);
+        return templateProcessor;
+    }
+
+    @Override
+    public XmlProcessor<? extends KiteElement, ? extends Element> createXmlProcessor(XmlProcessContext xmlProcessContext, Element parentNode) {
+        TemplateXmlProcessor templateProcessor = new TemplateXmlProcessor(xmlProcessContext, this);
         templateProcessor.setNode(parentNode);
         return templateProcessor;
     }
@@ -82,12 +90,12 @@ public class Template extends ObjectKiteElement {
         }
     }
 
-//    public String getXmlRootName() {
-//        if(StringUtils.isBlank(xmlRootName)) {
-//            throw new KiteException("\"xml-root\" is undefined in template \"%s : %s\".", namespace, templateId);
-//        }
-//        return xmlRootName;
-//    }
+    public String getXmlRootName() {
+        if (StringUtils.isBlank(xmlRootName)) {
+            throw new KiteException("\"xml-root\" is undefined in template \"%s : %s\".", namespace, templateId);
+        }
+        return xmlRootName;
+    }
 
     public String getXmlItemName() {
         if(StringUtils.isBlank(xmlItemName)) {

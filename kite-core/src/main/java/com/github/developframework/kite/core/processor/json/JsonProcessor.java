@@ -1,7 +1,6 @@
 package com.github.developframework.kite.core.processor.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.developframework.expression.Expression;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.processor.Processor;
 import lombok.Getter;
@@ -26,15 +25,13 @@ public abstract class JsonProcessor<ELEMENT extends KiteElement, NODE extends Js
     @Setter
     protected NODE node;
 
-    protected Expression expression;
     @Setter
     protected Object value;
 
-    public JsonProcessor(JsonProcessContext jsonProcessContext, ELEMENT element, NODE node, Expression expression) {
+    public JsonProcessor(JsonProcessContext jsonProcessContext, ELEMENT element, NODE node) {
         this.jsonProcessContext = jsonProcessContext;
         this.element = element;
         this.node = node;
-        this.expression = expression;
     }
 
     /**
