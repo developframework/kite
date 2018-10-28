@@ -7,7 +7,7 @@ import com.github.developframework.kite.core.KiteConfiguration;
  *
  * @author qiuzhenhao
  */
-public abstract class FunctionalKiteElement extends KiteElement {
+public abstract class FunctionalKiteElement extends AbstractKiteElement {
 
     public FunctionalKiteElement(KiteConfiguration configuration, String namespace, String templateId) {
         super(configuration, namespace, templateId);

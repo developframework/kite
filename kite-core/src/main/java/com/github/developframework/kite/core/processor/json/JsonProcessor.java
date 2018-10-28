@@ -13,7 +13,7 @@ import lombok.Setter;
  * @param <NODE> JsonNode
  */
 @Getter
-public abstract class JsonProcessor<ELEMENT extends KiteElement, NODE extends JsonNode> extends Processor{
+public abstract class JsonProcessor<ELEMENT extends KiteElement, NODE extends JsonNode> implements Processor {
 
     /* 处理过程上下文 */
     protected JsonProcessContext jsonProcessContext;

@@ -1,9 +1,9 @@
 package com.github.developframework.kite.core.processor;
 
 /**
- * 处理器顶级基类
+ * 处理器顶级接口
  * @author qiuzhenhao
  */
-public abstract class Processor {
+public interface Processor {
 
 }

@@ -14,7 +14,7 @@ import org.dom4j.Element;
  * @param <NODE> JsonNode
  */
 @Getter
-public abstract class XmlProcessor<ELEMENT extends KiteElement, NODE extends Element> extends Processor {
+public abstract class XmlProcessor<ELEMENT extends KiteElement, NODE extends Element> implements Processor {
 
     /* 处理过程上下文 */
     protected XmlProcessContext xmlProcessContext;

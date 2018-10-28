@@ -18,7 +18,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  * @author qiuzhenhao
  */
 @Getter
-public abstract class ContentKiteElement extends KiteElement {
+public abstract class ContentKiteElement extends AbstractKiteElement {
 
     @Setter
     protected DataDefinition dataDefinition;
