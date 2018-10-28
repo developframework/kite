@@ -17,6 +17,7 @@
 											<xs:attribute name="for-class" type="xs:string" />
 											<xs:attribute name="extend" type="xs:string" />
 											<xs:attribute name="xml-root" type="xs:string" />
+											<xs:attribute name="converter" type="xs:string"/>
 											<xs:attributeGroup ref="arrayTypeElementAttributeGroup"/>
 										</xs:extension>
 									</xs:complexContent>
@@ -35,6 +36,7 @@
 		<xs:attribute name="data" type="xs:string" use="required" />
 		<xs:attribute name="alias" type="xs:string" />
 		<xs:attribute name="null-hidden" type="xs:boolean" default="false" />
+		<xs:attribute name="converter" type="xs:string"/>
 	</xs:attributeGroup>
 
 	<!-- 容器节点属性组 -->
@@ -52,7 +54,6 @@
 	<!-- 值节点属性组 -->
 	<xs:attributeGroup name="propertyElementAttributeGroup">
 		<xs:attributeGroup ref="contentElementAttributeGroup" />
-		<xs:attribute name="converter" type="xs:string" />
 		<xs:attribute name="xml-cdata" type="xs:boolean" />
 	</xs:attributeGroup>
 

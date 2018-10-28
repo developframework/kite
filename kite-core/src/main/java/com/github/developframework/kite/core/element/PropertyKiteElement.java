@@ -5,8 +5,6 @@ import com.github.developframework.kite.core.data.DataDefinition;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Optional;
-
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
@@ -23,10 +21,6 @@ public abstract class PropertyKiteElement extends ContainerKiteElement {
 
     public PropertyKiteElement(KiteConfiguration configuration, String namespace, String templateId, DataDefinition dataDefinition, String alias) {
         super(configuration, namespace, templateId, dataDefinition, alias);
-    }
-
-    public Optional<String> getConverterValue() {
-        return Optional.ofNullable(converterValue);
     }
 
     public void setXmlCdata(String xmlCdataStr) {

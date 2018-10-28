@@ -40,11 +40,11 @@ public class ArrayJsonProcessor extends ContainerJsonProcessor<ArrayKiteElement,
         Optional<Object> valueOptional = getDataValue(parentProcessor);
         if (valueOptional.isPresent()) {
             this.value = KiteUtils.objectToArray(valueOptional.get(), element);
-            this.node = ((ObjectNode) parentProcessor.getNode()).putArray(element.showNameJSON());
+            this.node = ((ObjectNode) parentProcessor.node).putArray(element.showNameJSON());
             return true;
         }
         if (!element.isNullHidden()) {
-            ((ObjectNode) parentProcessor.getNode()).putNull(element.showNameJSON());
+            ((ObjectNode) parentProcessor.node).putNull(element.showNameJSON());
         }
         return false;
     }
@@ -59,7 +59,7 @@ public class ArrayJsonProcessor extends ContainerJsonProcessor<ArrayKiteElement,
                 final ObjectInArrayJsonProcessor childProcessor = new ObjectInArrayJsonProcessor(jsonProcessContext, element.getItemObjectElement(), i, array.length);
                 childProcessor.setValue(array[i]);
                 childProcessor.process(this);
-                node.add(childProcessor.getNode());
+                node.add(childProcessor.node);
             }
         }
     }

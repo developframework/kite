@@ -2,7 +2,7 @@ package com.github.developframework.kite.core.saxparser;
 
 import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.data.DataDefinition;
-import com.github.developframework.kite.core.element.KiteElement;
+import com.github.developframework.kite.core.element.ContentKiteElement;
 import org.xml.sax.Attributes;
 
 /**
@@ -10,7 +10,7 @@ import org.xml.sax.Attributes;
  * @author qiuzhenhao
  * @param <T> 节点类型
  */
-abstract class ContentElementSaxParser<T extends KiteElement> extends AbstractElementSaxParser{
+abstract class ContentElementSaxParser<T extends ContentKiteElement> extends AbstractElementSaxParser {
 
     ContentElementSaxParser(KiteConfiguration kiteConfiguration) {
         super(kiteConfiguration);
@@ -21,6 +21,7 @@ abstract class ContentElementSaxParser<T extends KiteElement> extends AbstractEl
         final DataDefinition dataDefinition = new DataDefinition(attributes.getValue("data"));
         final String alias = attributes.getValue("alias");
         T element = createElementInstance(parseContext, dataDefinition, alias);
+        element.setConverterValue(attributes.getValue("converter"));
         addOtherAttributes(element, attributes);
         addChildElement(parseContext, element);
         otherOperation(parseContext, element);

@@ -23,11 +23,11 @@ public class ObjectXmlProcessor extends ContainerXmlProcessor<ObjectKiteElement,
         Optional<Object> valueOptional = getDataValue(parentProcessor);
         if (valueOptional.isPresent()) {
             this.value = valueOptional.get();
-            this.node = parentProcessor.getNode().addElement(element.showNameXML());
+            this.node = parentProcessor.node.addElement(element.showNameXML());
             return true;
         }
         if (!element.isNullHidden()) {
-            parentProcessor.getNode().addElement(element.showNameXML());
+            parentProcessor.node.addElement(element.showNameXML());
         }
         return false;
     }

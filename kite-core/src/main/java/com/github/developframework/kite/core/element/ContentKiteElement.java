@@ -8,6 +8,8 @@ import com.github.developframework.kite.core.data.DataDefinition;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Optional;
+
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
@@ -20,6 +22,10 @@ public abstract class ContentKiteElement extends KiteElement {
 
     @Setter
     protected DataDefinition dataDefinition;
+
+    @Setter
+    protected String converterValue;
+
     @Setter
     protected String alias;
 
@@ -29,6 +35,10 @@ public abstract class ContentKiteElement extends KiteElement {
         super(configuration, namespace, templateId);
         this.dataDefinition = dataDefinition;
         this.alias = alias;
+    }
+
+    public Optional<String> getConverterValue() {
+        return Optional.ofNullable(converterValue);
     }
 
     public void setNullHidden(String nullHiddenStr) {

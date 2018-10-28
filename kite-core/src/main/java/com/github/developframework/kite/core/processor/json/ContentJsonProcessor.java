@@ -3,8 +3,10 @@ package com.github.developframework.kite.core.processor.json;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.data.FunctionSign;
+import com.github.developframework.kite.core.dynamic.KiteConverter;
 import com.github.developframework.kite.core.element.ContentKiteElement;
 import com.github.developframework.kite.core.element.KiteElement;
+import com.github.developframework.kite.core.utils.KiteUtils;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -26,15 +28,28 @@ public abstract class ContentJsonProcessor<ELEMENT extends ContentKiteElement, N
      * @param parentProcessor 上层处理器
      * @return 值
      */
+    @SuppressWarnings("unchecked")
     protected Optional<Object> getDataValue(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
         if (Objects.nonNull(value)) {
             return Optional.of(value);
         }
         DataDefinition dataDefinition = element.getDataDefinition();
+        Optional<Object> nextValueOptional;
         if (dataDefinition.getFunctionSign() == FunctionSign.ROOT || Objects.isNull(parentProcessor.value)) {
-            return jsonProcessContext.getDataModel().getData(dataDefinition.getExpression());
+            nextValueOptional = jsonProcessContext.getDataModel().getData(dataDefinition.getExpression());
         } else {
-            return jsonProcessContext.getDataModel().getData(parentProcessor.value, dataDefinition.getExpression());
+            nextValueOptional = jsonProcessContext.getDataModel().getData(parentProcessor.value, dataDefinition.getExpression());
+        }
+        if (nextValueOptional.isPresent()) {
+            // 处理转换器
+            if (element.getConverterValue().isPresent()) {
+                KiteConverter converter = KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), element.getConverterValue().get(), KiteConverter.class, "converter");
+                return Optional.ofNullable(converter.convert(nextValueOptional.get()));
+            } else {
+                return nextValueOptional;
+            }
+        } else {
+            return Optional.empty();
         }
     }
 }

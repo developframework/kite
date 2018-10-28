@@ -3,10 +3,8 @@ package com.github.developframework.kite.core.processor.json;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.kite.core.dynamic.PropertyConverter;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.element.PrototypeKiteElement;
-import com.github.developframework.kite.core.utils.KiteUtils;
 
 import java.util.Optional;
 
@@ -26,10 +24,6 @@ public class PrototypeJsonProcessor extends ContentJsonProcessor<PrototypeKiteEl
         Optional<Object> valueOptional = getDataValue(parentProcessor);
         if(valueOptional.isPresent()) {
             value = valueOptional.get();
-            if (element.getConverterValue().isPresent()) {
-                PropertyConverter converter = KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), element.getConverterValue().get(), PropertyConverter.class, "converter");
-                value = converter.convert(value);
-            }
             return true;
         }
         if (!element.isNullHidden()) {

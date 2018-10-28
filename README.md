@@ -857,7 +857,7 @@ public class Student {
 
 #### <a name="chapter511">**5.1.1. `<property>` 的转换器 `converter`**</a>
 
-`com.github.developframework.kite.core.dynamic.PropertyConverter`
+`com.github.developframework.kite.core.dynamic.KiteConverter`
 接口可以对表达式选取的属性值进行自定义转换。
 
 ```java

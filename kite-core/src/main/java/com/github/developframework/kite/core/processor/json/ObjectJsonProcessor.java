@@ -26,11 +26,11 @@ public class ObjectJsonProcessor extends ContainerJsonProcessor<ObjectKiteElemen
         Optional<Object> valueOptional = getDataValue(parentProcessor);
         if (valueOptional.isPresent()) {
             this.value = valueOptional.get();
-            this.node = ((ObjectNode) parentProcessor.getNode()).putObject(element.showNameJSON());
+            this.node = ((ObjectNode) parentProcessor.node).putObject(element.showNameJSON());
             return true;
         }
         if (!element.isNullHidden()) {
-            ((ObjectNode) parentProcessor.getNode()).putNull(element.showNameJSON());
+            ((ObjectNode) parentProcessor.node).putNull(element.showNameJSON());
         }
         return false;
     }

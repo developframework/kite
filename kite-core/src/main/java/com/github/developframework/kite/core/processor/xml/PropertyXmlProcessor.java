@@ -1,9 +1,7 @@
 package com.github.developframework.kite.core.processor.xml;
 
-import com.github.developframework.kite.core.dynamic.PropertyConverter;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.element.PropertyKiteElement;
-import com.github.developframework.kite.core.utils.KiteUtils;
 import org.dom4j.Element;
 
 import java.util.Iterator;
@@ -25,15 +23,11 @@ public abstract class PropertyXmlProcessor extends ContainerXmlProcessor<Propert
         Optional<Object> valueOptional = getDataValue(parentProcessor);
         if (valueOptional.isPresent()) {
             value = valueOptional.get();
-            if (element.getConverterValue().isPresent()) {
-                PropertyConverter converter = KiteUtils.getComponentInstance(xmlProcessContext.getDataModel(), element.getConverterValue().get(), PropertyConverter.class, "converter");
-                value = converter.convert(value);
-            }
-            this.node = parentProcessor.getNode().addElement(element.showNameXML());
+            this.node = parentProcessor.node.addElement(element.showNameXML());
             return true;
         }
         if (!element.isNullHidden()) {
-            this.node = parentProcessor.getNode().addElement(element.showNameXML());
+            this.node = parentProcessor.node.addElement(element.showNameXML());
         }
         return false;
     }

@@ -21,7 +21,7 @@ public class XmlAttributeXmlProcessor extends ContentXmlProcessor<XmlAttributeEl
         Optional<Object> valueOptional = getDataValue(parentProcessor);
         if (valueOptional.isPresent()) {
             this.value = valueOptional.get();
-            this.node = parentProcessor.getNode();
+            this.node = parentProcessor.node;
             return true;
         }
         return !element.isNullHidden();
