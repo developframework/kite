@@ -22,7 +22,7 @@ public class IfXmlProcessor extends FunctionalXmlProcessor<IfKiteElement, Elemen
     @Override
     protected void handleCoreLogic(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
         Condition condition = KiteUtils.getComponentInstance(xmlProcessContext.getDataModel(), element.getConditionValue(), Condition.class, "condition");
-        boolean verifyResult = condition.verify(xmlProcessContext.getDataModel(), element.getConditionValue());
+        boolean verifyResult = condition.verify(xmlProcessContext.getDataModel(), parentProcessor.value);
         if (verifyResult) {
             // 执行if
             executeIfTrue(parentProcessor);

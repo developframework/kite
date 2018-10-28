@@ -12,8 +12,8 @@ public interface Condition {
     /**
      * 判断条件
      * @param dataModel 数据模型
-     * @param conditionValue 条件
+     * @param currentValue 当前值
      * @return 判断结果
      */
-    boolean verify(DataModel dataModel, String conditionValue);
+    boolean verify(DataModel dataModel, Object currentValue);
 }

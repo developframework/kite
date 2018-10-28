@@ -23,7 +23,7 @@ public class IfJsonProcessor extends FunctionalJsonProcessor<IfKiteElement, Obje
     @Override
     protected void handleCoreLogic(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
         Condition condition = KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), element.getConditionValue(), Condition.class, "condition");
-        boolean verifyResult = condition.verify(jsonProcessContext.getDataModel(), element.getConditionValue());
+        boolean verifyResult = condition.verify(jsonProcessContext.getDataModel(), parentProcessor.value);
         if (verifyResult) {
             // 执行if
             executeIfTrue(parentProcessor);
