@@ -23,7 +23,7 @@ class ConfigurationSaxParseHandler extends DefaultHandler{
 
     public ConfigurationSaxParseHandler(KiteConfiguration configuration) {
         this.configuration = configuration;
-        this.elementSaxParserChain = new ArrayList<>(17);
+        this.elementSaxParserChain = new ArrayList<>(18);
         this.parseContext = new ParseContext(configuration);
         registerDefaultElementSaxParser();
     }
@@ -43,6 +43,7 @@ class ConfigurationSaxParseHandler extends DefaultHandler{
         registerElementSaxParser(new XmlAttributeElementSaxParser(configuration));
         registerElementSaxParser(new ExtendPortElementSaxParser(configuration));
         registerElementSaxParser(new IgnorePropertyElementSaxParser(configuration));
+        registerElementSaxParser(new ThisElementSaxParser(configuration));
         registerElementSaxParser(new PrototypeElementSaxParser(configuration));
         registerElementSaxParser(new IfElementSaxParser(configuration));
         registerElementSaxParser(new ElseElementSaxParser(configuration));

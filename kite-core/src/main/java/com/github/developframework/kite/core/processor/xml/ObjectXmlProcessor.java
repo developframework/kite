@@ -22,8 +22,8 @@ public class ObjectXmlProcessor extends ContainerXmlProcessor<ObjectKiteElement,
     protected boolean prepare(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
         Optional<Object> valueOptional = getDataValue(parentProcessor);
         if (valueOptional.isPresent()) {
-            this.value = valueOptional.get();
-            this.node = parentProcessor.node.addElement(element.showNameXML());
+            value = valueOptional.get();
+            node = parentProcessor.node.addElement(element.showNameXML());
             return true;
         }
         if (!element.isNullHidden()) {
@@ -36,8 +36,8 @@ public class ObjectXmlProcessor extends ContainerXmlProcessor<ObjectKiteElement,
     protected void handleCoreLogic(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
         for (Iterator<KiteElement> iterator = element.childElementIterator(); iterator.hasNext();) {
             final KiteElement childKiteElement = iterator.next();
-            final XmlProcessor<? extends KiteElement, ? extends Element> childXmlProcessor = childKiteElement.createXmlProcessor(xmlProcessContext, node);
-            childXmlProcessor.process(this);
+            final XmlProcessor<? extends KiteElement, ? extends Element> nextProcessor = childKiteElement.createXmlProcessor(xmlProcessContext, node);
+            nextProcessor.process(this);
         }
     }
 }

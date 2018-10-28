@@ -39,8 +39,8 @@ public class ObjectJsonProcessor extends ContainerJsonProcessor<ObjectKiteElemen
     protected void handleCoreLogic(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
         for (Iterator<KiteElement> iterator = element.childElementIterator(); iterator.hasNext();) {
             final KiteElement childKiteElement = iterator.next();
-            final JsonProcessor<? extends KiteElement, ? extends JsonNode> childJsonProcessor = childKiteElement.createJsonProcessor(jsonProcessContext, node);
-            childJsonProcessor.process(this);
+            final JsonProcessor<? extends KiteElement, ? extends JsonNode> nextProcessor = childKiteElement.createJsonProcessor(jsonProcessContext, node);
+            nextProcessor.process(this);
         }
     }
 }

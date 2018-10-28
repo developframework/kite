@@ -167,6 +167,20 @@
 					</xs:complexType>
 				</xs:element>
 
+				<!-- this -->
+				<xs:element name="this">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="contentElementType">
+								<xs:group ref="childElementGroup"/>
+								<xs:attribute name="alias" type="xs:string" use="required"/>
+								<xs:attribute name="null-hidden" type="xs:boolean" default="false"/>
+								<xs:attribute name="converter" type="xs:string"/>
+							</xs:extension>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+
 				<!-- link -->
 				<xs:element name="link">
 					<xs:complexType>
