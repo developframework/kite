@@ -44,17 +44,21 @@ public class ArrayJsonProcessor extends ContainerJsonProcessor<ArrayKiteElement,
     @SuppressWarnings("unchecked")
     protected void handleCoreLogic(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
         Object[] array = (Object[]) value;
+        // 处理comparator功能
         Optional<Comparator> comparator = KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), element.getComparatorValue(), Comparator.class, "comparator");
         comparator.ifPresent(c -> Arrays.sort(array, c));
+        // 处理mapFunction功能
         Optional<MapFunction> mapFunction = KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), element.getMapFunctionValue(), MapFunction.class, "map-function");
-        for (int i = 0; i < array.length; i++) {
+        // 处理limit功能
+        int length = element.getLimit() != null && element.getLimit() < array.length ? element.getLimit() : array.length;
+        for (int i = 0; i < length; i++) {
             if (element.isChildElementEmpty()) {
                 empty(array[i]);
             } else if (mapFunction.isPresent()) {
                 log.warn("The child element invalid, because you use \"map-function\" attribute.");
                 empty(mapFunction.get().apply(array[i], i));
             } else {
-                final ObjectInArrayJsonProcessor childProcessor = new ObjectInArrayJsonProcessor(jsonProcessContext, element.getItemObjectElement(), i, array.length);
+                final ObjectInArrayJsonProcessor childProcessor = new ObjectInArrayJsonProcessor(jsonProcessContext, element.getItemObjectElement(), i, length);
                 childProcessor.setValue(array[i]);
                 childProcessor.process(this);
                 node.add(childProcessor.node);

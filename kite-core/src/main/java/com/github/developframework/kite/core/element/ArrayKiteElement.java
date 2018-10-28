@@ -34,6 +34,9 @@ public class ArrayKiteElement extends ContainerKiteElement{
     protected String xmlItemName;
     @Setter
     protected String comparatorValue;
+    @Setter
+    @Getter
+    protected Integer limit;
 
     public ArrayKiteElement(KiteConfiguration configuration, String namespace, String templateId, DataDefinition dataDefinition, String alias) {
         super(configuration, namespace, templateId, dataDefinition, alias);

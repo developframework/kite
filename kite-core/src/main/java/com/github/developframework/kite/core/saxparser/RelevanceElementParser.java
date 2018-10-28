@@ -3,6 +3,7 @@ package com.github.developframework.kite.core.saxparser;
 import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.element.RelevanceKiteElement;
+import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.Attributes;
 
 /**
@@ -31,7 +32,12 @@ class RelevanceElementParser extends ContainerElementSaxParser<RelevanceKiteElem
         super.addOtherAttributes(element, attributes);
         element.setRelFunctionValue(attributes.getValue("rel-function"));
         element.setMapFunctionValue(attributes.getValue("map-function"));
+        element.setComparatorValue(attributes.getValue("comparator"));
         element.setRelevanceType(attributes.getValue("type"));
         element.setXmlItemName(attributes.getValue("xml-item"));
+        String limitValue = attributes.getValue("limit");
+        if (StringUtils.isNumeric(limitValue)) {
+            element.setLimit(Integer.parseInt(limitValue));
+        }
     }
 }

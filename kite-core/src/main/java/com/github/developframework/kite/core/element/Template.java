@@ -3,6 +3,7 @@ package com.github.developframework.kite.core.element;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.developframework.kite.core.KiteConfiguration;
+import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.exception.KiteException;
 import com.github.developframework.kite.core.processor.json.JsonProcessContext;
 import com.github.developframework.kite.core.processor.json.JsonProcessor;
@@ -91,7 +92,7 @@ public class Template extends ObjectKiteElement {
     }
 
     public String getXmlRootName() {
-        if (StringUtils.isBlank(xmlRootName)) {
+        if (StringUtils.isBlank(xmlRootName) && dataDefinition == DataDefinition.EMPTY_DATA_DEFINITION) {
             throw new KiteException("\"xml-root\" is undefined in template \"%s : %s\".", namespace, templateId);
         }
         return xmlRootName;
