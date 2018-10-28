@@ -36,12 +36,12 @@ public class RelevanceXmlProcessor extends ArrayXmlProcessor {
         if (valueOptional.isPresent()) {
             ObjectInArrayXmlProcessor objectInArrayProcessor = (ObjectInArrayXmlProcessor) parentProcessor;
 
-            RelFunction relFunction = KiteUtils.getComponentInstance(
+            Optional<RelFunction> relFunctionOptional = KiteUtils.getComponentInstance(
                     xmlProcessContext.getDataModel(),
                     ((RelevanceKiteElement) element).getRelFunctionValue(),
                     RelFunction.class,
                     "rel-function");
-
+            RelFunction relFunction = relFunctionOptional.get();
             Object[] targets = KiteUtils.objectToArray(valueOptional.get(), element);
             List<Integer> indexList = new LinkedList<>();
             for (int i = 0; i < targets.length; i++) {

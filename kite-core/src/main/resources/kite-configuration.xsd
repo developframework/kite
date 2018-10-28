@@ -48,6 +48,7 @@
 	<!-- 数组类型的节点属性组 -->
 	<xs:attributeGroup name="arrayTypeElementAttributeGroup">
 		<xs:attribute name="map-function" type="xs:string" />
+		<xs:attribute name="comparator" type="xs:string"/>
 		<xs:attribute name="xml-item" type="xs:string" />
 	</xs:attributeGroup>
 

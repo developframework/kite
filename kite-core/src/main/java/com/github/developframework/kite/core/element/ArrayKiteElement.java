@@ -29,9 +29,11 @@ public class ArrayKiteElement extends ContainerKiteElement{
     private ObjectKiteElement itemObjectElement;
 
     @Setter
-    private String mapFunctionValue;
+    protected String mapFunctionValue;
     @Setter
-    private String xmlItemName;
+    protected String xmlItemName;
+    @Setter
+    protected String comparatorValue;
 
     public ArrayKiteElement(KiteConfiguration configuration, String namespace, String templateId, DataDefinition dataDefinition, String alias) {
         super(configuration, namespace, templateId, dataDefinition, alias);
@@ -65,8 +67,12 @@ public class ArrayKiteElement extends ContainerKiteElement{
         this.itemObjectElement.copyChildElement(otherContainerElement);
     }
 
-    public Optional<String> getMapFunctionValueOptional() {
+    public Optional<String> getMapFunctionValue() {
         return Optional.ofNullable(mapFunctionValue);
+    }
+
+    public Optional<String> getComparatorValue() {
+        return Optional.ofNullable(comparatorValue);
     }
 
     public String getXmlItemName() {

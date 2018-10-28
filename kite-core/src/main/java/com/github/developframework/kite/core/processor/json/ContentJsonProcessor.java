@@ -42,9 +42,9 @@ public abstract class ContentJsonProcessor<ELEMENT extends ContentKiteElement, N
         }
         if (nextValueOptional.isPresent()) {
             // 处理转换器
-            if (element.getConverterValue().isPresent()) {
-                KiteConverter converter = KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), element.getConverterValue().get(), KiteConverter.class, "converter");
-                return Optional.ofNullable(converter.convert(nextValueOptional.get()));
+            Optional<KiteConverter> converter = KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), element.getConverterValue(), KiteConverter.class, "converter");
+            if (converter.isPresent()) {
+                return Optional.ofNullable(converter.get().convert(nextValueOptional.get()));
             } else {
                 return nextValueOptional;
             }

@@ -15,17 +15,19 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
+import java.util.Optional;
+
 /**
  * 关联节点
  *
  * @author qiuzhenhao
  */
-@Getter
+
 public class RelevanceKiteElement extends ArrayKiteElement {
 
     @Setter
     private String relFunctionValue;
-
+    @Getter
     private RelevanceType relevanceType;
 
     public RelevanceKiteElement(KiteConfiguration configuration, String namespace, String templateId, DataDefinition dataDefinition, String alias) {
@@ -72,9 +74,16 @@ public class RelevanceKiteElement extends ArrayKiteElement {
         } else {
             // 如果有子节点，视为数组节点处理
             ArrayKiteElement arrayKiteElement = new ArrayKiteElement(configuration, this, dataDefinition);
-            arrayKiteElement.setXmlItemName(getXmlItemName());
+            arrayKiteElement.setXmlItemName(xmlItemName);
+            arrayKiteElement.setMapFunctionValue(mapFunctionValue);
+            arrayKiteElement.setComparatorValue(comparatorValue);
+            arrayKiteElement.setConverterValue(converterValue);
             return arrayKiteElement;
         }
+    }
+
+    public Optional<String> getRelFunctionValue() {
+        return Optional.ofNullable(relFunctionValue);
     }
 
     /**

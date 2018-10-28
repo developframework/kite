@@ -30,5 +30,6 @@ class ArrayElementSaxParser extends ContainerElementSaxParser<ArrayKiteElement> 
         super.addOtherAttributes(element, attributes);
         element.setMapFunctionValue(attributes.getValue("map-function"));
         element.setXmlItemName(attributes.getValue("xml-item"));
+        element.setComparatorValue(attributes.getValue("comparator"));
     }
 }

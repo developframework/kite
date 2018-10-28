@@ -7,6 +7,7 @@ import com.github.developframework.kite.core.utils.KiteUtils;
 import org.dom4j.Element;
 
 import java.util.Iterator;
+import java.util.Optional;
 
 /**
  * if节点处理器
@@ -21,8 +22,8 @@ public class IfXmlProcessor extends FunctionalXmlProcessor<IfKiteElement, Elemen
 
     @Override
     protected void handleCoreLogic(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
-        Condition condition = KiteUtils.getComponentInstance(xmlProcessContext.getDataModel(), element.getConditionValue(), Condition.class, "condition");
-        boolean verifyResult = condition.verify(xmlProcessContext.getDataModel(), parentProcessor.value);
+        Optional<Condition> condition = KiteUtils.getComponentInstance(xmlProcessContext.getDataModel(), element.getConditionValue(), Condition.class, "condition");
+        boolean verifyResult = condition.get().verify(xmlProcessContext.getDataModel(), parentProcessor.value);
         if (verifyResult) {
             // 执行if
             executeIfTrue(parentProcessor);

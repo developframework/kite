@@ -3,16 +3,15 @@ package com.github.developframework.kite.core.processor.json;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.kite.core.data.DataModel;
 import com.github.developframework.kite.core.dynamic.MapFunction;
 import com.github.developframework.kite.core.element.ArrayKiteElement;
 import com.github.developframework.kite.core.element.KiteElement;
-import com.github.developframework.kite.core.exception.InvalidArgumentsException;
-import com.github.developframework.kite.core.exception.KiteException;
 import com.github.developframework.kite.core.utils.KiteUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Optional;
 
 /**
@@ -23,16 +22,8 @@ import java.util.Optional;
 @Slf4j
 public class ArrayJsonProcessor extends ContainerJsonProcessor<ArrayKiteElement, ArrayNode> {
 
-    protected Optional<MapFunction> mapFunctionOptional;
-
     public ArrayJsonProcessor(JsonProcessContext jsonProcessContext, ArrayKiteElement element) {
         super(jsonProcessContext, element);
-        this.mapFunctionOptional = mapFunction(element.getMapFunctionValueOptional(), jsonProcessContext.getDataModel());
-        if (mapFunctionOptional.isPresent()) {
-            if (!element.isChildElementEmpty()) {
-                log.warn("The child element invalid, because you use \"map-function\" attribute.");
-            }
-        }
     }
 
     @Override
@@ -50,11 +41,18 @@ public class ArrayJsonProcessor extends ContainerJsonProcessor<ArrayKiteElement,
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void handleCoreLogic(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
         Object[] array = (Object[]) value;
+        Optional<Comparator> comparator = KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), element.getComparatorValue(), Comparator.class, "comparator");
+        comparator.ifPresent(c -> Arrays.sort(array, c));
+        Optional<MapFunction> mapFunction = KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), element.getMapFunctionValue(), MapFunction.class, "map-function");
         for (int i = 0; i < array.length; i++) {
-            if (element.isChildElementEmpty() || mapFunctionOptional.isPresent()) {
-                empty(array[i], i);
+            if (element.isChildElementEmpty()) {
+                empty(array[i]);
+            } else if (mapFunction.isPresent()) {
+                log.warn("The child element invalid, because you use \"map-function\" attribute.");
+                empty(mapFunction.get().apply(array[i], i));
             } else {
                 final ObjectInArrayJsonProcessor childProcessor = new ObjectInArrayJsonProcessor(jsonProcessContext, element.getItemObjectElement(), i, array.length);
                 childProcessor.setValue(array[i]);
@@ -69,16 +67,11 @@ public class ArrayJsonProcessor extends ContainerJsonProcessor<ArrayKiteElement,
      * @param itemValue 数组元素值
      */
     @SuppressWarnings("unchecked")
-    private void empty(Object itemValue, int index) {
+    private void empty(Object itemValue) {
         if (itemValue == null) {
             node.addNull();
             return;
         }
-
-        if (mapFunctionOptional.isPresent()) {
-            itemValue = mapFunctionOptional.get().apply(itemValue, index);
-        }
-
         if (itemValue instanceof String) {
             node.add((String) itemValue);
         } else if (itemValue instanceof Integer) {
@@ -102,33 +95,5 @@ public class ArrayJsonProcessor extends ContainerJsonProcessor<ArrayKiteElement,
         } else {
             node.add(itemValue.toString());
         }
-    }
-
-    /**
-     * 获得mapFunction
-     * @param mapFunctionValueOptional mapFunctionValueOptional
-     * @param dataModel 数据模型
-     * @return mapFunction
-     */
-    private Optional<MapFunction> mapFunction(Optional<String> mapFunctionValueOptional, DataModel dataModel) {
-        if (mapFunctionValueOptional.isPresent()) {
-            final String mapFunctionValue = mapFunctionValueOptional.get();
-            Optional<Object> mapFunctionOptional = dataModel.getData(mapFunctionValue);
-            Object obj = mapFunctionOptional.orElseGet(() -> {
-                try {
-                    return Class.forName(mapFunctionValue).newInstance();
-                } catch (ClassNotFoundException e) {
-                    throw new InvalidArgumentsException("map-function", mapFunctionValue, "Class not found, and it's also not a expression.");
-                } catch (IllegalAccessException | InstantiationException e) {
-                    throw new KiteException("Can't new mapFunction instance.");
-                }
-            });
-            if (obj instanceof MapFunction) {
-                return Optional.of(((MapFunction) obj));
-            } else {
-                throw new InvalidArgumentsException("map-function", mapFunctionValue, "It's not a MapFunction instance.");
-            }
-        }
-        return Optional.empty();
     }
 }

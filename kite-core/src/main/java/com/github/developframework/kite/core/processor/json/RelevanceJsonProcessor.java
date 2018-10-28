@@ -37,12 +37,12 @@ public class RelevanceJsonProcessor extends ArrayJsonProcessor {
         if (valueOptional.isPresent()) {
             ObjectInArrayJsonProcessor objectInArrayProcessor = (ObjectInArrayJsonProcessor) parentProcessor;
 
-            RelFunction relFunction = KiteUtils.getComponentInstance(
+            Optional<RelFunction> relFunctionOptional = KiteUtils.getComponentInstance(
                     jsonProcessContext.getDataModel(),
                     ((RelevanceKiteElement) element).getRelFunctionValue(),
                     RelFunction.class,
                     "rel-function");
-
+            RelFunction relFunction = relFunctionOptional.get();
             Object[] targets = KiteUtils.objectToArray(valueOptional.get(), element);
             List<Integer> indexList = new LinkedList<>();
             for (int i = 0; i < targets.length; i++) {

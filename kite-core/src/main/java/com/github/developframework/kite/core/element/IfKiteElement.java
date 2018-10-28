@@ -9,7 +9,6 @@ import com.github.developframework.kite.core.processor.json.JsonProcessor;
 import com.github.developframework.kite.core.processor.xml.IfXmlProcessor;
 import com.github.developframework.kite.core.processor.xml.XmlProcessContext;
 import com.github.developframework.kite.core.processor.xml.XmlProcessor;
-import lombok.Getter;
 import lombok.Setter;
 import org.dom4j.Element;
 
@@ -22,7 +21,6 @@ import java.util.Optional;
  */
 public class IfKiteElement extends ContainerFunctionalKiteElement {
 
-    @Getter
     private String conditionValue;
     @Setter
     private ElseKiteElement elseElement;
@@ -44,6 +42,10 @@ public class IfKiteElement extends ContainerFunctionalKiteElement {
 
     public Optional<ElseKiteElement> getElseElement() {
         return Optional.ofNullable(elseElement);
+    }
+
+    public Optional<String> getConditionValue() {
+        return Optional.ofNullable(conditionValue);
     }
 
 }

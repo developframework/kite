@@ -6,6 +6,7 @@ import com.github.developframework.kite.core.exception.InvalidArgumentsException
 import com.github.developframework.kite.core.exception.KiteException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -15,8 +16,12 @@ import java.util.Set;
 public final class KiteUtils {
 
     @SuppressWarnings("unchecked")
-    public static <T> T getComponentInstance(DataModel dataModel, String value, Class<T> tClass, String attributeName) {
-        return (T) dataModel.getData(value).orElseGet(() -> {
+    public static <T> Optional<T> getComponentInstance(DataModel dataModel, Optional<String> valueOptional, Class<T> tClass, String attributeName) {
+        if (!valueOptional.isPresent()) {
+            return Optional.empty();
+        }
+        final String value = valueOptional.get();
+        return Optional.of((T) dataModel.getData(value).orElseGet(() -> {
             try {
                 Object obj = Class.forName(value).newInstance();
                 if (tClass == obj.getClass()) {
@@ -29,7 +34,7 @@ public final class KiteUtils {
             } catch (IllegalAccessException | InstantiationException e) {
                 throw new KiteException("Can't new " + tClass.getSimpleName() + " instance.");
             }
-        });
+        }));
     }
 
     public static Object[] objectToArray(Object object, ContentKiteElement element) {
