@@ -26,7 +26,7 @@ class TemplateElementSaxParser extends ContainerElementSaxParser<Template>{
         final String id = attributes.getValue("id").trim();
         final String data = attributes.getValue("data");
         final String extend = attributes.getValue("extend");
-        final String mapFunctionValue = attributes.getValue("map-function");
+        final String mapFunctionValue = attributes.getValue("map");
         final String xmlRootName = attributes.getValue("xml-root");
         final String xmlItemName = attributes.getValue("xml-item");
         final Template template = new Template(kiteConfiguration, parseContext.getCurrentTemplatePackage().getNamespace(), id);

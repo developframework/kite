@@ -29,7 +29,7 @@ class ArrayElementSaxParser extends ContainerElementSaxParser<ArrayKiteElement> 
     @Override
     protected void addOtherAttributes(ArrayKiteElement element, Attributes attributes) {
         super.addOtherAttributes(element, attributes);
-        element.setMapFunctionValue(attributes.getValue("map-function"));
+        element.setMapFunctionValue(attributes.getValue("map"));
         element.setXmlItemName(attributes.getValue("xml-item"));
         element.setComparatorValue(attributes.getValue("comparator"));
         String limitValue = attributes.getValue("limit");

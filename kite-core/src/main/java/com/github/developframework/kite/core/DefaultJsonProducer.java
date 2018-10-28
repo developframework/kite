@@ -17,12 +17,13 @@ import com.github.developframework.kite.core.processor.json.TemplateJsonProcesso
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * 默认的Json生成器
  * @author qiuzhenhao
  */
-class DefaultJsonProducer implements JsonProducer{
+class DefaultJsonProducer implements JsonProducer {
 
     private KiteConfiguration kiteConfiguration;
 
@@ -45,9 +46,8 @@ class DefaultJsonProducer implements JsonProducer{
                 return kiteConfiguration.getObjectMapper().writeValueAsString(root);
             }
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            throw new KiteException("produce json string failed.");
         }
-        return null;
     }
 
     @Override
@@ -83,7 +83,7 @@ class DefaultJsonProducer implements JsonProducer{
             Optional<Object> rootObjectOptional = dataModel.getData(templateDataDefinition.getExpression());
             if (rootObjectOptional.isPresent()) {
                 Object rootObject = rootObjectOptional.get();
-                if (rootObject.getClass().isArray() || rootObject instanceof List) {
+                if (rootObject.getClass().isArray() || rootObject instanceof List || rootObject instanceof Set) {
                     // 视为数组模板
                     return constructRootArrayNodeTree(jsonProcessContext, template, rootObject);
                 } else {

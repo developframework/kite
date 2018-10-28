@@ -277,7 +277,7 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 | data         | 取值表达式                                                   | 否       |
 | for-class    | 声明data表达式指向的对象类型                                 | 否       |
 | extend       | 声明继承的kite和端口，格式为namespace.id:port（namespace不填时默认为当前namespace） | 否       |
-| map-function | 仅当data指代的数据为数组或List时有效。MapFunction的实现类全名或Expression表达式。详见[5.1.2节](#chapter512) | 否       |
+| map | 仅当data指代的数据为数组或List时有效。MapFunction的实现类全名或Expression表达式。详见[5.1.2节](#chapter512) | 否       |
 | xml-root     | 生成xml时的根节点名称                                        | 否       |
 | xml-item     | 生成xml时，子节点数组项的节点名称                            | 否       |
 
@@ -310,7 +310,7 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 | alias        | 别名，你可以重新定义显示名                                   | 否       |
 | for-class    | 声明data表达式指向的对象类型                                 | 否       |
 | null-hidden  | true时表示表达式取的值为null时隐藏该节点，默认为false        | 否       |
-| map-function | MapFunction的实现类全名或Expression表达式。详见[5.1.2节](#chapter512) | 否       |
+| map | MapFunction的实现类全名或Expression表达式。详见[5.1.2节](#chapter512) | 否       |
 | xml-item     | 生成xml时，子节点数组项的节点名称                            | 否       |
 
 `<array>`标签可以没有子标签，这时表示数组为基本类型数组。
@@ -389,16 +389,16 @@ Kite框架提供模块化设计json结构视图的功能。在一个`<template>`
 该标签用于实现一对多关联功能。详见[5.4.2.节](#chapter542)。
 
 ```xml
-<relevance data="" alias="" rel-function="" null-hidden="true"></relevance>
+<relevance data="" alias="" rel="" null-hidden="true"></relevance>
 ```
 
 | 属性           | 功能                                       | 是否必须 |
 | ------------ | ---------------------------------------- | ---- |
 | data         | 取值表达式，**data必须指代一个List或array类型的对象**      | 是    |
 | alias        | 别名，你可以重新定义显示名                            | 否    |
-| rel-function | 关联判定器全限定类名或expression表达式                 | 是    |
+| rel | 关联判定器全限定类名或expression表达式                 | 是    |
 | null-hidden  | true时表示表达式取的值为null时隐藏该节点，默认为false        | 否    |
-| map-function | MapFunction的实现类全名或Expression表达式。详见[5.1.2节](#chapter512) | 否    |
+| map | MapFunction的实现类全名或Expression表达式。详见[5.1.2节](#chapter512) | 否    |
 
 ###### d) object-virtual
 
@@ -903,9 +903,9 @@ dataModel.putData("nameConverter", (PropertyConverter<String>) source -> "My nam
 
 `<property>` 系列标签的`converter` 属性可以填写Expression表达式，还可以填写`PropertyConverter` 的接口实现类全类名。
 
-#### <a name="chapter512">**5.1.2. `<array>` 的元素映射器 `map-function`**</a>
+#### <a name="chapter512">**5.1.2. `<array>` 的元素映射器 `map`**</a>
 
-在`<array>`节点属性`map-function`用于指定对每个元素的映射函数。`map-function`的值可以为`Expression`表达式或一个实现`com.github.developframework.kite.core.dynamic.MapFunction`接口的完全类名。其中使用表达式方式，其获取的实例必须是`com.github.developframework.kite.core.dynamic.MapFunction`的实现类。具体示例：实现功能：对数组的每个元素进行映射处理，处理结果作为生成Json的数据。以下示例在字符串数组的每项元素以`value_{item}_{i}` 形式输出。
+在`<array>`节点属性`map`用于指定对每个元素的映射函数。`map`的值可以为`Expression`表达式或一个实现`com.github.developframework.kite.core.dynamic.MapFunction`接口的完全类名。其中使用表达式方式，其获取的实例必须是`com.github.developframework.kite.core.dynamic.MapFunction`的实现类。具体示例：实现功能：对数组的每个元素进行映射处理，处理结果作为生成Json的数据。以下示例在字符串数组的每项元素以`value_{item}_{i}` 形式输出。
 
 ```java
 String[] strArray = new String[]{"aaa", "bbb", "ccc"};
@@ -914,8 +914,8 @@ dataModel.putData("func", ((MapFunction<String, String>) (item, i) -> "value_" +
 ```
 
 ```xml
-<template id="array-map-function-demo" >
-  <array data="strArray" map-function="func"></array>
+<template id="array-map-demo" >
+  <array data="strArray" map="func"></array>
 </template>
 ```
 
@@ -924,12 +924,12 @@ dataModel.putData("func", ((MapFunction<String, String>) (item, i) -> "value_" +
 ```
 **注意**
 
-使用`map-function`会导致`<array>`标签的所有子节点失效，因为映射结果将会直接作为json数据。
+使用`map`会导致`<array>`标签的所有子节点失效，因为映射结果将会直接作为json数据。
 
 如果你设置了子节点将会出现以下警告：
 
 ```
-The child element invalid, because you use "map-function" attribute.
+The child element invalid, because you use "map" attribute.
 ```
 ### <a name="chapter52">**5.2. 虚拟结构**</a>
 
@@ -1116,7 +1116,7 @@ dataModel.putData("scores", scores);
 
 #### <a name="chapter542">**5.4.2. 根据条件关联**</a>
 
-假如A数组有2个元素，B数组有3个元素。其中A[0] 需要关联B[0]和B[1]， A[1] 需要关联B[2]。这种需求下就可以使用`<relevance>`标签，实现在数组间一对多关联。属性`rel-function` 指定判定条件，需要实现一个接口：
+假如A数组有2个元素，B数组有3个元素。其中A[0] 需要关联B[0]和B[1]， A[1] 需要关联B[2]。这种需求下就可以使用`<relevance>`标签，实现在数组间一对多关联。属性`rel` 指定判定条件，需要实现一个接口：
 
 ```java
 public interface RelFunction<S, T> {
@@ -1163,7 +1163,7 @@ dataModel.putData("schoolClasses", schoolClasses);
     <property data="id" />
     <property data="className" />
     <!-- 关联学生列表 -->
-    <relevance data="#students" rel-function="rel-function">
+    <relevance data="#students" rel="rel">
       <include id="student-detail" namespace="kite-student" />
     </relevance>
   </template>
@@ -1173,7 +1173,7 @@ dataModel.putData("schoolClasses", schoolClasses);
 实现`RelFunction`
 
 ```java
-dataModel.putData("rel-function", (RelFunction<SchoolClass, Student>) (sourceItem, sourceIndex, target, targetIndex) -> sourceItem.getId() == target.getClassId());
+dataModel.putData("rel", (RelFunction<SchoolClass, Student>) (sourceItem, sourceIndex, target, targetIndex) -> sourceItem.getId() == target.getClassId());
 ```
 
 判定条件为当SchoolClass（sourceItem）的id与Student（target）的classId相等时，允许关联。

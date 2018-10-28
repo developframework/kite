@@ -47,7 +47,7 @@
 
 	<!-- 数组类型的节点属性组 -->
 	<xs:attributeGroup name="arrayTypeElementAttributeGroup">
-		<xs:attribute name="map-function" type="xs:string" />
+		<xs:attribute name="map" type="xs:string"/>
 		<xs:attribute name="comparator" type="xs:string"/>
 		<xs:attribute name="limit" type="xs:string"/>
 		<xs:attribute name="xml-item" type="xs:string" />
@@ -181,7 +181,7 @@
 					<xs:complexType>
 						<xs:complexContent>
 							<xs:extension base="containerElementType">
-								<xs:attribute name="rel-function" type="xs:string" use="required"/>
+								<xs:attribute name="rel" type="xs:string" use="required"/>
 								<xs:attribute name="type">
 									<xs:simpleType>
 										<xs:restriction base="xs:string">

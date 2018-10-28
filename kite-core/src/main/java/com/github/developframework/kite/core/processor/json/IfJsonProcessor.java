@@ -8,7 +8,6 @@ import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.utils.KiteUtils;
 
 import java.util.Iterator;
-import java.util.Optional;
 
 /**
  * if节点处理器
@@ -23,15 +22,18 @@ public class IfJsonProcessor extends FunctionalJsonProcessor<IfKiteElement, Obje
 
     @Override
     protected void handleCoreLogic(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
-        Optional<Condition> condition = KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), element.getConditionValue(), Condition.class, "condition");
-        boolean verifyResult = condition.get().verify(jsonProcessContext.getDataModel(), parentProcessor.value);
-        if (verifyResult) {
-            // 执行if
-            executeIfTrue(parentProcessor);
-        } else {
-            // 执行else
-            executeIfFalse(parentProcessor);
-        }
+        element.getConditionValue()
+                .map(conditionValue -> KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), conditionValue, Condition.class, "condition"))
+                .ifPresent(condition -> {
+                    boolean verifyResult = condition.verify(jsonProcessContext.getDataModel(), parentProcessor.value);
+                    if (verifyResult) {
+                        // 执行if
+                        executeIfTrue(parentProcessor);
+                    } else {
+                        // 执行else
+                        executeIfFalse(parentProcessor);
+                    }
+                });
     }
 
     /**

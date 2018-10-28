@@ -3,6 +3,7 @@ package com.github.developframework.kite.core.processor.json;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.developframework.expression.ExpressionUtils;
 import com.github.developframework.kite.core.dynamic.MapFunction;
 import com.github.developframework.kite.core.element.ArrayKiteElement;
 import com.github.developframework.kite.core.element.KiteElement;
@@ -45,18 +46,30 @@ public class ArrayJsonProcessor extends ContainerJsonProcessor<ArrayKiteElement,
     protected void handleCoreLogic(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
         Object[] array = (Object[]) value;
         // 处理comparator功能
-        Optional<Comparator> comparator = KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), element.getComparatorValue(), Comparator.class, "comparator");
-        comparator.ifPresent(c -> Arrays.sort(array, c));
-        // 处理mapFunction功能
-        Optional<MapFunction> mapFunction = KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), element.getMapFunctionValue(), MapFunction.class, "map-function");
+        element.getComparatorValue()
+                .map(comparatorValue -> KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), comparatorValue, Comparator.class, "comparator"))
+                .ifPresent(comparator -> Arrays.sort(array, comparator));
         // 处理limit功能
         int length = element.getLimit() != null && element.getLimit() < array.length ? element.getLimit() : array.length;
         for (int i = 0; i < length; i++) {
-            if (element.isChildElementEmpty()) {
+            if (element.getMapFunctionValue().isPresent()) {
+                // 处理mapFunction功能
+                log.warn("The child element invalid, because you use \"map\" attribute.");
+
+                String mapFunctionValue = element.getMapFunctionValue().get();
+                Object itemValue;
+                // 处理this开头的表达式，直接取元素属性值
+                if (mapFunctionValue.startsWith("this.")) {
+                    itemValue = ExpressionUtils.getValue(array[i], mapFunctionValue.substring(5));
+                } else {
+                    MapFunction mapFunction = element.getMapFunctionValue()
+                            .map(mfv -> KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), mfv, MapFunction.class, "map"))
+                            .get();
+                    itemValue = mapFunction.apply(array[i], i);
+                }
+                empty(itemValue);
+            } else if (element.isChildElementEmpty()) {
                 empty(array[i]);
-            } else if (mapFunction.isPresent()) {
-                log.warn("The child element invalid, because you use \"map-function\" attribute.");
-                empty(mapFunction.get().apply(array[i], i));
             } else {
                 final ObjectInArrayJsonProcessor childProcessor = new ObjectInArrayJsonProcessor(jsonProcessContext, element.getItemObjectElement(), i, length);
                 childProcessor.setValue(array[i]);
