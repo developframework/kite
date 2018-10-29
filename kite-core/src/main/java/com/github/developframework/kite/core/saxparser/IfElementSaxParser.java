@@ -8,7 +8,7 @@ import org.xml.sax.Attributes;
  * if节点解析器
  * @author qiuzhenhao
  */
-class IfElementSaxParser extends AbstractElementSaxParser{
+class IfElementSaxParser extends AbstractElementSaxParser {
 
     IfElementSaxParser(KiteConfiguration kiteConfiguration) {
         super(kiteConfiguration);

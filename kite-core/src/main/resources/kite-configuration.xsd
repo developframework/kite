@@ -249,6 +249,28 @@
 						</xs:element>
 					</xs:choice>
 				</xs:sequence>
+
+				<!-- switch & case -->
+				<xs:element name="switch">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:sequence maxOccurs="unbounded">
+								<xs:element name="case">
+									<xs:complexType>
+										<xs:group ref="childElementGroup"/>
+										<xs:attribute name="test" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:element name="default" minOccurs="0">
+								<xs:complexType>
+									<xs:group ref="childElementGroup"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="data" type="xs:string" use="required"/>
+					</xs:complexType>
+				</xs:element>
 			</xs:choice>
 		</xs:sequence>
 	</xs:group>

@@ -1,10 +1,7 @@
 package com.github.developframework.kite.core.saxparser;
 
 import com.github.developframework.kite.core.KiteConfiguration;
-import com.github.developframework.kite.core.element.IfKiteElement;
-import com.github.developframework.kite.core.element.KiteElement;
-import com.github.developframework.kite.core.element.Template;
-import com.github.developframework.kite.core.element.TemplatePackage;
+import com.github.developframework.kite.core.element.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,6 +23,8 @@ class ParseContext {
     private Template currentTemplate;
     @Setter
     private IfKiteElement currentIfElement;
+    @Setter
+    private SwitchKiteElement currentSwitchElement;
     /* 节点栈 */
     private Stack<KiteElement> stack;
 
