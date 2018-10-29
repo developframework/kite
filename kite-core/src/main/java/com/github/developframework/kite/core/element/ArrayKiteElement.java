@@ -3,6 +3,7 @@ package com.github.developframework.kite.core.element;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.developframework.kite.core.KiteConfiguration;
+import com.github.developframework.kite.core.TemplateLocation;
 import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.exception.KiteException;
 import com.github.developframework.kite.core.processor.json.ArrayJsonProcessor;
@@ -38,13 +39,13 @@ public class ArrayKiteElement extends ContainerKiteElement{
     @Getter
     protected Integer limit;
 
-    public ArrayKiteElement(KiteConfiguration configuration, String namespace, String templateId, DataDefinition dataDefinition, String alias) {
-        super(configuration, namespace, templateId, dataDefinition, alias);
-        this.itemObjectElement = new ObjectKiteElement(configuration, namespace, templateId, dataDefinition, alias);
+    public ArrayKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, DataDefinition dataDefinition, String alias) {
+        super(configuration, templateLocation, dataDefinition, alias);
+        this.itemObjectElement = new ObjectKiteElement(configuration, templateLocation, dataDefinition, alias);
     }
 
     public ArrayKiteElement(KiteConfiguration configuration, ContainerKiteElement containerElement, DataDefinition dataDefinition) {
-        this(configuration, containerElement.namespace, containerElement.templateId, dataDefinition, containerElement.alias);
+        this(configuration, containerElement.templateLocation, dataDefinition, containerElement.alias);
         this.copyChildElement(containerElement);
     }
 
@@ -80,7 +81,7 @@ public class ArrayKiteElement extends ContainerKiteElement{
 
     public String getXmlItemName() {
         if(StringUtils.isBlank(xmlItemName)) {
-            throw new KiteException("\"xml-item\" is undefined in template \"%s : %s\".", namespace, templateId);
+            throw new KiteException("\"xml-item\" is undefined in template \"%s\".", templateLocation.toString());
         }
         return xmlItemName;
     }

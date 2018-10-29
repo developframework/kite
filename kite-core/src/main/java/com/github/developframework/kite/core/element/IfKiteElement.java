@@ -3,6 +3,7 @@ package com.github.developframework.kite.core.element;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.developframework.kite.core.KiteConfiguration;
+import com.github.developframework.kite.core.TemplateLocation;
 import com.github.developframework.kite.core.processor.json.IfJsonProcessor;
 import com.github.developframework.kite.core.processor.json.JsonProcessContext;
 import com.github.developframework.kite.core.processor.json.JsonProcessor;
@@ -25,8 +26,8 @@ public class IfKiteElement extends ContainerFunctionalKiteElement {
     @Setter
     private ElseKiteElement elseElement;
 
-    public IfKiteElement(KiteConfiguration configuration, String namespace, String templateId, String conditionValue) {
-        super(configuration, namespace, templateId);
+    public IfKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, String conditionValue) {
+        super(configuration, templateLocation);
         this.conditionValue = conditionValue;
     }
 

@@ -3,6 +3,7 @@ package com.github.developframework.kite.core.element;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.developframework.kite.core.KiteConfiguration;
+import com.github.developframework.kite.core.TemplateLocation;
 import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.exception.KiteException;
 import com.github.developframework.kite.core.processor.json.JsonProcessContext;
@@ -39,8 +40,8 @@ public class Template extends ObjectKiteElement {
     @Setter
     private String xmlItemName;
 
-    public Template(KiteConfiguration configuration, String namespace, String templateId) {
-        super(configuration, namespace, templateId, null, null);
+    public Template(KiteConfiguration configuration, TemplateLocation templateLocation) {
+        super(configuration, templateLocation, null, null);
     }
 
     @Override
@@ -72,35 +73,35 @@ public class Template extends ObjectKiteElement {
     @Getter
     public class Extend {
 
-        private String namespace;
-
-        private String templateId;
+        private TemplateLocation extendTemplateLocation;
 
         private String port;
 
         public Extend(String extendValue, String defaultNamespace) {
             String front = StringUtils.substringBefore(extendValue, ":");
             this.port = StringUtils.substringAfter(extendValue, ":");
+            String namespace, templateId;
             if (front.contains(".")) {
-                this.namespace = StringUtils.substringBefore(front, ".");
-                this.templateId = StringUtils.substringAfter(front, ".");
+                namespace = StringUtils.substringBefore(front, ".");
+                templateId = StringUtils.substringAfter(front, ".");
             } else {
-                this.namespace = defaultNamespace;
-                this.templateId = front;
+                namespace = defaultNamespace;
+                templateId = front;
             }
+            extendTemplateLocation = new TemplateLocation(namespace, templateId);
         }
     }
 
     public String getXmlRootName() {
         if (StringUtils.isBlank(xmlRootName) && dataDefinition == DataDefinition.EMPTY_DATA_DEFINITION) {
-            throw new KiteException("\"xml-root\" is undefined in template \"%s : %s\".", namespace, templateId);
+            throw new KiteException("\"xml-root\" is undefined in template \"%s\".", templateLocation);
         }
         return xmlRootName;
     }
 
     public String getXmlItemName() {
         if(StringUtils.isBlank(xmlItemName)) {
-            throw new KiteException("\"xml-item\" is undefined in template \"%s : %s\".", namespace, templateId);
+            throw new KiteException("\"xml-item\" is undefined in template \"%s\".", templateLocation);
         }
         return xmlItemName;
     }

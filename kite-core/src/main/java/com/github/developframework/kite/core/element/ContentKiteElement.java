@@ -4,6 +4,7 @@ import com.github.developframework.expression.ArrayExpression;
 import com.github.developframework.expression.Expression;
 import com.github.developframework.expression.ObjectExpression;
 import com.github.developframework.kite.core.KiteConfiguration;
+import com.github.developframework.kite.core.TemplateLocation;
 import com.github.developframework.kite.core.data.DataDefinition;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,8 +32,8 @@ public abstract class ContentKiteElement extends AbstractKiteElement {
 
     protected boolean nullHidden;
 
-    public ContentKiteElement(KiteConfiguration configuration, String namespace, String templateId, DataDefinition dataDefinition, String alias) {
-        super(configuration, namespace, templateId);
+    public ContentKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, DataDefinition dataDefinition, String alias) {
+        super(configuration, templateLocation);
         this.dataDefinition = dataDefinition;
         this.alias = alias;
     }

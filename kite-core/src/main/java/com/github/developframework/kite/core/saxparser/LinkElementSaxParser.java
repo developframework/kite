@@ -22,6 +22,6 @@ class LinkElementSaxParser extends ContainerElementSaxParser<LinkKiteElement>  {
 
     @Override
     protected LinkKiteElement createElementInstance(ParseContext parseContext, DataDefinition dataDefinition, String alias) {
-        return new LinkKiteElement(kiteConfiguration, parseContext.getCurrentTemplate().getNamespace(), parseContext.getCurrentTemplate().getTemplateId(), dataDefinition, alias);
+        return new LinkKiteElement(kiteConfiguration, parseContext.getCurrentTemplateLocation(), dataDefinition, alias);
     }
 }

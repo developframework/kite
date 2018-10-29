@@ -39,7 +39,7 @@ public class TemplatePackage extends HashMap<String, Template>{
      * @param template 模板
      */
     public void push(Template template) {
-        String templateId = template.getTemplateId();
+        String templateId = template.getTemplateLocation().getTemplateId();
         if (super.containsKey(templateId)) {
             throw new ResourceNotUniqueException("Kite template", templateId);
         }

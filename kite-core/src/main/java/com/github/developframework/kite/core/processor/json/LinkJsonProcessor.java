@@ -31,7 +31,7 @@ public class LinkJsonProcessor extends ObjectJsonProcessor {
         if (valueOptional.isPresent()) {
             Object[] array = KiteUtils.objectToArray(valueOptional.get(), element);
             if (array.length != ((ObjectInArrayJsonProcessor) parentProcessor).getSize()) {
-                throw new LinkSizeNotEqualException(element.getNamespace(), element.getTemplateId());
+                throw new LinkSizeNotEqualException(element.getTemplateLocation());
             }
             value = array[index];
             return true;

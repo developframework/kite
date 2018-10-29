@@ -3,6 +3,7 @@ package com.github.developframework.kite.core.element;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.developframework.kite.core.KiteConfiguration;
+import com.github.developframework.kite.core.TemplateLocation;
 import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.processor.json.JsonProcessContext;
 import com.github.developframework.kite.core.processor.json.JsonProcessor;
@@ -30,8 +31,8 @@ public class RelevanceKiteElement extends ArrayKiteElement {
     @Getter
     private RelevanceType relevanceType;
 
-    public RelevanceKiteElement(KiteConfiguration configuration, String namespace, String templateId, DataDefinition dataDefinition, String alias) {
-        super(configuration, namespace, templateId, dataDefinition, alias);
+    public RelevanceKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, DataDefinition dataDefinition, String alias) {
+        super(configuration, templateLocation, dataDefinition, alias);
     }
 
     @Override
@@ -60,7 +61,7 @@ public class RelevanceKiteElement extends ArrayKiteElement {
     public ContentKiteElement createProxyObjectElement() {
         if (isChildElementEmpty()) {
             // 如果没有子节点，视为普通属性节点处理
-            return new ProxyNormalPropertyKiteElement(configuration, namespace, templateId, dataDefinition, alias);
+            return new ProxyNormalPropertyKiteElement(configuration, templateLocation, dataDefinition, alias);
         } else {
             // 如果有子节点，视为数组节点处理
             return new ObjectKiteElement(configuration, this, dataDefinition);
@@ -70,7 +71,7 @@ public class RelevanceKiteElement extends ArrayKiteElement {
     public ContentKiteElement createProxyArrayElement() {
         if (isChildElementEmpty()) {
             // 如果没有子节点，视为普通属性节点处理
-            return new ProxyNormalPropertyKiteElement(configuration, namespace, templateId, dataDefinition, alias);
+            return new ProxyNormalPropertyKiteElement(configuration, templateLocation, dataDefinition, alias);
         } else {
             // 如果有子节点，视为数组节点处理
             ArrayKiteElement arrayKiteElement = new ArrayKiteElement(configuration, this, dataDefinition);

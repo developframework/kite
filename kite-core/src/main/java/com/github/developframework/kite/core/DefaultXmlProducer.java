@@ -110,7 +110,7 @@ class DefaultXmlProducer implements XmlProducer {
         Element objNode;
         if(StringUtils.isBlank(xmlRootName)) {
             if (StringUtils.isBlank(objNodeName)) {
-                throw new KiteException("\"data\" or \"xml-root\" is undefined in template \"%s : %s\".", template.getNamespace(), template.getTemplateId());
+                throw new KiteException("\"data\" or \"xml-root\" is undefined in template \"%s\".", template.getTemplateLocation().toString());
             } else {
                 objNode = document.addElement(objNodeName);
             }
@@ -136,7 +136,7 @@ class DefaultXmlProducer implements XmlProducer {
         Element arrayNode;
         if(StringUtils.isBlank(xmlRootName)) {
             if (StringUtils.isBlank(arrayNodeName)) {
-                throw new KiteException("\"data\" or \"xml-root\" is undefined in template \"%s : %s\".", template.getNamespace(), template.getTemplateId());
+                throw new KiteException("\"data\" or \"xml-root\" is undefined in template \"%s\".", template.getTemplateLocation().toString());
             } else {
                 arrayNode = document.addElement(arrayNodeName);
             }
@@ -144,7 +144,7 @@ class DefaultXmlProducer implements XmlProducer {
             Element rootNode = document.addElement(xmlRootName);
             arrayNode = rootNode.addElement(arrayNodeName);
         }
-        ArrayKiteElement arrayElement = new ArrayKiteElement(kiteConfiguration, template.getNamespace(), template.getTemplateId(), template.getDataDefinition(), null);
+        ArrayKiteElement arrayElement = new ArrayKiteElement(kiteConfiguration, template.getTemplateLocation(), template.getDataDefinition(), null);
         arrayElement.setXmlItemName(template.getXmlItemName());
         arrayElement.setMapFunctionValue(template.getMapFunctionValue());
         ArrayXmlProcessor arrayProcessor = new ArrayTemplateXmlProcessor(xmlProcessContext, template, arrayElement);

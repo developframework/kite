@@ -3,6 +3,7 @@ package com.github.developframework.kite.core.element;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.developframework.kite.core.KiteConfiguration;
+import com.github.developframework.kite.core.TemplateLocation;
 import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.processor.json.JsonProcessContext;
 import com.github.developframework.kite.core.processor.json.JsonProcessor;
@@ -19,8 +20,8 @@ import org.dom4j.Element;
  */
 public class LinkKiteElement extends ObjectKiteElement {
 
-    public LinkKiteElement(KiteConfiguration kiteConfiguration, String namespace, String templateId, DataDefinition dataDefinition, String alias) {
-        super(kiteConfiguration, namespace, templateId, dataDefinition, alias);
+    public LinkKiteElement(KiteConfiguration kiteConfiguration, TemplateLocation templateLocation, DataDefinition dataDefinition, String alias) {
+        super(kiteConfiguration, templateLocation, dataDefinition, alias);
     }
 
     @Override
@@ -45,7 +46,7 @@ public class LinkKiteElement extends ObjectKiteElement {
     public ContentKiteElement createProxyContentElement() {
         if (isChildElementEmpty()) {
             // 如果没有子节点，视为普通属性节点处理
-            return new ProxyNormalPropertyKiteElement(configuration, namespace, templateId, dataDefinition, alias);
+            return new ProxyNormalPropertyKiteElement(configuration, templateLocation, dataDefinition, alias);
         } else {
             // 如果有子节点，视为对象节点处理
             return new ObjectKiteElement(configuration, this, dataDefinition);

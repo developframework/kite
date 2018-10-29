@@ -1,6 +1,7 @@
 package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.KiteConfiguration;
+import com.github.developframework.kite.core.TemplateLocation;
 import lombok.Getter;
 
 /**
@@ -13,14 +14,11 @@ public abstract class AbstractKiteElement implements KiteElement {
 
     /* 配置 */
     protected KiteConfiguration configuration;
-    /* 所在命名空间 */
-    protected String namespace;
-    /* 所在模板 */
-    protected String templateId;
+    /* 所在位置 */
+    protected TemplateLocation templateLocation;
 
-    public AbstractKiteElement(KiteConfiguration configuration, String namespace, String templateId) {
+    public AbstractKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation) {
         this.configuration = configuration;
-        this.namespace = namespace;
-        this.templateId = templateId;
+        this.templateLocation = templateLocation;
     }
 }

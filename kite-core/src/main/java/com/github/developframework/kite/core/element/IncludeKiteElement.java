@@ -3,6 +3,7 @@ package com.github.developframework.kite.core.element;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.developframework.kite.core.KiteConfiguration;
+import com.github.developframework.kite.core.TemplateLocation;
 import com.github.developframework.kite.core.processor.json.IncludeJsonProcessor;
 import com.github.developframework.kite.core.processor.json.JsonProcessContext;
 import com.github.developframework.kite.core.processor.json.JsonProcessor;
@@ -21,15 +22,11 @@ import org.dom4j.Element;
 @Setter
 public class IncludeKiteElement extends FunctionalKiteElement {
 
-    /* 命名空间 */
-    private String targetNamespace;
-    /* 模板ID */
-    private String targetTemplateId;
+    private TemplateLocation targetTemplateLocation;
 
-    public IncludeKiteElement(KiteConfiguration configuration, String namespace, String templateId, String targetNamespace, String targetTemplateId) {
-        super(configuration, namespace, templateId);
-        this.targetNamespace = targetNamespace;
-        this.targetTemplateId = targetTemplateId;
+    public IncludeKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, TemplateLocation targetTemplateLocation) {
+        super(configuration, templateLocation);
+        this.targetTemplateLocation = targetTemplateLocation;
     }
 
     @Override

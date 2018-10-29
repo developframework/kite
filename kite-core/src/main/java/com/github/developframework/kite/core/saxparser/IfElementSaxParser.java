@@ -22,7 +22,7 @@ class IfElementSaxParser extends AbstractElementSaxParser {
     @Override
     public void handleAtStartElement(ParseContext parseContext, Attributes attributes) {
         final String condition = attributes.getValue("condition").trim();
-        final IfKiteElement ifElement = new IfKiteElement(kiteConfiguration, parseContext.getCurrentTemplate().getNamespace(), parseContext.getCurrentTemplate().getTemplateId(), condition);
+        final IfKiteElement ifElement = new IfKiteElement(kiteConfiguration, parseContext.getCurrentTemplateLocation(), condition);
         parseContext.setCurrentIfElement(ifElement);
         addChildElement(parseContext, ifElement);
         parseContext.getStack().push(ifElement);

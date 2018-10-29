@@ -21,7 +21,7 @@ class ElseElementSaxParser extends AbstractElementSaxParser{
 
     @Override
     public void handleAtStartElement(ParseContext parseContext, Attributes attributes) {
-        final ElseKiteElement elseElement = new ElseKiteElement(kiteConfiguration, parseContext.getCurrentTemplate().getNamespace(), parseContext.getCurrentTemplate().getTemplateId());
+        final ElseKiteElement elseElement = new ElseKiteElement(kiteConfiguration, parseContext.getCurrentTemplateLocation());
         parseContext.getCurrentIfElement().setElseElement(elseElement);
         parseContext.getStack().push(elseElement);
     }

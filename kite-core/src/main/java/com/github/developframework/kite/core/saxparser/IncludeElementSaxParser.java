@@ -1,6 +1,7 @@
 package com.github.developframework.kite.core.saxparser;
 
 import com.github.developframework.kite.core.KiteConfiguration;
+import com.github.developframework.kite.core.TemplateLocation;
 import com.github.developframework.kite.core.element.IncludeKiteElement;
 import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.Attributes;
@@ -25,7 +26,7 @@ class IncludeElementSaxParser extends AbstractElementSaxParser{
         final String templateId = attributes.getValue("id").trim();
         String namespace = attributes.getValue("namespace");
         namespace = StringUtils.isNotBlank(namespace) ? namespace.trim() : parseContext.getCurrentTemplatePackage().getNamespace();
-        final IncludeKiteElement includeElement = new IncludeKiteElement(kiteConfiguration, parseContext.getCurrentTemplate().getNamespace(), parseContext.getCurrentTemplate().getTemplateId(), namespace, templateId);
+        final IncludeKiteElement includeElement = new IncludeKiteElement(kiteConfiguration, parseContext.getCurrentTemplateLocation(), new TemplateLocation(namespace, templateId));
         addChildElement(parseContext, includeElement);
     }
 

@@ -1,6 +1,7 @@
 package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.KiteConfiguration;
+import com.github.developframework.kite.core.TemplateLocation;
 import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.exception.KiteParseXmlException;
 import lombok.Getter;
@@ -27,8 +28,8 @@ public abstract class ContainerKiteElement extends ContentKiteElement implements
     /* 忽略的属性名称列表 */
     protected List<String> ignorePropertyNames = new ArrayList<>();
 
-    public ContainerKiteElement(KiteConfiguration configuration, String namespace, String templateId, DataDefinition dataDefinition, String alias) {
-        super(configuration, namespace, templateId, dataDefinition, alias);
+    public ContainerKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, DataDefinition dataDefinition, String alias) {
+        super(configuration, templateLocation, dataDefinition, alias);
     }
 
     /**
@@ -62,7 +63,7 @@ public abstract class ContainerKiteElement extends ContentKiteElement implements
             for (Field field : fields) {
                 if (!ignorePropertyNames.contains(field.getName())) {
                     DataDefinition dataDefinition = new DataDefinition(field.getName());
-                    PropertyKiteElement propertyElement = new NormalPropertyKiteElement(configuration, this.getNamespace(), this.getTemplateId(), dataDefinition, null);
+                    PropertyKiteElement propertyElement = new NormalPropertyKiteElement(configuration, templateLocation, dataDefinition, null);
                     if (!childKiteElements.contains(propertyElement)) {
                         addChildElement(propertyElement);
                     }
@@ -77,8 +78,7 @@ public abstract class ContainerKiteElement extends ContentKiteElement implements
         this.alias = otherContainerElement.alias;
         this.forClass = otherContainerElement.forClass;
         this.nullHidden = otherContainerElement.nullHidden;
-        this.namespace = otherContainerElement.namespace;
-        this.templateId = otherContainerElement.templateId;
+        this.templateLocation = otherContainerElement.templateLocation;
     }
 
     @Override

@@ -25,7 +25,7 @@ public class SwitchElementSaxParser extends AbstractElementSaxParser {
     @Override
     public void handleAtStartElement(ParseContext parseContext, Attributes attributes) {
         final DataDefinition dataDefinition = new DataDefinition(attributes.getValue("data"));
-        SwitchKiteElement switchKiteElement = new SwitchKiteElement(kiteConfiguration, parseContext.getCurrentTemplate().getNamespace(), parseContext.getCurrentTemplate().getTemplateId(), dataDefinition);
+        SwitchKiteElement switchKiteElement = new SwitchKiteElement(kiteConfiguration, parseContext.getCurrentTemplateLocation(), dataDefinition);
         parseContext.setCurrentSwitchElement(switchKiteElement);
         addChildElement(parseContext, switchKiteElement);
         parseContext.getStack().push(switchKiteElement);

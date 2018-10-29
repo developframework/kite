@@ -23,7 +23,7 @@ class VirtualObjectElementSaxParser extends ContainerElementSaxParser<VirtualObj
 
     @Override
     protected VirtualObjectKiteElement createElementInstance(ParseContext parseContext, DataDefinition dataDefinition, String alias) {
-        return new VirtualObjectKiteElement(kiteConfiguration, parseContext.getCurrentTemplate().getNamespace(), parseContext.getCurrentTemplate().getTemplateId(), dataDefinition, alias);
+        return new VirtualObjectKiteElement(kiteConfiguration, parseContext.getCurrentTemplateLocation(), dataDefinition, alias);
     }
 
     @Override

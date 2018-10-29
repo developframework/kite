@@ -1,6 +1,7 @@
 package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.KiteConfiguration;
+import com.github.developframework.kite.core.TemplateLocation;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -15,8 +16,8 @@ public abstract class ContainerFunctionalKiteElement extends FunctionalKiteEleme
     /* 子节点列表 */
     protected List<KiteElement> childElements = new LinkedList<>();
 
-    public ContainerFunctionalKiteElement(KiteConfiguration configuration, String namespace, String templateId) {
-        super(configuration, namespace, templateId);
+    public ContainerFunctionalKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation) {
+        super(configuration, templateLocation);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.github.developframework.kite.core.element;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.developframework.kite.core.KiteConfiguration;
+import com.github.developframework.kite.core.TemplateLocation;
 import com.github.developframework.kite.core.processor.json.CaseJsonProcessor;
 import com.github.developframework.kite.core.processor.json.JsonProcessContext;
 import com.github.developframework.kite.core.processor.json.JsonProcessor;
@@ -22,8 +23,8 @@ public class CaseKiteElement extends ContainerFunctionalKiteElement {
     @Getter
     private String testValue;
 
-    public CaseKiteElement(KiteConfiguration configuration, String namespace, String templateId, String testValue) {
-        super(configuration, namespace, templateId);
+    public CaseKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, String testValue) {
+        super(configuration, templateLocation);
         this.testValue = testValue;
     }
 

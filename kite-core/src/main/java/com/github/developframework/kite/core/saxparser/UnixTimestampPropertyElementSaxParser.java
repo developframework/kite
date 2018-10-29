@@ -22,6 +22,6 @@ class UnixTimestampPropertyElementSaxParser extends PropertyElementSaxParser {
 
     @Override
     protected PropertyKiteElement createElementInstance(ParseContext parseContext, DataDefinition dataDefinition, String alias) {
-        return new UnixTimestampPropertyKiteElement(kiteConfiguration, parseContext.getCurrentTemplate().getNamespace(), parseContext.getCurrentTemplate().getTemplateId(), dataDefinition, alias);
+        return new UnixTimestampPropertyKiteElement(kiteConfiguration, parseContext.getCurrentTemplateLocation(), dataDefinition, alias);
     }
 }

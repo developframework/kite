@@ -23,7 +23,7 @@ class ArrayElementSaxParser extends ContainerElementSaxParser<ArrayKiteElement> 
 
     @Override
     protected ArrayKiteElement createElementInstance(ParseContext parseContext, DataDefinition dataDefinition, String alias) {
-        return new ArrayKiteElement(kiteConfiguration, parseContext.getCurrentTemplate().getNamespace(), parseContext.getCurrentTemplate().getTemplateId(), dataDefinition, alias);
+        return new ArrayKiteElement(kiteConfiguration, parseContext.getCurrentTemplateLocation(), dataDefinition, alias);
     }
 
     @Override

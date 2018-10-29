@@ -18,7 +18,7 @@ public class XmlAttributeElementSaxParser extends ContentElementSaxParser<XmlAtt
 
     @Override
     protected XmlAttributeElement createElementInstance(ParseContext parseContext, DataDefinition dataDefinition, String alias) {
-        return new XmlAttributeElement(kiteConfiguration, parseContext.getCurrentTemplate().getNamespace(), parseContext.getCurrentTemplate().getTemplateId(), dataDefinition, alias);
+        return new XmlAttributeElement(kiteConfiguration, parseContext.getCurrentTemplateLocation(), dataDefinition, alias);
     }
 
     @Override

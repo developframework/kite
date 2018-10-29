@@ -20,7 +20,7 @@ public class IncludeXmlProcessor extends FunctionalXmlProcessor<IncludeKiteEleme
     @Override
     protected void handleCoreLogic(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
         KiteConfiguration kiteConfiguration = xmlProcessContext.getConfiguration();
-        Template template = kiteConfiguration.extractTemplate(element.getTargetNamespace(), element.getTargetTemplateId());
+        Template template = kiteConfiguration.extractTemplate(element.getTargetTemplateLocation().getNamespace(), element.getTargetTemplateLocation().getTemplateId());
         for (Iterator<KiteElement> iterator = template.childElementIterator(); iterator.hasNext();) {
             final KiteElement childElement = iterator.next();
             final XmlProcessor<? extends KiteElement, ? extends Element> childProcessor = childElement.createXmlProcessor(xmlProcessContext, node);

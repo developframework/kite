@@ -1,6 +1,7 @@
 package com.github.developframework.kite.core.saxparser;
 
 import com.github.developframework.kite.core.KiteConfiguration;
+import com.github.developframework.kite.core.TemplateLocation;
 import com.github.developframework.kite.core.element.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,5 +32,9 @@ class ParseContext {
     public ParseContext(KiteConfiguration configuration) {
         this.configuration = configuration;
         this.stack = new Stack<>();
+    }
+
+    public TemplateLocation getCurrentTemplateLocation() {
+        return currentTemplate.getTemplateLocation();
     }
 }

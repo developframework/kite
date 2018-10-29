@@ -110,7 +110,7 @@ class DefaultJsonProducer implements JsonProducer {
 
     private ArrayNode constructRootArrayNodeTree(JsonProcessContext jsonProcessContext, Template template, Object value) {
         ArrayNode rootNode = kiteConfiguration.getObjectMapper().createArrayNode();
-        ArrayKiteElement arrayElement = new ArrayKiteElement(kiteConfiguration, template.getNamespace(), template.getTemplateId(), template.getDataDefinition(), null);
+        ArrayKiteElement arrayElement = new ArrayKiteElement(kiteConfiguration, template.getTemplateLocation(), template.getDataDefinition(), null);
         arrayElement.setMapFunctionValue(template.getMapFunctionValue());
         ArrayJsonProcessor arrayProcessor = new ArrayTemplateJsonProcessor(jsonProcessContext, template, arrayElement);
         arrayProcessor.setValue(value);

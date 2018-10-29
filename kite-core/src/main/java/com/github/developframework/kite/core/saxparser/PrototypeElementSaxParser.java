@@ -21,7 +21,7 @@ class PrototypeElementSaxParser extends PropertyElementSaxParser{
 
     @Override
     protected PrototypeKiteElement createElementInstance(ParseContext parseContext, DataDefinition dataDefinition, String alias) {
-        return new PrototypeKiteElement(kiteConfiguration, parseContext.getCurrentTemplate().getNamespace(), parseContext.getCurrentTemplate().getTemplateId(), dataDefinition, alias);
+        return new PrototypeKiteElement(kiteConfiguration, parseContext.getCurrentTemplateLocation(), dataDefinition, alias);
     }
 
 }

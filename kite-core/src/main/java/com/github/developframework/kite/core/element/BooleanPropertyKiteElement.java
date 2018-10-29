@@ -3,6 +3,7 @@ package com.github.developframework.kite.core.element;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.developframework.kite.core.KiteConfiguration;
+import com.github.developframework.kite.core.TemplateLocation;
 import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.processor.json.BooleanPropertyJsonProcessor;
 import com.github.developframework.kite.core.processor.json.JsonProcessContext;
@@ -20,8 +21,8 @@ import org.dom4j.Element;
  */
 public class BooleanPropertyKiteElement extends PropertyKiteElement {
 
-    public BooleanPropertyKiteElement(KiteConfiguration configuration, String namespace, String templateId, DataDefinition dataDefinition, String alias) {
-        super(configuration, namespace, templateId, dataDefinition, alias);
+    public BooleanPropertyKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, DataDefinition dataDefinition, String alias) {
+        super(configuration, templateLocation, dataDefinition, alias);
     }
 
     @Override

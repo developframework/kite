@@ -3,6 +3,7 @@ package com.github.developframework.kite.core.element;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.developframework.kite.core.KiteConfiguration;
+import com.github.developframework.kite.core.TemplateLocation;
 import com.github.developframework.kite.core.processor.json.ElseJsonProcessor;
 import com.github.developframework.kite.core.processor.json.JsonProcessContext;
 import com.github.developframework.kite.core.processor.json.JsonProcessor;
@@ -17,8 +18,8 @@ import org.dom4j.Element;
  */
 public class ElseKiteElement extends ContainerFunctionalKiteElement{
 
-    public ElseKiteElement(KiteConfiguration configuration, String namespace, String templateId) {
-        super(configuration, namespace, templateId);
+    public ElseKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation) {
+        super(configuration, templateLocation);
     }
 
     @Override

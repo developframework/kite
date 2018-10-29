@@ -22,7 +22,7 @@ public class DefaultCaseElementSaxParser extends AbstractElementSaxParser {
 
     @Override
     public void handleAtStartElement(ParseContext parseContext, Attributes attributes) {
-        CaseKiteElement caseKiteElement = new CaseKiteElement(kiteConfiguration, parseContext.getCurrentTemplate().getNamespace(), parseContext.getCurrentTemplate().getTemplateId(), null);
+        CaseKiteElement caseKiteElement = new CaseKiteElement(kiteConfiguration, parseContext.getCurrentTemplateLocation(), null);
         parseContext.getCurrentSwitchElement().setDefaultCaseKiteElement(caseKiteElement);
         parseContext.getStack().push(caseKiteElement);
     }

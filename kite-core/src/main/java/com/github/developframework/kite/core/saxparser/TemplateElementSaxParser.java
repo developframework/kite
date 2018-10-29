@@ -1,6 +1,7 @@
 package com.github.developframework.kite.core.saxparser;
 
 import com.github.developframework.kite.core.KiteConfiguration;
+import com.github.developframework.kite.core.TemplateLocation;
 import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.element.Template;
 import org.apache.commons.lang3.StringUtils;
@@ -29,7 +30,7 @@ class TemplateElementSaxParser extends ContainerElementSaxParser<Template>{
         final String mapFunctionValue = attributes.getValue("map");
         final String xmlRootName = attributes.getValue("xml-root");
         final String xmlItemName = attributes.getValue("xml-item");
-        final Template template = new Template(kiteConfiguration, parseContext.getCurrentTemplatePackage().getNamespace(), id);
+        final Template template = new Template(kiteConfiguration, new TemplateLocation(parseContext.getCurrentTemplatePackage().getNamespace(), id));
         if (StringUtils.isNotBlank(data)) {
             template.setDataDefinition(new DataDefinition(data));
         } else {

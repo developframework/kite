@@ -31,7 +31,7 @@ public class LinkXmlProcessor extends ObjectXmlProcessor {
         if (valueOptional.isPresent()) {
             Object[] array = KiteUtils.objectToArray(valueOptional.get(), element);
             if (array.length != ((ObjectInArrayXmlProcessor) parentProcessor).getSize()) {
-                throw new LinkSizeNotEqualException(element.getNamespace(), element.getTemplateId());
+                throw new LinkSizeNotEqualException(element.getTemplateLocation());
             }
             value = array[index];
             return true;

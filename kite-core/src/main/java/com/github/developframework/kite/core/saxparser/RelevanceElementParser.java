@@ -24,7 +24,7 @@ class RelevanceElementParser extends ContainerElementSaxParser<RelevanceKiteElem
 
     @Override
     protected RelevanceKiteElement createElementInstance(ParseContext parseContext, DataDefinition dataDefinition, String alias) {
-        return new RelevanceKiteElement(kiteConfiguration, parseContext.getCurrentTemplate().getNamespace(), parseContext.getCurrentTemplate().getTemplateId(), dataDefinition, alias);
+        return new RelevanceKiteElement(kiteConfiguration, parseContext.getCurrentTemplateLocation(), dataDefinition, alias);
     }
 
     @Override
