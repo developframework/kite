@@ -4,7 +4,6 @@ import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.TemplateLocation;
 import com.github.developframework.kite.core.data.DataDefinition;
 import lombok.Getter;
-import lombok.Setter;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -15,8 +14,6 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  */
 public abstract class PropertyKiteElement extends ContainerKiteElement {
 
-    @Setter
-    protected String converterValue;
     @Getter
     protected boolean isXmlCdata;
 

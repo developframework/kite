@@ -18,7 +18,8 @@ public class VirtualObjectJsonProcessor extends ObjectJsonProcessor {
 
     @Override
     protected boolean prepare(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
-        this.node = ((ObjectNode) parentProcessor.node).putObject(element.showNameJSON());
+        node = ((ObjectNode) parentProcessor.node).putObject(element.showNameJSON());
+        value = parentProcessor.value;
         // 始终为true
         return true;
     }

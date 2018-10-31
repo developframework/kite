@@ -17,7 +17,8 @@ public class VirtualObjectXmlProcessor extends ObjectXmlProcessor {
 
     @Override
     protected boolean prepare(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
-        this.node = parentProcessor.node.addElement(element.showNameXML());
+        node = parentProcessor.node.addElement(element.showNameXML());
+        value = parentProcessor.value;
         // 始终为true
         return true;
     }

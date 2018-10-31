@@ -3,7 +3,10 @@ package com.github.developframework.kite.core.processor.xml;
 import com.github.developframework.kite.core.element.ArrayKiteElement;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.element.Template;
+import com.github.developframework.kite.core.utils.KiteUtils;
 import org.dom4j.Element;
+
+import java.util.Optional;
 
 /**
  * 数组模板处理器
@@ -20,7 +23,11 @@ public class ArrayTemplateXmlProcessor extends ArrayXmlProcessor {
 
     @Override
     protected boolean prepare(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
-        // 始终为true
-        return true;
+        Optional<Object> valueOptional = getDataValue(parentProcessor);
+        if (valueOptional.isPresent()) {
+            this.value = KiteUtils.objectToArray(valueOptional.get(), element);
+            return true;
+        }
+        return false;
     }
 }
