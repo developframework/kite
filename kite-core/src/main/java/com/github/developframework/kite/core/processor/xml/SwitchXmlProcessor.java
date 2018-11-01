@@ -28,7 +28,7 @@ public class SwitchXmlProcessor extends FunctionalXmlProcessor<SwitchKiteElement
     protected boolean prepare(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
         Optional<Object> dataValue = getDataValue(parentProcessor);
         if (dataValue.isPresent()) {
-            value = dataValue;
+            value = dataValue.get();
             return true;
         }
         return false;

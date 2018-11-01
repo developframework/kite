@@ -29,7 +29,7 @@ public class SwitchJsonProcessor extends FunctionalJsonProcessor<SwitchKiteEleme
     protected boolean prepare(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
         Optional<Object> dataValue = getDataValue(parentProcessor);
         if (dataValue.isPresent()) {
-            value = dataValue;
+            value = dataValue.get();
             return true;
         }
         return false;
