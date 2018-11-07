@@ -21,12 +21,12 @@ public class IfJsonProcessor extends FunctionalJsonProcessor<IfKiteElement, Obje
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void handleCoreLogic(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
         element.getConditionValue()
                 .map(conditionValue -> KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), conditionValue, Condition.class, "condition"))
                 .ifPresent(condition -> {
-                    boolean verifyResult = condition.verify(jsonProcessContext.getDataModel(), parentProcessor.value);
-                    if (verifyResult) {
+                    if (condition.verify(jsonProcessContext.getDataModel(), parentProcessor.value)) {
                         // 执行if
                         executeIfTrue(parentProcessor);
                     } else {

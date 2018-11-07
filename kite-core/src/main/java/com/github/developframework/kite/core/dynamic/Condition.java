@@ -7,7 +7,7 @@ import com.github.developframework.kite.core.data.DataModel;
  * @author qiuzhenhao
  */
 @FunctionalInterface
-public interface Condition {
+public interface Condition<T> {
 
     /**
      * 判断条件
@@ -15,5 +15,5 @@ public interface Condition {
      * @param currentValue 当前值
      * @return 判断结果
      */
-    boolean verify(DataModel dataModel, Object currentValue);
+    boolean verify(DataModel dataModel, T currentValue);
 }
