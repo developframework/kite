@@ -2,6 +2,7 @@ package com.github.developframework.kite.spring.mvc;
 
 import com.github.developframework.kite.core.KiteFactory;
 import com.github.developframework.kite.core.data.DataModel;
+import com.github.developframework.kite.spring.mvc.annotation.TemplateId;
 import com.github.developframework.kite.spring.mvc.annotation.TemplateType;
 import com.github.developframework.kite.spring.mvc.response.KiteResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -35,9 +36,8 @@ public final class KiteResponseReturnValueHandler extends AnnotationKiteReturnVa
 
     @Override
     protected String templateId(KiteResponse returnValue, MethodParameter methodParameter) {
-        String tempTemplateId = super.templateId(returnValue, methodParameter);
-        if (StringUtils.isNotBlank(tempTemplateId)) {
-            return tempTemplateId;
+        if (methodParameter.hasMethodAnnotation(TemplateId.class)) {
+            return methodParameter.getMethodAnnotation(TemplateId.class).value();
         } else {
             return returnValue.getTemplateId();
         }
@@ -45,9 +45,8 @@ public final class KiteResponseReturnValueHandler extends AnnotationKiteReturnVa
 
     @Override
     protected TemplateType templateType(KiteResponse returnValue, MethodParameter methodParameter) {
-        TemplateType tempTemplateType = super.templateType(returnValue, methodParameter);
-        if (tempTemplateType != null) {
-            return tempTemplateType;
+        if (methodParameter.hasMethodAnnotation(TemplateId.class)) {
+            return methodParameter.getMethodAnnotation(TemplateId.class).type();
         } else {
             return returnValue.getTemplateType();
         }
