@@ -2,12 +2,10 @@ package com.github.developframework.kite.spring.mvc;
 
 import com.github.developframework.kite.core.KiteFactory;
 import com.github.developframework.kite.core.data.DataModel;
-import com.github.developframework.kite.spring.mvc.annotation.KiteNamespace;
-import com.github.developframework.kite.spring.mvc.annotation.TemplateId;
 import com.github.developframework.kite.spring.mvc.annotation.TemplateType;
 import com.github.developframework.kite.spring.mvc.response.KiteResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.MethodParameter;
-import org.springframework.core.annotation.AnnotationUtils;
 
 /**
  * 处理KiteResponse的ReturnValueHandler
@@ -27,33 +25,31 @@ public final class KiteResponseReturnValueHandler extends AnnotationKiteReturnVa
 
     @Override
     protected String namespace(KiteResponse returnValue, MethodParameter methodParameter) {
-        if (methodParameter.hasMethodAnnotation(KiteNamespace.class)) {
-            return methodParameter.getMethodAnnotation(KiteNamespace.class).value();
+        String tempNamespace = returnValue.getNamespace();
+        if (StringUtils.isNotBlank(tempNamespace)) {
+            return tempNamespace;
         } else {
-            final KiteNamespace annotation = AnnotationUtils.findAnnotation(methodParameter.getContainingClass(), KiteNamespace.class);
-            if (annotation != null) {
-                return annotation.value();
-            } else {
-                return returnValue.getNamespace();
-            }
+            return super.namespace(returnValue, methodParameter);
         }
     }
 
     @Override
     protected String templateId(KiteResponse returnValue, MethodParameter methodParameter) {
-        if (methodParameter.hasMethodAnnotation(TemplateId.class)) {
-            return methodParameter.getMethodAnnotation(TemplateId.class).value();
+        String tempTemplateId = returnValue.getTemplateId();
+        if (StringUtils.isNotBlank(tempTemplateId)) {
+            return tempTemplateId;
         } else {
-            return returnValue.getTemplateId();
+            return super.templateId(returnValue, methodParameter);
         }
     }
 
     @Override
     protected TemplateType templateType(KiteResponse returnValue, MethodParameter methodParameter) {
-        if (methodParameter.hasMethodAnnotation(TemplateId.class)) {
-            return methodParameter.getMethodAnnotation(TemplateId.class).type();
+        TemplateType tempTemplateType = returnValue.getTemplateType();
+        if (tempTemplateType != null) {
+            return tempTemplateType;
         } else {
-            return returnValue.getTemplateType();
+            return super.templateType(returnValue, methodParameter);
         }
     }
 
