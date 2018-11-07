@@ -2,11 +2,12 @@ package com.github.developframework.kite.spring.mvc;
 
 import com.github.developframework.kite.core.KiteFactory;
 import com.github.developframework.kite.core.data.DataModel;
+import com.github.developframework.kite.spring.mvc.annotation.KiteNamespace;
 import com.github.developframework.kite.spring.mvc.annotation.TemplateId;
 import com.github.developframework.kite.spring.mvc.annotation.TemplateType;
 import com.github.developframework.kite.spring.mvc.response.KiteResponse;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.annotation.AnnotationUtils;
 
 /**
  * 处理KiteResponse的ReturnValueHandler
@@ -26,11 +27,15 @@ public final class KiteResponseReturnValueHandler extends AnnotationKiteReturnVa
 
     @Override
     protected String namespace(KiteResponse returnValue, MethodParameter methodParameter) {
-        String tempNamespace = super.namespace(returnValue, methodParameter);
-        if (StringUtils.isNotBlank(tempNamespace)) {
-            return tempNamespace;
+        if (methodParameter.hasMethodAnnotation(KiteNamespace.class)) {
+            return methodParameter.getMethodAnnotation(KiteNamespace.class).value();
         } else {
-            return returnValue.getNamespace();
+            final KiteNamespace annotation = AnnotationUtils.findAnnotation(methodParameter.getContainingClass(), KiteNamespace.class);
+            if (annotation != null) {
+                return annotation.value();
+            } else {
+                return returnValue.getNamespace();
+            }
         }
     }
 
