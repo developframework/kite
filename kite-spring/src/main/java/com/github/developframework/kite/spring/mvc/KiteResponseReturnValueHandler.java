@@ -35,21 +35,21 @@ public final class KiteResponseReturnValueHandler extends AnnotationKiteReturnVa
 
     @Override
     protected String templateId(KiteResponse returnValue, MethodParameter methodParameter) {
-        String tempTemplateId =  returnValue.getTemplateId();
+        String tempTemplateId = super.templateId(returnValue, methodParameter);
         if(StringUtils.isNotBlank(tempTemplateId)) {
             return tempTemplateId;
         } else {
-            return super.templateId(returnValue, methodParameter);
+            return returnValue.getTemplateId();
         }
     }
 
     @Override
     protected TemplateType templateType(KiteResponse returnValue, MethodParameter methodParameter) {
-        TemplateType tempTemplateType =  returnValue.getTemplateType();
+        TemplateType tempTemplateType = super.templateType(returnValue, methodParameter);
         if(tempTemplateType != null) {
             return tempTemplateType;
         } else {
-            return super.templateType(returnValue, methodParameter);
+            return returnValue.getTemplateType();
         }
     }
 
