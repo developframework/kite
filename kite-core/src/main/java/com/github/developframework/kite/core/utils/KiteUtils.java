@@ -19,7 +19,7 @@ public final class KiteUtils {
         return (T) dataModel.getData(value).orElseGet(() -> {
             try {
                 Object obj = Class.forName(value).newInstance();
-                if (tClass == obj.getClass()) {
+                if (obj.getClass().isAssignableFrom(tClass)) {
                     return obj;
                 } else {
                     throw new InvalidArgumentsException(attributeName, value, "It's not a " + tClass.getSimpleName() + " instance.");
