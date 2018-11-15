@@ -73,7 +73,7 @@ public class DatePropertyXmlProcessor extends PropertyXmlProcessor {
             date = java.util.Date.from(((LocalDateTime) value).atZone(ZoneId.systemDefault()).toInstant());
         } else if (clazz == LocalDate.class) {
             // LocalDate
-            LocalTime localTime = LocalTime.parse("00:00:00");
+            LocalTime localTime = LocalTime.of(0, 0, 0, 0);
             LocalDateTime localDateTime = LocalDateTime.of((LocalDate) value, localTime);
             date = java.util.Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
         } else if (clazz == LocalTime.class) {
