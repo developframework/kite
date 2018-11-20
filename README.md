@@ -1082,7 +1082,7 @@ String json = jsonProducer.produce(dataModel, "kite-student", "student-detail", 
 
 #### <a name="chapter541">**5.4.1. 一对一数组链接**</a>
 
-使用`<link>` 标签可以在数组间一对一链接对象。**该标签仅能在`<array>`下使用。**当`<link>` 的data属性所指的数组和父`<array>`数组个数不相同时将会抛出`LinkSizeNotEqualException`。
+使用`<link>` 标签可以在数组间一对一链接对象。 **该标签仅能在`<array>`下使用。** 当`<link>` 的data属性所指的数组和父`<array>`数组个数不相同时将会抛出`LinkSizeNotEqualException`。
 例子：
 假如每个学生实例都有一个账户实例，并且又都一对一对应了一个成绩值。
 
@@ -1114,7 +1114,7 @@ String json = jsonProducer.produce(dataModel, "kite-student", "student-detail", 
 ```
 
 ```java
- Account peterAccount = new Account("peter's username", "peter's password");
+Account peterAccount = new Account("peter's username", "peter's password");
 Account johnAccount = new Account("john's username", "john's password");
 
 Student[] students = {peter, john};
@@ -1241,19 +1241,19 @@ dataModel.putData("rel", (RelFunction<SchoolClass, Student>) (sourceItem, source
 
 可以使用`<if>` `<else>` 标签进行模块内容的取舍。`<else>` 标签可以不写，但必须紧跟`<if>` 后出现。
 
-`<if>` 标签的`condition` 属性内容为接口`com.github.developframework.kite.core.dynamic.Condition` 的实现类或直接使用Boolean类型。
+`<if>` 标签的`condition` 属性内容为接口`com.github.developframework.kite.core.dynamic.Condition` 的实现类。
 
 ```java
 @FunctionalInterface
-public interface Condition {
+public interface Condition<T> {
 
     /**
      * 判断条件
      * @param dataModel 数据模型
-     * @param expression 当前位置的表达式
+     * @param currentValue 当前值
      * @return 判断结果
      */
-    boolean verify(DataModel dataModel, Expression expression);
+    boolean verify(DataModel dataModel, T currentValue);
 }
 ```
 
