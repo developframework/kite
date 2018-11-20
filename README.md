@@ -891,24 +891,25 @@ public class Student {
 
 ### **5.1.处理器**
 
-#### <a name="chapter511">**5.1.1. `<property>` 的转换器 `converter`**</a>
+#### <a name="chapter511">**5.1.1. 转换器 `converter`**</a>
 
 `com.github.developframework.kite.core.dynamic.KiteConverter`
-接口可以对表达式选取的属性值进行自定义转换。
+接口可以对表达式选取的属性值进行自定义转换。具体地，是去处理了`data` 属性找到的值。所以`converter`和`data` 一般同时可用。
 
 ```java
 @FunctionalInterface
-public interface PropertyConverter<TARGET> {
+public interface KiteConverter<SOURCE, TARGET> {
 
     /**
      * 转化方法
      * @param source 源对象
      * @return 目标对象
      */
-    TARGET convert(Object source);
+    TARGET convert(SOURCE source);
 }
 ```
 
+- 泛型SOURCE为原数据的类型。
 - 泛型TARGET为转化后的类型。
 
 例如将peter的name处理后输出：
@@ -937,7 +938,17 @@ dataModel.putData("nameConverter", (KiteConverter<String, String>) source -> "My
 }
 ```
 
-`<property>` 系列标签的`converter` 属性可以填写Expression表达式，还可以填写`PropertyConverter` 的接口实现类全类名。
+`converter` 属性可以填写Expression表达式，还可以填写`KiteConverter` 的接口实现类全类名。
+
+当转换器用于获取当前data值对象内部属性值时有一种快捷用法：
+
+```xml
+<template id="student-name">
+  <property data="student" alias="name" converter="this.name"/>
+</template>
+```
+
+`<property>` 的取值为student，经过converter的转换选取了student对象的name属性作为该节点的值。
 
 #### <a name="chapter512">**5.1.2. `<array>` 的元素映射器 `map`**</a>
 
