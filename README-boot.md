@@ -30,7 +30,7 @@ public class MyApplication {
 ```properties
 kite.locations=classpath*:kite/*.xml #指定扫描路径
 kite.json.usedefault=true #采用默认的ObjectMapper对象
-kite.json.namingStrategy= #xml命名策略
+kite.json.namingStrategy= #json命名策略
 kite.xml.namingStrategy= #xml命名策略
 kite.xml.suppressDeclaration= #默认true 是否去除xml的头信息（<?xml version="1.0" encoding="UTF-8"?>）
 ```

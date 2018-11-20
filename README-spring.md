@@ -19,7 +19,7 @@
     <property name="configs">
         <set>
             <value>/kite/kite-student.xml</value>
-            <value>/jsonview/kite-account.xml</value>
+            <value>/kite/kite-account.xml</value>
             <value>/kite/kite-class.xml</value>
         </set>
     </property>

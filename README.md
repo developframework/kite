@@ -240,6 +240,7 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 - `<object>`
 - `<array>`
 - `<property>`
+- `<this>`
 - `<prototype>`
 - `<xml-attribute>`
 
@@ -252,6 +253,7 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 - `<property-ignore>`
 - `<extend-port>`
 - `<if>`、 `<else>`
+- `<switch>`、`<case>`、`<default>`
 
 拓展型标签
 
@@ -268,7 +270,7 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
   当你需要声明一个json格式模板时，你将会使用到`<template>`标签。
 
   ```xml
-  <template id="" data="" for-class=""></template>
+  <template id="" data="" for-class="" converter=""></template>
   ```
 
 | 属性         | 功能                                                         | 是否必须 |
@@ -277,6 +279,7 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 | data         | 取值表达式                                                   | 否       |
 | for-class    | 声明data表达式指向的对象类型                                 | 否       |
 | extend       | 声明继承的kite和端口，格式为namespace.id:port（namespace不填时默认为当前namespace） | 否       |
+| converter | 类型转换器全限定类名或expression表达式。详见[5.1.1节](#chapter511) | 否 |
 | map | 仅当data指代的数据为数组或List时有效。MapFunction的实现类全名或Expression表达式。详见[5.1.2节](#chapter512) | 否       |
 | xml-root     | 生成xml时的根节点名称                                        | 否       |
 | xml-item     | 生成xml时，子节点数组项的节点名称                            | 否       |
@@ -286,22 +289,23 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 当你需要在json中构建一个对象结构时，你将会使用到`<object>`标签。详见[4.1.节](#chapter41)
 
 ```xml
-<object data="" alias="" for-class="" null-hidden="true"></object>
+<object data="" alias="" for-class="" null-hidden="true" converter=""></object>
 ```
 
-| 属性          | 功能                                | 是否必须 |
-| ----------- | --------------------------------- | ---- |
-| data        | 取值表达式                             | 是    |
-| alias       | 别名，你可以重新定义显示名                     | 否    |
-| for-class   | 声明data表达式指向的对象类型                  | 否    |
-| null-hidden | true时表示表达式取的值为null时隐藏该节点，默认为false | 否    |
+| 属性        | 功能                                                         | 是否必须 |
+| ----------- | ------------------------------------------------------------ | -------- |
+| data        | 取值表达式                                                   | 是       |
+| alias       | 别名，你可以重新定义显示名                                   | 否       |
+| for-class   | 声明data表达式指向的对象类型                                 | 否       |
+| null-hidden | true时表示表达式取的值为null时隐藏该节点，默认为false        | 否       |
+| converter   | 类型转换器全限定类名或expression表达式。详见[5.1.1节](#chapter511) | 否       |
 
 ###### c) array
 
 当你需要在json中构建一个数组结构时，你将会使用到`<array>`标签。详见[4.6.节](#chapter46)
 
 ```xml
-<array data="" alias="" for-class="" null-hidden="true"></array>
+<array data="" alias="" for-class="" null-hidden="true" converter=""></array>
 ```
 
 | 属性         | 功能                                                         | 是否必须 |
@@ -310,8 +314,11 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 | alias        | 别名，你可以重新定义显示名                                   | 否       |
 | for-class    | 声明data表达式指向的对象类型                                 | 否       |
 | null-hidden  | true时表示表达式取的值为null时隐藏该节点，默认为false        | 否       |
+| converter | 类型转换器全限定类名或expression表达式。详见[5.1.1节](#chapter511) | 否 |
 | map | MapFunction的实现类全名或Expression表达式。详见[5.1.2节](#chapter512) | 否       |
 | xml-item     | 生成xml时，子节点数组项的节点名称                            | 否       |
+| limit | 取前若干个元素 | 否 |
+| comparator | Comparator比较器接口实现类表达式 | 否 |
 
 `<array>`标签可以没有子标签，这时表示数组为基本类型数组。
 
@@ -330,7 +337,19 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 | converter   | 类型转换器全限定类名或expression表达式。详见[5.1.1节](#chapter511) | 否    |
 | null-hidden | true时表示表达式取的值为null时隐藏该节点，默认为false        | 否    |
 
-###### e) prototype
+###### e) this
+
+指代节点本身值
+
+```xml
+<this alias="" converter=""/>
+```
+| 属性      | 功能                                                         | 是否必须 |
+| --------- | ------------------------------------------------------------ | -------- |
+| alias     | 别名，你可以重新定义显示名                                   | 是       |
+| converter | 类型转换器全限定类名或expression表达式。详见[5.1.1节](#chapter511) | 否       |
+
+###### f) prototype
 
 使用Jackson原型实体构建结构， 你将会使用到`<prototype>`标签。详见[4.7.节](#chapter47)
 
@@ -345,7 +364,7 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 | converter   | 类型转换器全限定类名或expression表达式。详见[5.1.1节](#chapter511) | 否    |
 | null-hidden | true时表示表达式取的值为null时隐藏该节点，默认为false        | 否    |
 
-###### f) xml-attribute
+###### g) xml-attribute
 
 在输出xml时，提供配置xml节点的属性。
 
@@ -452,6 +471,23 @@ Kite框架提供模块化设计json结构视图的功能。在一个`<template>`
 | 属性        | 功能                      | 是否必须 |
 | --------- | ----------------------- | ---- |
 | condition | 条件接口实现类全名或Expression表达式 | 是    |
+
+###### h) switch  case  default
+
+分支结构标签。详见[5.5.2节](#chapter552)
+
+```xml
+<switch data="">
+	<case test=""></case>
+	<case test=""></case>
+	<default></default>
+</switch>
+```
+
+| 属性 | 功能                             | 是否必须 |
+| ---- | -------------------------------- | -------- |
+| data | 取值表达式                       | 是       |
+| test | CaseTestFunction接口实现类表达式 | 是       |
 
 
 ##### **3.2.2.3. 拓展型标签**
@@ -889,7 +925,7 @@ public interface PropertyConverter<TARGET> {
 ```java
 dataModel.putData("student", peter);
 // 这里采用JDK8 lambda写法
-dataModel.putData("nameConverter", (PropertyConverter<String>) source -> "My name is " + source);
+dataModel.putData("nameConverter", (KiteConverter<String, String>) source -> "My name is " + source);
 ```
 
 ```json
@@ -1247,6 +1283,71 @@ dataModel.putData("myCondition", (Condition) (dm, expression) -> true);
 ```
 
 当myCondition 接口返回false时
+
+```json
+{"sayBye" : "Bye"}
+```
+
+#### <a name="chapter552">**5.5.2. `<switch>` `<case>` `<default>`**</a>
+
+可以使用`<switch>` `<case>` `<default>`标签进行模块内容的选择。`<case>` 标签可以出现多个，`<default>`只能出现一次，并且只能是`<switch>` 标签的最后一个子节点。
+
+`<case>` 标签的`test` 属性内容为接口`com.github.developframework.kite.core.dynamic.CaseTestFunction` 的实现类。
+
+```java
+@FunctionalInterface
+public interface CaseTestFunction<T> {
+
+    /**
+     * 测试选择
+     * 
+     * @param data switch传入的值
+     * @return 是否选中该分支
+     */
+    boolean test(T data);
+}
+```
+
+最简范例：
+
+```xml
+<template id="first-view">
+  <switch data="switchData">
+    <case test="testCase1">
+        <property data="sayHello"/>
+    </case>
+    <case test="testCase2">
+        <property data="sayThanks"/>
+    </case>
+    <default>
+        <property data="sayBye"/>
+    </default>
+  </switch>
+</template>
+```
+
+```java
+dataModel.putData("switchData", 1);
+dataModel.putData("sayHello", "Hello");
+dataModel.putData("sayThanks", "Thanks");
+dataModel.putData("sayBye", "Bye");
+dataModel.putData("testCase1", (CaseTestFunction) value -> ((Integer)value) == 1);
+dataModel.putData("testCase2", (CaseTestFunction) value -> ((Integer)value) == 2);
+```
+
+当`switchData`等于1时输出
+
+```json
+{"sayHello" : "Hello"}
+```
+
+当`switchData`等于2时输出
+
+```json
+{"sayThanks" : "Thanks"}
+```
+
+当`switchData`等于3时输出
 
 ```json
 {"sayBye" : "Bye"}
