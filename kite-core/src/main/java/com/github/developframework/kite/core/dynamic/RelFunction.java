@@ -4,6 +4,7 @@ package com.github.developframework.kite.core.dynamic;
  * 关联函数接口
  * @author qiuzhenhao
  */
+@FunctionalInterface
 public interface RelFunction<S, T> {
 
     /**

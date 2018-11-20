@@ -4,6 +4,7 @@ package com.github.developframework.kite.core.dynamic;
  * 数组映射接口
  * @author qiuzhenhao
  */
+@FunctionalInterface
 public interface MapFunction<T, R> {
 
     /**
