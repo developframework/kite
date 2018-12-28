@@ -242,6 +242,7 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 - `<property>`
 - `<this>`
 - `<prototype>`
+- `json`
 - `<xml-attribute>`
 
 功能型标签
@@ -319,6 +320,7 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 | xml-item     | 生成xml时，子节点数组项的节点名称                            | 否       |
 | limit | 取前若干个元素 | 否 |
 | comparator | Comparator比较器接口实现类表达式 | 否 |
+| null-empty | true时表示表达式取的值为null时设为空数组，默认为false | 否 |
 
 `<array>`标签可以没有子标签，这时表示数组为基本类型数组。
 
@@ -364,7 +366,22 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 | converter   | 类型转换器全限定类名或expression表达式。详见[5.1.1节](#chapter511) | 否    |
 | null-hidden | true时表示表达式取的值为null时隐藏该节点，默认为false        | 否    |
 
-###### g) xml-attribute
+###### g) json
+
+使用json字符串构建结构， 你将会使用到`<json>`标签。
+
+```xml
+<json data="" alias="" converter="" null-hidden="true"/>
+```
+
+| 属性        | 功能                                                         | 是否必须 |
+| ----------- | ------------------------------------------------------------ | -------- |
+| data        | 取值表达式                                                   | 是       |
+| alias       | 别名，你可以重新定义显示名                                   | 否       |
+| converter   | 类型转换器全限定类名或expression表达式。详见[5.1.1节](#chapter511) | 否       |
+| null-hidden | true时表示表达式取的值为null时隐藏该节点，默认为false        | 否       |
+
+###### h) xml-attribute
 
 在输出xml时，提供配置xml节点的属性。
 
@@ -408,7 +425,7 @@ Kite框架提供模块化设计json结构视图的功能。在一个`<template>`
 该标签用于实现一对多关联功能。详见[5.4.2.节](#chapter542)。
 
 ```xml
-<relevance data="" alias="" rel="" null-hidden="true"></relevance>
+<relevance data="" alias="" rel="" null-hidden="true" null-empty="true"></relevance>
 ```
 
 | 属性           | 功能                                       | 是否必须 |
@@ -418,6 +435,7 @@ Kite框架提供模块化设计json结构视图的功能。在一个`<template>`
 | rel | 关联判定器全限定类名或expression表达式                 | 是    |
 | null-hidden  | true时表示表达式取的值为null时隐藏该节点，默认为false        | 否    |
 | map | MapFunction的实现类全名或Expression表达式。详见[5.1.2节](#chapter512) | 否    |
+| null-empty | true时表示表达式取的值为null时设为空数组，默认为false | 否 |
 
 ###### d) object-virtual
 

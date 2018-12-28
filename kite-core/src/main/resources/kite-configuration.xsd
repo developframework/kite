@@ -140,6 +140,13 @@
 					</xs:complexType>
 				</xs:element>
 
+				<!-- json -->
+				<xs:element name="json">
+					<xs:complexType>
+						<xs:attributeGroup ref="contentElementAttributeGroup"/>
+					</xs:complexType>
+				</xs:element>
+
 				<!-- object -->
 				<xs:element name="object">
 					<xs:complexType>
