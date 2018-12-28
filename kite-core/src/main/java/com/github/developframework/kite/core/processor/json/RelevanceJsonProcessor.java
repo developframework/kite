@@ -51,7 +51,11 @@ public class RelevanceJsonProcessor extends ArrayJsonProcessor {
             return true;
         }
         if (!element.isNullHidden()) {
-            ((ObjectNode) parentProcessor.getNode()).putNull(element.showNameJSON());
+            if (element.isNullEmpty()) {
+                ((ObjectNode) parentProcessor.node).putArray(element.showNameJSON());
+            } else {
+                ((ObjectNode) parentProcessor.node).putNull(element.showNameJSON());
+            }
         }
         return false;
     }

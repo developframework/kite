@@ -19,6 +19,8 @@ import org.dom4j.Element;
 
 import java.util.Optional;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 /**
  * 数组节点
  * @author qiuzhenhao
@@ -38,6 +40,9 @@ public class ArrayKiteElement extends ContainerKiteElement{
     @Setter
     @Getter
     protected Integer limit;
+
+    @Getter
+    protected boolean nullEmpty;
 
     public ArrayKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, DataDefinition dataDefinition, String alias) {
         super(configuration, templateLocation, dataDefinition, alias);
@@ -84,5 +89,9 @@ public class ArrayKiteElement extends ContainerKiteElement{
             throw new KiteException("\"xml-item\" is undefined in template \"%s\".", templateLocation.toString());
         }
         return xmlItemName;
+    }
+
+    public void setNullEmpty(String nullEmptyStr) {
+        this.nullEmpty = isNotBlank(nullEmptyStr) && Boolean.parseBoolean(nullEmptyStr);
     }
 }

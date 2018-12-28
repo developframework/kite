@@ -36,7 +36,11 @@ public class ArrayJsonProcessor extends ContainerJsonProcessor<ArrayKiteElement,
             return true;
         }
         if (!element.isNullHidden()) {
-            ((ObjectNode) parentProcessor.node).putNull(element.showNameJSON());
+            if (element.isNullEmpty()) {
+                ((ObjectNode) parentProcessor.node).putArray(element.showNameJSON());
+            } else {
+                ((ObjectNode) parentProcessor.node).putNull(element.showNameJSON());
+            }
         }
         return false;
     }

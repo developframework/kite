@@ -51,6 +51,7 @@
 		<xs:attribute name="comparator" type="xs:string"/>
 		<xs:attribute name="limit" type="xs:string"/>
 		<xs:attribute name="xml-item" type="xs:string" />
+		<xs:attribute name="null-empty" type="xs:boolean" default="false"/>
 	</xs:attributeGroup>
 
 	<!-- 值节点属性组 -->

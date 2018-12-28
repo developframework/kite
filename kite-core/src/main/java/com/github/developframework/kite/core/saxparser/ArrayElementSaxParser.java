@@ -32,9 +32,13 @@ class ArrayElementSaxParser extends ContainerElementSaxParser<ArrayKiteElement> 
         element.setMapFunctionValue(attributes.getValue("map"));
         element.setXmlItemName(attributes.getValue("xml-item"));
         element.setComparatorValue(attributes.getValue("comparator"));
+        element.setNullEmpty(attributes.getValue("null-empty"));
         String limitValue = attributes.getValue("limit");
         if (StringUtils.isNumeric(limitValue)) {
-            element.setLimit(Integer.parseInt(limitValue));
+            int limit = Integer.parseInt(limitValue);
+            if (limit >= 0) {
+                element.setLimit(limit);
+            }
         }
     }
 }
