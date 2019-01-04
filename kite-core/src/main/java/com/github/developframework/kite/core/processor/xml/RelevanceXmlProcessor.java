@@ -89,10 +89,16 @@ public class RelevanceXmlProcessor extends ArrayXmlProcessor {
      * @param matchItems 匹配的元素
      */
     private void generateObjectStructure(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor, Object[] matchItems) {
-        ContentKiteElement contentElement = ((RelevanceKiteElement) element).createProxyObjectElement();
-        XmlProcessor<? extends KiteElement, ? extends Element> nextProcessor = contentElement.createXmlProcessor(xmlProcessContext, null);
-        nextProcessor.value = matchItems[0];
-        nextProcessor.process(parentProcessor);
+        if (matchItems.length > 0) {
+            ContentKiteElement contentElement = ((RelevanceKiteElement) element).createProxyObjectElement();
+            XmlProcessor<? extends KiteElement, ? extends Element> nextProcessor = contentElement.createXmlProcessor(xmlProcessContext, null);
+            nextProcessor.value = matchItems[0];
+            nextProcessor.process(parentProcessor);
+        } else {
+            if (!element.isNullHidden()) {
+                parentProcessor.getNode().addElement(element.showNameXML());
+            }
+        }
     }
 
     /**

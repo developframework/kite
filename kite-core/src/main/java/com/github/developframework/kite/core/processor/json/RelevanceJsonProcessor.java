@@ -94,10 +94,16 @@ public class RelevanceJsonProcessor extends ArrayJsonProcessor {
      * @param matchItems 匹配的元素
      */
     private void generateObjectStructure(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor, Object[] matchItems) {
-        ContentKiteElement contentElement = ((RelevanceKiteElement) element).createProxyObjectElement();
-        JsonProcessor<? extends KiteElement, ? extends JsonNode> nextProcessor = contentElement.createJsonProcessor(jsonProcessContext, null);
-        nextProcessor.value = matchItems[0];
-        nextProcessor.process(parentProcessor);
+        if (matchItems.length > 0) {
+            ContentKiteElement contentElement = ((RelevanceKiteElement) element).createProxyObjectElement();
+            JsonProcessor<? extends KiteElement, ? extends JsonNode> nextProcessor = contentElement.createJsonProcessor(jsonProcessContext, null);
+            nextProcessor.value = matchItems[0];
+            nextProcessor.process(parentProcessor);
+        } else {
+            if (!element.isNullHidden()) {
+                ((ObjectNode) parentProcessor.node).putNull(element.showNameJSON());
+            }
+        }
     }
 
     /**
