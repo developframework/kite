@@ -5,12 +5,12 @@ import com.github.developframework.kite.spring.mvc.KiteResponseReturnValueHandle
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
 @Configuration
-public class KiteWebMvcConfigurer extends WebMvcConfigurerAdapter {
+public class KiteWebMvcConfigurer implements WebMvcConfigurer {
 
 	@Autowired
 	private DataModelReturnValueHandler dataModelReturnValueHandler;

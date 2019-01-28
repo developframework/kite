@@ -43,4 +43,15 @@ public abstract class KiteResponse {
         dataModel.putData(dataName, data);
         return this;
     }
+
+    /**
+     * 设置type
+     *
+     * @param templateType
+     * @return
+     */
+    public KiteResponse type(TemplateType templateType) {
+        this.templateType = templateType;
+        return this;
+    }
 }
