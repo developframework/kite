@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * 可包含子节点的
+ * 可包含子节点的能力
  *
  * @author qiuzhenhao
  */

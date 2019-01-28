@@ -69,18 +69,12 @@ public class RelevanceKiteElement extends ArrayKiteElement {
     }
 
     public ContentKiteElement createProxyArrayElement() {
-        if (isChildElementEmpty()) {
-            // 如果没有子节点，视为普通属性节点处理
-            return new ProxyNormalPropertyKiteElement(configuration, templateLocation, dataDefinition, alias);
-        } else {
-            // 如果有子节点，视为数组节点处理
-            ArrayKiteElement arrayKiteElement = new ArrayKiteElement(configuration, this, dataDefinition);
-            arrayKiteElement.setXmlItemName(xmlItemName);
-            arrayKiteElement.setMapFunctionValue(mapFunctionValue);
-            arrayKiteElement.setComparatorValue(comparatorValue);
-            arrayKiteElement.setConverterValue(converterValue);
-            return arrayKiteElement;
-        }
+        ArrayKiteElement arrayKiteElement = new ArrayKiteElement(configuration, this, dataDefinition);
+        arrayKiteElement.setXmlItemName(xmlItemName);
+        arrayKiteElement.setMapFunctionValue(mapFunctionValue);
+        arrayKiteElement.setComparatorValue(comparatorValue);
+        arrayKiteElement.setConverterValue(converterValue);
+        return arrayKiteElement;
     }
 
     public Optional<String> getRelFunctionValue() {

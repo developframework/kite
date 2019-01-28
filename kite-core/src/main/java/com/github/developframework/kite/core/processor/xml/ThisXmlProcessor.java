@@ -36,22 +36,46 @@ public class ThisXmlProcessor extends ContainerXmlProcessor<ThisKiteElement, Ele
         } else {
             value = parentProcessor.value;
         }
-        if (value != null) {
-            node = parentProcessor.node.addElement(element.showNameXML());
+        if (element.isChildElementEmpty()) {
+            node = parentProcessor.node;
             return true;
-        }
-        if (!element.isNullHidden()) {
-            parentProcessor.node.addElement(element.showNameXML());
+        } else {
+            if (value != null) {
+                node = parentProcessor.node.addElement(element.showNameXML());
+                return true;
+            }
+            if (!element.isNullHidden()) {
+                parentProcessor.node.addElement(element.showNameXML());
+            }
         }
         return false;
     }
 
     @Override
     protected void handleCoreLogic(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
-        for (Iterator<KiteElement> iterator = element.childElementIterator(); iterator.hasNext(); ) {
-            final KiteElement childKiteElement = iterator.next();
-            final XmlProcessor<? extends KiteElement, ? extends Element> nextProcessor = childKiteElement.createXmlProcessor(xmlProcessContext, node);
-            nextProcessor.process(this);
+        if (element.isChildElementEmpty()) {
+            empty(element, value);
+        } else {
+            for (Iterator<KiteElement> iterator = element.childElementIterator(); iterator.hasNext(); ) {
+                final KiteElement childKiteElement = iterator.next();
+                final XmlProcessor<? extends KiteElement, ? extends Element> nextProcessor = childKiteElement.createXmlProcessor(xmlProcessContext, node);
+                nextProcessor.process(this);
+            }
         }
+    }
+
+    /**
+     * 空子标签处理
+     *
+     * @param itemValue 数组元素值
+     */
+    private void empty(ThisKiteElement element, Object itemValue) {
+        if (itemValue == null) {
+            if (!element.isNullHidden()) {
+                node.addElement(element.showNameXML());
+            }
+            return;
+        }
+        node.addElement(element.showNameXML()).addText(itemValue.toString());
     }
 }

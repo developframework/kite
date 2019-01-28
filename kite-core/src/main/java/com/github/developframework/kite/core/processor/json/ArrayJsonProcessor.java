@@ -87,7 +87,6 @@ public class ArrayJsonProcessor extends ContainerJsonProcessor<ArrayKiteElement,
      * 空子标签处理
      * @param itemValue 数组元素值
      */
-    @SuppressWarnings("unchecked")
     private void empty(Object itemValue) {
         if (itemValue == null) {
             node.addNull();
