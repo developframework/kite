@@ -51,7 +51,9 @@ public class ArrayXmlProcessor extends ContainerXmlProcessor<ArrayKiteElement, E
         for (int i = 0; i < length; i++) {
             if (element.getMapFunctionValue().isPresent()) {
                 // 处理mapFunction功能
-                log.warn("The child element invalid, because you use \"map\" attribute.");
+                if (!element.isChildElementEmpty()) {
+                    log.warn("The child element invalid, because you use \"map\" attribute.");
+                }
 
                 String mapFunctionValue = element.getMapFunctionValue().get();
                 Object itemValue;
