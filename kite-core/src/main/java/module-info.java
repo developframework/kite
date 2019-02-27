@@ -5,7 +5,7 @@ module kite.core {
 
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.databind;
-    requires develop.toolkit;
+    requires develop.toolkit.base;
     requires dom4j;
     requires expression;
     requires java.sql;

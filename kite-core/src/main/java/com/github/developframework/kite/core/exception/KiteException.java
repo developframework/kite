@@ -1,6 +1,6 @@
 package com.github.developframework.kite.core.exception;
 
-import develop.toolkit.exception.FormatRuntimeException;
+import develop.toolkit.base.exception.FormatRuntimeException;
 import lombok.extern.slf4j.Slf4j;
 
 /**
