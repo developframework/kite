@@ -44,7 +44,7 @@ public class LinkJsonProcessor extends ObjectJsonProcessor {
 
     @Override
     protected void handleCoreLogic(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
-        ContentKiteElement contentElement = ((LinkKiteElement) element).createProxyContentElement();
+        ContentKiteElement contentElement = ((LinkKiteElement) element).createProxyContentElement(value.getClass());
         JsonProcessor<? extends KiteElement, ? extends JsonNode> nextProcessor = contentElement.createJsonProcessor(jsonProcessContext, ((ObjectInArrayJsonProcessor) parentProcessor).node);
         nextProcessor.setValue(value);
         nextProcessor.process(parentProcessor);

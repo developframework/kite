@@ -44,7 +44,7 @@ public class LinkXmlProcessor extends ObjectXmlProcessor {
 
     @Override
     protected void handleCoreLogic(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
-        ContentKiteElement contentElement = ((LinkKiteElement) element).createProxyContentElement();
+        ContentKiteElement contentElement = ((LinkKiteElement) element).createProxyContentElement(value.getClass());
         XmlProcessor<? extends KiteElement, ? extends Element> nextProcessor = contentElement.createXmlProcessor(xmlProcessContext, ((ObjectInArrayXmlProcessor) parentProcessor).node);
         nextProcessor.setValue(value);
         nextProcessor.process(parentProcessor);

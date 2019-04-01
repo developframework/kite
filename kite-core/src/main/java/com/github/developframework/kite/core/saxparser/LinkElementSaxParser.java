@@ -3,6 +3,7 @@ package com.github.developframework.kite.core.saxparser;
 import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.element.LinkKiteElement;
+import org.xml.sax.Attributes;
 
 /**
  * 一对一链接节点解析器
@@ -23,5 +24,11 @@ class LinkElementSaxParser extends ContainerElementSaxParser<LinkKiteElement>  {
     @Override
     protected LinkKiteElement createElementInstance(ParseContext parseContext, DataDefinition dataDefinition, String alias) {
         return new LinkKiteElement(kiteConfiguration, parseContext.getCurrentTemplateLocation(), dataDefinition, alias);
+    }
+
+    @Override
+    protected void addOtherAttributes(LinkKiteElement element, Attributes attributes) {
+        super.addOtherAttributes(element, attributes);
+        element.setMapFunctionValue(attributes.getValue("map"));
     }
 }

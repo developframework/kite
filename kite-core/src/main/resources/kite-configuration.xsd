@@ -193,7 +193,9 @@
 				<xs:element name="link">
 					<xs:complexType>
 						<xs:complexContent>
-							<xs:extension base="containerElementType" />
+                            <xs:extension base="containerElementType">
+                                <xs:attributeGroup ref="arrayTypeElementAttributeGroup"/>
+                            </xs:extension>
 						</xs:complexContent>
 					</xs:complexType>
 				</xs:element>
