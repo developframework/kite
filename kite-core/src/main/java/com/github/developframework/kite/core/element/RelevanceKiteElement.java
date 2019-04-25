@@ -31,6 +31,9 @@ public class RelevanceKiteElement extends ArrayKiteElement {
     @Getter
     private RelevanceType relevanceType;
 
+    @Setter
+    protected String innerConverterValue;
+
     public RelevanceKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, DataDefinition dataDefinition, String alias) {
         super(configuration, templateLocation, dataDefinition, alias);
     }
@@ -79,6 +82,10 @@ public class RelevanceKiteElement extends ArrayKiteElement {
 
     public Optional<String> getRelFunctionValue() {
         return Optional.ofNullable(relFunctionValue);
+    }
+
+    public Optional<String> getInnerConverterValue() {
+        return Optional.ofNullable(innerConverterValue);
     }
 
     /**

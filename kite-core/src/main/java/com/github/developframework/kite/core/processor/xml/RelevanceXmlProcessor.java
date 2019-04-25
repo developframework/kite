@@ -1,5 +1,7 @@
 package com.github.developframework.kite.core.processor.xml;
 
+import com.github.developframework.expression.ExpressionUtils;
+import com.github.developframework.kite.core.dynamic.KiteConverter;
 import com.github.developframework.kite.core.dynamic.RelFunction;
 import com.github.developframework.kite.core.element.ContentKiteElement;
 import com.github.developframework.kite.core.element.KiteElement;
@@ -12,6 +14,8 @@ import org.dom4j.Element;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * 关联节点处理器
@@ -57,7 +61,7 @@ public class RelevanceXmlProcessor extends ArrayXmlProcessor {
 
     @Override
     protected void handleCoreLogic(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
-        Object[] valueArray = (Object[]) value;
+        Object[] valueArray = forInnerConverter((Object[]) value);
         // 类型策略
         switch (((RelevanceKiteElement) element).getRelevanceType()) {
             case AUTO: {
@@ -90,7 +94,12 @@ public class RelevanceXmlProcessor extends ArrayXmlProcessor {
      */
     private void generateObjectStructure(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor, Object[] matchItems) {
         if (matchItems.length > 0) {
-            ContentKiteElement contentElement = ((RelevanceKiteElement) element).createProxyObjectElement();
+            ContentKiteElement contentElement;
+            if (KiteUtils.isArrayOrCollection(matchItems[0])) {
+                contentElement = ((RelevanceKiteElement) element).createProxyArrayElement();
+            } else {
+                contentElement = ((RelevanceKiteElement) element).createProxyObjectElement();
+            }
             XmlProcessor<? extends KiteElement, ? extends Element> nextProcessor = contentElement.createXmlProcessor(xmlProcessContext, null);
             nextProcessor.value = matchItems[0];
             nextProcessor.process(parentProcessor);
@@ -112,5 +121,28 @@ public class RelevanceXmlProcessor extends ArrayXmlProcessor {
         XmlProcessor<? extends KiteElement, ? extends Element> nextProcessor = contentElement.createXmlProcessor(xmlProcessContext, ((ObjectInArrayXmlProcessor) parentProcessor).node);
         nextProcessor.value = matchItems;
         nextProcessor.process(parentProcessor);
+    }
+
+    /**
+     * 内嵌转换器
+     *
+     * @param valueArray
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    private Object[] forInnerConverter(Object[] valueArray) {
+        Optional<String> innerConverterValue = ((RelevanceKiteElement) element).getInnerConverterValue();
+        // 处理转换器
+        if (innerConverterValue.isPresent()) {
+            String converterValue = innerConverterValue.get();
+            if (converterValue.startsWith("this.")) {
+                // 简单表达式
+                return Stream.of(valueArray).map(value -> ExpressionUtils.getValue(value, converterValue.substring(5))).toArray(Object[]::new);
+            } else {
+                KiteConverter converter = KiteUtils.getComponentInstance(xmlProcessContext.getDataModel(), converterValue, KiteConverter.class, "inner-converter");
+                return Stream.of(valueArray).map((Function<Object, Object>) converter::convert).toArray(Object[]::new);
+            }
+        }
+        return valueArray;
     }
 }

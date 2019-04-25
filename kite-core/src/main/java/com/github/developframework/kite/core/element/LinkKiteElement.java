@@ -55,7 +55,7 @@ public class LinkKiteElement extends ObjectKiteElement {
         if (valueClass.isArray() || Collection.class.isAssignableFrom(valueClass)) {
             // 如果值类型是数组或集合，视为数组节点处理
             ArrayKiteElement arrayKiteElement = new ArrayKiteElement(configuration, this, dataDefinition);
-            mapFunctionValue = arrayKiteElement.getMapFunctionValue().orElse(null);
+            arrayKiteElement.setMapFunctionValue(mapFunctionValue);
             return arrayKiteElement;
         } else if (isChildElementEmpty()) {
             // 如果没有子节点，视为普通属性节点处理

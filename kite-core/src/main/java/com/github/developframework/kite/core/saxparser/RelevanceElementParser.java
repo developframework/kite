@@ -36,6 +36,7 @@ class RelevanceElementParser extends ContainerElementSaxParser<RelevanceKiteElem
         element.setRelevanceType(attributes.getValue("type"));
         element.setXmlItemName(attributes.getValue("xml-item"));
         element.setNullEmpty(attributes.getValue("null-empty"));
+        element.setInnerConverterValue(attributes.getValue("inner-converter"));
         String limitValue = attributes.getValue("limit");
         if (StringUtils.isNumeric(limitValue)) {
             element.setLimit(Integer.parseInt(limitValue));

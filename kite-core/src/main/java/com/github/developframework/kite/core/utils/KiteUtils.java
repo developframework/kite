@@ -5,6 +5,7 @@ import com.github.developframework.kite.core.element.ContentKiteElement;
 import com.github.developframework.kite.core.exception.InvalidArgumentsException;
 import com.github.developframework.kite.core.exception.KiteException;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Set;
 
@@ -18,7 +19,7 @@ public final class KiteUtils {
     public static <T> T getComponentInstance(DataModel dataModel, String value, Class<T> tClass, String attributeName) {
         return (T) dataModel.getData(value).orElseGet(() -> {
             try {
-                Object obj = Class.forName(value).newInstance();
+                Object obj = Class.forName(value).getConstructor().newInstance();
                 if (tClass.isAssignableFrom(obj.getClass())) {
                     return obj;
                 } else {
@@ -28,6 +29,8 @@ public final class KiteUtils {
                 throw new InvalidArgumentsException(attributeName, value, "class not found, and it's also not a expression.");
             } catch (IllegalAccessException | InstantiationException e) {
                 throw new KiteException("Can't new " + tClass.getSimpleName() + " instance.");
+            } catch (NoSuchMethodException | InvocationTargetException e) {
+                throw new KiteException(tClass.getSimpleName() + " No noArg Constructor.");
             }
         });
     }
@@ -42,5 +45,9 @@ public final class KiteUtils {
         } else {
             throw new InvalidArgumentsException("data", element.getDataDefinition().toString(), "Data must be array or List/Set type, the value class is " + object.getClass().getName());
         }
+    }
+
+    public static boolean isArrayOrCollection(Object object) {
+        return object != null && (object.getClass().isArray() || object instanceof List<?> || object instanceof Set<?>);
     }
 }
