@@ -4,12 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.developframework.expression.ExpressionUtils;
 import com.github.developframework.kite.core.dynamic.KiteConverter;
+import com.github.developframework.kite.core.element.ContentKiteElement;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.element.ThisKiteElement;
 import com.github.developframework.kite.core.utils.KiteUtils;
-
-import java.math.BigDecimal;
-import java.util.Iterator;
 
 /**
  * 指代自身的Json处理器
@@ -37,70 +35,18 @@ public class ThisJsonProcessor extends ContainerJsonProcessor<ThisKiteElement, O
         } else {
             value = parentProcessor.value;
         }
-        if (element.isChildElementEmpty()) {
-            node = (ObjectNode) parentProcessor.node;
-            return true;
-        } else {
-            if (value != null) {
-                node = ((ObjectNode) parentProcessor.node).putObject(element.showNameJSON());
-                return true;
-            }
-            if (!element.isNullHidden()) {
-                ((ObjectNode) parentProcessor.node).putNull(element.showNameJSON());
-            }
+        if (value == null && !element.isNullHidden()) {
+            ((ObjectNode) parentProcessor.node).putNull(element.showNameJSON());
+            return false;
         }
-        return false;
+        return true;
     }
 
     @Override
-    protected void handleCoreLogic(ContentJsonProcessor parentProcessor) {
-        if (element.isChildElementEmpty()) {
-            empty(node, value);
-        } else {
-            for (Iterator<KiteElement> iterator = element.childElementIterator(); iterator.hasNext(); ) {
-                final KiteElement childKiteElement = iterator.next();
-                final JsonProcessor<? extends KiteElement, ? extends JsonNode> childJsonProcessor = childKiteElement.createJsonProcessor(jsonProcessContext, node);
-                childJsonProcessor.process(this);
-            }
-        }
-    }
-
-    /**
-     * 空子标签处理
-     *
-     * @param node      节点
-     * @param itemValue 数组元素值
-     */
-    private void empty(ObjectNode node, Object itemValue) {
-        String showName = element.showNameJSON();
-        if (itemValue == null) {
-            if (!element.isNullHidden()) {
-                node.putNull(showName);
-            }
-            return;
-        }
-        if (itemValue instanceof String) {
-            node.put(showName, (String) itemValue);
-        } else if (itemValue instanceof Integer) {
-            node.put(showName, (Integer) itemValue);
-        } else if (itemValue instanceof Long) {
-            node.put(showName, (Long) itemValue);
-        } else if (itemValue instanceof Short) {
-            node.put(showName, (Short) itemValue);
-        } else if (itemValue instanceof Boolean) {
-            node.put(showName, (Boolean) itemValue);
-        } else if (itemValue instanceof Float) {
-            node.put(showName, (Float) itemValue);
-        } else if (itemValue instanceof Double) {
-            node.put(showName, (Double) itemValue);
-        } else if (itemValue instanceof BigDecimal) {
-            node.put(showName, (BigDecimal) itemValue);
-        } else if (itemValue instanceof Character) {
-            node.put(showName, (Character) itemValue);
-        } else if (itemValue instanceof Byte) {
-            node.put(showName, (Byte) itemValue);
-        } else {
-            node.put(showName, itemValue.toString());
-        }
+    protected void handleCoreLogic(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
+        ContentKiteElement contentElement = KiteUtils.isArrayOrCollection(value) ? element.createProxyArrayElement() : element.createProxyObjectElement();
+        JsonProcessor<? extends KiteElement, ? extends JsonNode> nextProcessor = contentElement.createJsonProcessor(jsonProcessContext, (ObjectNode) parentProcessor.node);
+        nextProcessor.value = value;
+        nextProcessor.process(parentProcessor);
     }
 }

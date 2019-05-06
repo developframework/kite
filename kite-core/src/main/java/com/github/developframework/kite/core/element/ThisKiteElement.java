@@ -33,4 +33,23 @@ public class ThisKiteElement extends ContainerKiteElement {
     public XmlProcessor<? extends KiteElement, ? extends Element> createXmlProcessor(XmlProcessContext xmlProcessContext, Element parentNode) {
         return new ThisXmlProcessor(xmlProcessContext, this);
     }
+
+    public ContentKiteElement createProxyObjectElement() {
+        if (isChildElementEmpty()) {
+            // 如果没有子节点，视为普通属性节点处理
+            return new ProxyNormalPropertyKiteElement(configuration, templateLocation, dataDefinition, alias);
+        } else {
+            // 如果有子节点，视为数组节点处理
+            return new ObjectKiteElement(configuration, this, dataDefinition);
+        }
+    }
+
+    public ContentKiteElement createProxyArrayElement() {
+        ArrayKiteElement arrayKiteElement = new ArrayKiteElement(configuration, this, dataDefinition);
+//        arrayKiteElement.setXmlItemName(xmlItemName);
+//        arrayKiteElement.setMapFunctionValue(mapFunctionValue);
+//        arrayKiteElement.setComparatorValue(comparatorValue);
+//        arrayKiteElement.setConverterValue(converterValue);
+        return arrayKiteElement;
+    }
 }
