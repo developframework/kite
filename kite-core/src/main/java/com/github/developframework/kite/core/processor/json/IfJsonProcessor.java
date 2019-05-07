@@ -2,7 +2,7 @@ package com.github.developframework.kite.core.processor.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.kite.core.dynamic.Condition;
+import com.github.developframework.kite.core.dynamic.KiteCondition;
 import com.github.developframework.kite.core.element.IfKiteElement;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.utils.KiteUtils;
@@ -23,17 +23,23 @@ public class IfJsonProcessor extends FunctionalJsonProcessor<IfKiteElement, Obje
     @Override
     @SuppressWarnings("unchecked")
     protected void handleCoreLogic(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
-        element.getConditionValue()
-                .map(conditionValue -> KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), conditionValue, Condition.class, "condition"))
-                .ifPresent(condition -> {
-                    if (condition.verify(jsonProcessContext.getDataModel(), parentProcessor.value)) {
-                        // 执行if
-                        executeIfTrue(parentProcessor);
-                    } else {
-                        // 执行else
-                        executeIfFalse(parentProcessor);
-                    }
-                });
+        element.getConditionValue().ifPresent(conditionValue -> {
+            Boolean flag = (Boolean) jsonProcessContext.getDataModel()
+                    .getData(conditionValue)
+                    .filter(v -> v instanceof Boolean)
+                    .orElse(null);
+            if (flag == null) {
+                KiteCondition condition = KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), conditionValue, KiteCondition.class, "condition");
+                flag = condition.verify(jsonProcessContext.getDataModel(), parentProcessor.value);
+            }
+            if (flag) {
+                // 执行if
+                executeIfTrue(parentProcessor);
+            } else {
+                // 执行else
+                executeIfFalse(parentProcessor);
+            }
+        });
     }
 
     /**

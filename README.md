@@ -1270,7 +1270,7 @@ dataModel.putData("rel", (RelFunction<SchoolClass, Student>) (sourceItem, source
 
 可以使用`<if>` `<else>` 标签进行模块内容的取舍。`<else>` 标签可以不写，但必须紧跟`<if>` 后出现。
 
-`<if>` 标签的`condition` 属性内容为接口`com.github.developframework.kite.core.dynamic.Condition` 的实现类。
+`<if>` 标签的`condition` 属性内容为接口`com.github.developframework.kite.core.dynamic.KiteCondition` 的实现类。
 
 ```java
 @FunctionalInterface

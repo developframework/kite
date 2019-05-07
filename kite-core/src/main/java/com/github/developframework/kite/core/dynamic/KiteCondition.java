@@ -7,7 +7,7 @@ import com.github.developframework.kite.core.data.DataModel;
  * @author qiuzhenhao
  */
 @FunctionalInterface
-public interface Condition<T> {
+public interface KiteCondition<T> {
 
     /**
      * 判断条件

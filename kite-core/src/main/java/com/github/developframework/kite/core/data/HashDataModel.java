@@ -26,6 +26,11 @@ public class HashDataModel implements DataModel {
     }
 
     @Override
+    public boolean contains(String dataName) {
+        return dataMap.containsKey(dataName);
+    }
+
+    @Override
     public void putData(String dataName, Object data) {
         this.dataMap.put(dataName, data);
     }

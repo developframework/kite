@@ -1,6 +1,6 @@
 package com.github.developframework.kite.core.processor.xml;
 
-import com.github.developframework.kite.core.dynamic.Condition;
+import com.github.developframework.kite.core.dynamic.KiteCondition;
 import com.github.developframework.kite.core.element.IfKiteElement;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.utils.KiteUtils;
@@ -21,18 +21,23 @@ public class IfXmlProcessor extends FunctionalXmlProcessor<IfKiteElement, Elemen
 
     @Override
     protected void handleCoreLogic(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
-        element.getConditionValue()
-                .map(conditionValue -> KiteUtils.getComponentInstance(xmlProcessContext.getDataModel(), conditionValue, Condition.class, "condition"))
-                .ifPresent(condition -> {
-                    boolean verifyResult = condition.verify(xmlProcessContext.getDataModel(), parentProcessor.value);
-                    if (verifyResult) {
-                        // 执行if
-                        executeIfTrue(parentProcessor);
-                    } else {
-                        // 执行else
-                        executeIfFalse(parentProcessor);
-                    }
-                });
+        element.getConditionValue().ifPresent(conditionValue -> {
+            Boolean flag = (Boolean) xmlProcessContext.getDataModel()
+                    .getData(conditionValue)
+                    .filter(v -> v instanceof Boolean)
+                    .orElse(null);
+            if (flag == null) {
+                KiteCondition condition = KiteUtils.getComponentInstance(xmlProcessContext.getDataModel(), conditionValue, KiteCondition.class, "condition");
+                flag = condition.verify(xmlProcessContext.getDataModel(), parentProcessor.value);
+            }
+            if (flag) {
+                // 执行if
+                executeIfTrue(parentProcessor);
+            } else {
+                // 执行else
+                executeIfFalse(parentProcessor);
+            }
+        });
     }
 
     /**

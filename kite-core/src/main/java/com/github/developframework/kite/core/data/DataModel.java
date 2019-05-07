@@ -11,6 +11,8 @@ import java.util.Optional;
  */
 public interface DataModel extends Serializable {
 
+    boolean contains(String dataName);
+
     /**
      * 放入数据
      * @param dataName 数据名称
