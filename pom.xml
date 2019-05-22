@@ -4,7 +4,7 @@
 
     <groupId>com.github.developframework</groupId>
     <artifactId>kite</artifactId>
-    <version>0.14-SNAPSHOT</version>
+    <version>0.13-SNAPSHOT</version>
     <modules>
         <module>kite-core</module>
         <module>kite-spring</module>
@@ -110,17 +110,17 @@
             <dependency>
                 <groupId>com.github.developframework</groupId>
                 <artifactId>kite-core</artifactId>
-                <version>0.14-SNAPSHOT</version>
+                <version>0.13-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.github.developframework</groupId>
                 <artifactId>kite-spring</artifactId>
-                <version>0.14-SNAPSHOT</version>
+                <version>0.13-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.github.developframework</groupId>
                 <artifactId>kite-spring-boot-starter</artifactId>
-                <version>0.14-SNAPSHOT</version>
+                <version>0.13-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
