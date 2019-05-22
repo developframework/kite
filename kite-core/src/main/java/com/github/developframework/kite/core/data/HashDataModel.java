@@ -102,7 +102,7 @@ public class HashDataModel implements DataModel {
 
     /**
      * 生成一个构造器
-     * @return
+     * @return 构造器
      */
     public static DataModelBuilder builder() {
         return new DataModelBuilder(HashDataModel.class);
