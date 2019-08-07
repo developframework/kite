@@ -57,7 +57,7 @@ class DefaultJsonProducer implements JsonProducer {
             if(isPretty) {
                 kiteConfiguration.getObjectMapper().writerWithDefaultPrettyPrinter().writeValue(jsonGenerator, root);
             } else {
-                kiteConfiguration.getObjectMapper().writeValue(jsonGenerator, root);
+                kiteConfiguration.getObjectMapper().writer().writeValue(jsonGenerator, root);
             }
         } catch (Exception e) {
             throw new KiteException("produce json string failed.");
