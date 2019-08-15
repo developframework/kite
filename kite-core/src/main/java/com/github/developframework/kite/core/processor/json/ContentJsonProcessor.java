@@ -41,21 +41,19 @@ public abstract class ContentJsonProcessor<ELEMENT extends ContentKiteElement, N
         } else {
             nextValueOptional = jsonProcessContext.getDataModel().getData(parentProcessor.value, dataDefinition.getExpression());
         }
-        if (nextValueOptional.isPresent()) {
-            // 处理转换器
-            if (element.getConverterValue().isPresent()) {
-                String converterValue = element.getConverterValue().get();
-                if (converterValue.startsWith("this.")) {
-                    // 简单表达式
-                    return Optional.ofNullable(ExpressionUtils.getValue(parentProcessor.value, converterValue.substring(5)));
-                } else {
-                    KiteConverter converter = KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), converterValue, KiteConverter.class, "converter");
-                    return Optional.ofNullable(converter.convert(nextValueOptional.get()));
-                }
+        final Object nextValue = nextValueOptional.orElse(null);
+        // 处理转换器
+        if (element.getConverterValue().isPresent()) {
+            String converterValue = element.getConverterValue().get();
+            if (converterValue.startsWith("this.")) {
+                // 简单表达式
+                return Optional.ofNullable(ExpressionUtils.getValue(parentProcessor.value, converterValue.substring(5)));
             } else {
-                return nextValueOptional;
+                KiteConverter converter = KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), converterValue, KiteConverter.class, "converter");
+                return Optional.ofNullable(converter.convert(nextValue));
             }
+        } else {
+            return nextValueOptional;
         }
-        return Optional.empty();
     }
 }

@@ -12,7 +12,7 @@ import com.github.developframework.kite.spring.mvc.DataModelReturnValueHandler;
 import com.github.developframework.kite.spring.mvc.KiteResponseReturnValueHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
@@ -30,8 +30,7 @@ import org.springframework.context.annotation.Import;
 @Slf4j
 public class KiteComponentAutoConfiguration {
 
-    @Bean
-    @Autowired
+    @Bean("defaultKiteFactory")
     @ConditionalOnProperty(name = "kite.json.useDefault", havingValue = "true", matchIfMissing = true)
     public KiteFactory kiteFactoryForDefaultObjectMapper(KiteProperties kiteProperties, ObjectMapper objectMapper) {
         log.info("Kite framework use Jackson default ObjectMapper.");
@@ -41,7 +40,7 @@ public class KiteComponentAutoConfiguration {
         return kiteFactory;
     }
 
-    @Bean
+    @Bean("defaultKiteFactory")
     @ConditionalOnProperty(name = "kite.json.useDefault", havingValue = "false")
     public KiteFactory kiteFactoryForNewObjectMapper(KiteProperties kiteProperties) {
         log.info("Kite framework use a new ObjectMapper.");
@@ -52,12 +51,12 @@ public class KiteComponentAutoConfiguration {
     }
 
     @Bean
-    public DataModelReturnValueHandler dataModelReturnValueHandler(KiteFactory kiteFactory) {
+    public DataModelReturnValueHandler dataModelReturnValueHandler(@Qualifier("defaultKiteFactory") KiteFactory kiteFactory) {
         return new DataModelReturnValueHandler(kiteFactory);
     }
 
     @Bean
-    public KiteResponseReturnValueHandler kiteResponseReturnValueHandler(KiteFactory kiteFactory) {
+    public KiteResponseReturnValueHandler kiteResponseReturnValueHandler(@Qualifier("defaultKiteFactory") KiteFactory kiteFactory) {
         return new KiteResponseReturnValueHandler(kiteFactory);
     }
 
@@ -79,7 +78,7 @@ public class KiteComponentAutoConfiguration {
 
         if(kiteProperties.getXml() != null) {
             if(kiteProperties.getXml().getSuppressDeclaration() != null) {
-                kiteConfiguration.setXmlSuppressDeclaration(kiteProperties.getXml().getSuppressDeclaration().booleanValue());
+                kiteConfiguration.setXmlSuppressDeclaration(kiteProperties.getXml().getSuppressDeclaration());
             }
         }
     }
@@ -94,13 +93,13 @@ public class KiteComponentAutoConfiguration {
             try {
                 Class<?> namingStrategyClass = Class.forName(namingStrategyValue);
                 if (KitePropertyNamingStrategy.class.isAssignableFrom(namingStrategyClass)) {
-                    return (KitePropertyNamingStrategy) namingStrategyClass.newInstance();
+                    return (KitePropertyNamingStrategy) namingStrategyClass.getConstructor().newInstance();
                 } else {
                     throw new KiteException("Class \"%s\" is not subclass \"%s\".", namingStrategyValue, KitePropertyNamingStrategy.class.getName());
                 }
             } catch (ClassNotFoundException e) {
                 throw new KiteException("Class \"%s\" is not found.", namingStrategyValue);
-            } catch (IllegalAccessException | InstantiationException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
