@@ -12,10 +12,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.github.developframework</groupId>
             <artifactId>kite-core</artifactId>
         </dependency>

@@ -20,6 +20,7 @@ public class IfXmlProcessor extends FunctionalXmlProcessor<IfKiteElement, Elemen
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void handleCoreLogic(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
         element.getConditionValue().ifPresent(conditionValue -> {
             Boolean flag = (Boolean) xmlProcessContext.getDataModel()
