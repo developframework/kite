@@ -17,10 +17,6 @@
         </dependency>
         <dependency>
             <groupId>com.github.developframework</groupId>
-            <artifactId>develop-toolkit-base</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.developframework</groupId>
             <artifactId>expression</artifactId>
         </dependency>
         <dependency>

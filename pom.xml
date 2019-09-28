@@ -48,7 +48,6 @@
     <properties>
         <version.lombok>1.18.10</version.lombok>
         <version.expression>1.3.2</version.expression>
-        <version.develop-toolkit>1.0.1-SNAPSHOT</version.develop-toolkit>
         <version.jackson>2.9.9</version.jackson>
         <version.dom4j>1.6.1</version.dom4j>
         <version.slf4j-api>1.7.25</version.slf4j-api>
@@ -64,11 +63,6 @@
                 <artifactId>lombok</artifactId>
                 <version>${version.lombok}</version>
                 <optional>true</optional>
-            </dependency>
-            <dependency>
-                <groupId>com.github.developframework</groupId>
-                <artifactId>develop-toolkit-base</artifactId>
-                <version>${version.develop-toolkit}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -151,7 +145,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>3.8.1</version>
                 <configuration>
                     <annotationProcessorPaths>
                         <path>
@@ -164,7 +158,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>3.1.0</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
