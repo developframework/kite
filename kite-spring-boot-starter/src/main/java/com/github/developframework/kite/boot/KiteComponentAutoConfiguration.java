@@ -84,7 +84,7 @@ public class KiteComponentAutoConfiguration {
     }
 
     private KitePropertyNamingStrategy getKitePropertyNamingStrategy(String namingStrategyValue) {
-        if (StringUtils.isNotBlank(namingStrategyValue)) {
+        if (StringUtils.isNotEmpty(namingStrategyValue)) {
 
             // 识别内置的命名策略
             if(namingStrategyValue.toLowerCase().equals("doNothing")) {

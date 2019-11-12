@@ -37,7 +37,7 @@ public abstract class ContainerKiteElement extends ContentKiteElement implements
      * @param className 类名
      */
     public void setForClass(String className) {
-        if (StringUtils.isNotBlank(className)) {
+        if (StringUtils.isNotEmpty(className)) {
             try {
                 forClass = Class.forName(className);
             } catch (ClassNotFoundException e) {

@@ -41,7 +41,7 @@ public class DatePropertyJsonProcessor extends PropertyJsonProcessor {
 
     public DatePropertyJsonProcessor(JsonProcessContext context, PropertyKiteElement element, String pattern) {
         super(context, element);
-        this.pattern = StringUtils.isBlank(pattern) ? DEFAULT_PATTERN : pattern;
+        this.pattern = StringUtils.isEmpty(pattern) ? DEFAULT_PATTERN : pattern;
     }
 
     @Override

@@ -54,7 +54,7 @@ public class RelevanceKiteElement extends ArrayKiteElement {
      * @param relevanceTypeValue 关联类型值
      */
     public void setRelevanceType(String relevanceTypeValue) {
-        if (StringUtils.isNotBlank(relevanceTypeValue)) {
+        if (StringUtils.isNotEmpty(relevanceTypeValue)) {
             this.relevanceType = RelevanceType.valueOf(relevanceTypeValue.toUpperCase());
         } else {
             this.relevanceType = RelevanceType.MULTIPLE;

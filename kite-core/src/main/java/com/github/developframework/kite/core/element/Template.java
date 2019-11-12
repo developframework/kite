@@ -93,14 +93,14 @@ public class Template extends ObjectKiteElement {
     }
 
     public String getXmlRootName() {
-        if (StringUtils.isBlank(xmlRootName) && dataDefinition == DataDefinition.EMPTY_DATA_DEFINITION) {
+        if (StringUtils.isEmpty(xmlRootName) && dataDefinition == DataDefinition.EMPTY_DATA_DEFINITION) {
             throw new KiteException("\"xml-root\" is undefined in template \"%s\".", templateLocation);
         }
         return xmlRootName;
     }
 
     public String getXmlItemName() {
-        if(StringUtils.isBlank(xmlItemName)) {
+        if (StringUtils.isEmpty(xmlItemName)) {
             throw new KiteException("\"xml-item\" is undefined in template \"%s\".", templateLocation);
         }
         return xmlItemName;

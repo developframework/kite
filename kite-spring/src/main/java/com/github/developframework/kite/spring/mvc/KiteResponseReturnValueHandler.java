@@ -26,7 +26,7 @@ public final class KiteResponseReturnValueHandler extends AnnotationKiteReturnVa
     @Override
     protected String namespace(KiteResponse returnValue, MethodParameter methodParameter) {
         String tempNamespace = returnValue.getNamespace();
-        if (StringUtils.isNotBlank(tempNamespace)) {
+        if (StringUtils.isNotEmpty(tempNamespace)) {
             return tempNamespace;
         } else {
             return super.namespace(returnValue, methodParameter);
@@ -36,7 +36,7 @@ public final class KiteResponseReturnValueHandler extends AnnotationKiteReturnVa
     @Override
     protected String templateId(KiteResponse returnValue, MethodParameter methodParameter) {
         String tempTemplateId = returnValue.getTemplateId();
-        if (StringUtils.isNotBlank(tempTemplateId)) {
+        if (StringUtils.isNotEmpty(tempTemplateId)) {
             return tempTemplateId;
         } else {
             return super.templateId(returnValue, methodParameter);

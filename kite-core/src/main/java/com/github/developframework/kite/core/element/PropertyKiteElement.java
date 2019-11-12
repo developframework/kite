@@ -5,7 +5,7 @@ import com.github.developframework.kite.core.TemplateLocation;
 import com.github.developframework.kite.core.data.DataDefinition;
 import lombok.Getter;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
  * 属性节点
@@ -22,7 +22,7 @@ public abstract class PropertyKiteElement extends ContainerKiteElement {
     }
 
     public void setXmlCdata(String xmlCdataStr) {
-        this.isXmlCdata = isNotBlank(xmlCdataStr) && Boolean.parseBoolean(xmlCdataStr);
+        this.isXmlCdata = isNotEmpty(xmlCdataStr) && Boolean.parseBoolean(xmlCdataStr);
     }
 
     @Override

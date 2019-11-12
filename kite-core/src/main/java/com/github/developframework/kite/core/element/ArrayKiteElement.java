@@ -19,7 +19,7 @@ import org.dom4j.Element;
 
 import java.util.Optional;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
  * 数组节点
@@ -85,13 +85,13 @@ public class ArrayKiteElement extends ContainerKiteElement{
     }
 
     public String getXmlItemName() {
-        if(StringUtils.isBlank(xmlItemName)) {
+        if (StringUtils.isEmpty(xmlItemName)) {
             throw new KiteException("\"xml-item\" is undefined in template \"%s\".", templateLocation.toString());
         }
         return xmlItemName;
     }
 
     public void setNullEmpty(String nullEmptyStr) {
-        this.nullEmpty = isNotBlank(nullEmptyStr) && Boolean.parseBoolean(nullEmptyStr);
+        this.nullEmpty = isNotEmpty(nullEmptyStr) && Boolean.parseBoolean(nullEmptyStr);
     }
 }

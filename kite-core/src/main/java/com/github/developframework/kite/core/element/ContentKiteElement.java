@@ -2,6 +2,7 @@ package com.github.developframework.kite.core.element;
 
 import com.github.developframework.expression.ArrayExpression;
 import com.github.developframework.expression.Expression;
+import com.github.developframework.expression.MethodExpression;
 import com.github.developframework.expression.ObjectExpression;
 import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.TemplateLocation;
@@ -11,7 +12,7 @@ import lombok.Setter;
 
 import java.util.Optional;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
  * 内容节点基类
@@ -43,7 +44,7 @@ public abstract class ContentKiteElement extends AbstractKiteElement {
     }
 
     public void setNullHidden(String nullHiddenStr) {
-        this.nullHidden = isNotBlank(nullHiddenStr) && Boolean.parseBoolean(nullHiddenStr);
+        this.nullHidden = isNotEmpty(nullHiddenStr) && Boolean.parseBoolean(nullHiddenStr);
     }
 
     /**
@@ -51,7 +52,7 @@ public abstract class ContentKiteElement extends AbstractKiteElement {
      * @return 显示名称
      */
     public String showNameJSON() {
-        if (isNotBlank(alias)) {
+        if (isNotEmpty(alias)) {
             return alias;
         }
         final String expressionString = expressionString();
@@ -63,7 +64,7 @@ public abstract class ContentKiteElement extends AbstractKiteElement {
      * @return 显示名称
      */
     public String showNameXML() {
-        if (isNotBlank(alias)) {
+        if (isNotEmpty(alias)) {
             return alias;
         }
         final String expressionString = expressionString();
@@ -77,8 +78,11 @@ public abstract class ContentKiteElement extends AbstractKiteElement {
         } else if (expression instanceof ArrayExpression) {
             ArrayExpression arrayExpression = ((ArrayExpression) expression);
             return arrayExpression.getPropertyName() + "_" + arrayExpression.getIndex();
+        } else if (expression instanceof MethodExpression) {
+            MethodExpression methodExpression = ((MethodExpression) expression);
+            return methodExpression.getMethodName();
         } else {
-            throw new IllegalStateException();
+            throw new AssertionError();
         }
     }
 

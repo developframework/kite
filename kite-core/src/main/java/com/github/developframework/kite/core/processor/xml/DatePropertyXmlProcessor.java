@@ -37,7 +37,7 @@ public class DatePropertyXmlProcessor extends PropertyXmlProcessor {
 
     public DatePropertyXmlProcessor(XmlProcessContext context, PropertyKiteElement element, String pattern) {
         super(context, element);
-        dateFormat = new SimpleDateFormat(StringUtils.isBlank(pattern) ? "yyyy-MM-dd HH:mm:ss" : pattern);
+        dateFormat = new SimpleDateFormat(StringUtils.isEmpty(pattern) ? "yyyy-MM-dd HH:mm:ss" : pattern);
     }
 
     @Override

@@ -31,22 +31,22 @@ class TemplateElementSaxParser extends ContainerElementSaxParser<Template>{
         final String xmlRootName = attributes.getValue("xml-root");
         final String xmlItemName = attributes.getValue("xml-item");
         final Template template = new Template(kiteConfiguration, new TemplateLocation(parseContext.getCurrentTemplatePackage().getNamespace(), id));
-        if (StringUtils.isNotBlank(data)) {
+        if (StringUtils.isNotEmpty(data)) {
             template.setDataDefinition(new DataDefinition(data));
         } else {
             template.setDataDefinition(DataDefinition.EMPTY_DATA_DEFINITION);
         }
-        if (StringUtils.isNotBlank(extend)) {
+        if (StringUtils.isNotEmpty(extend)) {
             String defaultNamespace = parseContext.getCurrentTemplatePackage().getNamespace();
             template.setExtend(template.new Extend(extend.trim(), defaultNamespace));
         }
-        if (StringUtils.isNotBlank(mapFunctionValue)) {
+        if (StringUtils.isNotEmpty(mapFunctionValue)) {
             template.setMapFunctionValue(mapFunctionValue);
         }
-        if (StringUtils.isNotBlank(xmlRootName)) {
+        if (StringUtils.isNotEmpty(xmlRootName)) {
             template.setXmlRootName(xmlRootName);
         }
-        if (StringUtils.isNotBlank(xmlItemName)) {
+        if (StringUtils.isNotEmpty(xmlItemName)) {
             template.setXmlItemName(xmlItemName);
         }
         template.setForClass(attributes.getValue("for-class"));

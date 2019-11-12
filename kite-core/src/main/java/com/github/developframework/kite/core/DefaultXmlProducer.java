@@ -108,8 +108,8 @@ class DefaultXmlProducer implements XmlProducer {
         String xmlRootName = template.getXmlRootName();
         String objNodeName = kiteConfiguration.getForXmlStrategy().propertyShowName(kiteConfiguration, template.getDataDefinition().getExpression().toString());
         Element objNode;
-        if(StringUtils.isBlank(xmlRootName)) {
-            if (StringUtils.isBlank(objNodeName)) {
+        if (StringUtils.isEmpty(xmlRootName)) {
+            if (StringUtils.isEmpty(objNodeName)) {
                 throw new KiteException("\"data\" or \"xml-root\" is undefined in template \"%s\".", template.getTemplateLocation().toString());
             } else {
                 objNode = document.addElement(objNodeName);
@@ -134,8 +134,8 @@ class DefaultXmlProducer implements XmlProducer {
         String xmlRootName = template.getXmlRootName();
         String arrayNodeName = kiteConfiguration.getForXmlStrategy().propertyShowName(kiteConfiguration, template.getDataDefinition().getExpression().toString());
         Element arrayNode;
-        if(StringUtils.isBlank(xmlRootName)) {
-            if (StringUtils.isBlank(arrayNodeName)) {
+        if (StringUtils.isEmpty(xmlRootName)) {
+            if (StringUtils.isEmpty(arrayNodeName)) {
                 throw new KiteException("\"data\" or \"xml-root\" is undefined in template \"%s\".", template.getTemplateLocation().toString());
             } else {
                 arrayNode = document.addElement(arrayNodeName);

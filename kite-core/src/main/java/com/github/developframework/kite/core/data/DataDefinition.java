@@ -1,5 +1,6 @@
 package com.github.developframework.kite.core.data;
 
+import com.github.developframework.expression.EmptyExpression;
 import com.github.developframework.expression.Expression;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
@@ -25,8 +26,8 @@ public class DataDefinition {
     }
 
     public DataDefinition(String dataValue) {
-        if (StringUtils.isBlank(dataValue)) {
-            expression = Expression.EMPTY_EXPRESSION;
+        if (StringUtils.isEmpty(dataValue)) {
+            expression = EmptyExpression.INSTANCE;
         } else {
             dataValue = dataValue.trim();
             char firstChar = dataValue.charAt(0);
