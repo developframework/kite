@@ -52,7 +52,7 @@
         <version.dom4j>1.6.1</version.dom4j>
         <version.slf4j-api>1.7.25</version.slf4j-api>
         <version.servlet-api>2.5</version.servlet-api>
-        <version.spring>5.1.9.RELEASE</version.spring>
+        <version.spring>5.2.0.RELEASE</version.spring>
         <version.spring-boot>2.1.8.RELEASE</version.spring-boot>
     </properties>
 
