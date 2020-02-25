@@ -31,8 +31,9 @@ public class HashDataModel implements DataModel {
     }
 
     @Override
-    public void putData(String dataName, Object data) {
+    public DataModel putData(String dataName, Object data) {
         this.dataMap.put(dataName, data);
+        return this;
     }
 
     @Override
