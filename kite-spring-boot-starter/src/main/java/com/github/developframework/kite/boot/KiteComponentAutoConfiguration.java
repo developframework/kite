@@ -1,7 +1,6 @@
 package com.github.developframework.kite.boot;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.developframework.kite.boot.annotation.EnableKite;
 import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.KiteFactory;
 import com.github.developframework.kite.core.exception.KiteException;
@@ -16,16 +15,17 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 /**
  * 自动配置Kite
- * {@link EnableKite}
  */
 @Configuration
 @Import(KiteWebMvcConfigurer.class)
+@EnableConfigurationProperties(KiteProperties.class)
 @AutoConfigureAfter(JacksonAutoConfiguration.class)
 @Slf4j
 public class KiteComponentAutoConfiguration {
@@ -87,7 +87,7 @@ public class KiteComponentAutoConfiguration {
         if (StringUtils.isNotEmpty(namingStrategyValue)) {
 
             // 识别内置的命名策略
-            if(namingStrategyValue.toLowerCase().equals("doNothing")) {
+            if ("doNothing".equals(namingStrategyValue.toLowerCase())) {
                 return new DoNothingKitePropertyNamingStrategy();
             }
             try {
