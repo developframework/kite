@@ -1,7 +1,5 @@
 package com.github.developframework.kite.core.dynamic;
 
-import java.util.Objects;
-
 /**
  * 转化器
  *
@@ -19,17 +17,4 @@ public interface KiteConverter<SOURCE, TARGET> {
      * @return 目标对象
      */
     TARGET convert(SOURCE source);
-
-    /**
-     * 判断是否为空的转换器
-     *
-     * @return
-     */
-    default KiteConverter<?, Boolean> nonNull() {
-        return Objects::nonNull;
-    }
-
-    default KiteConverter<?, Boolean> isNull() {
-        return Objects::isNull;
-    }
 }
