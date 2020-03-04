@@ -48,7 +48,7 @@
     <properties>
         <version.lombok>1.18.10</version.lombok>
         <version.expression>1.4.0</version.expression>
-        <version.jackson>2.9.9</version.jackson>
+        <version.jackson>2.9.10.3</version.jackson>
         <version.dom4j>1.6.1</version.dom4j>
         <version.slf4j-api>1.7.25</version.slf4j-api>
         <version.servlet-api>2.5</version.servlet-api>
