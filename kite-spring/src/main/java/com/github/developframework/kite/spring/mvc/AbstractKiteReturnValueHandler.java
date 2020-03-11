@@ -20,6 +20,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 抽象的springmvc ReturnValueHandler
@@ -35,11 +36,10 @@ public abstract class AbstractKiteReturnValueHandler<T> implements HandlerMethod
     }
 
     protected ServletServerHttpResponse createOutputMessage(NativeWebRequest webRequest) {
-        HttpServletResponse response = webRequest.getNativeResponse(HttpServletResponse.class);
-        ServletServerHttpResponse res = new ServletServerHttpResponse(response);
+        ServletServerHttpResponse res = new ServletServerHttpResponse(webRequest.getNativeResponse(HttpServletResponse.class));
         final HttpHeaders headers = res.getHeaders();
         if (headers.getContentType() == null) {
-            headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+            headers.setContentType(MediaType.APPLICATION_JSON);
         }
         return res;
     }
@@ -82,7 +82,7 @@ public abstract class AbstractKiteReturnValueHandler<T> implements HandlerMethod
             case XML:{
                 final XmlProducer xmlProducer = kiteFactory.getXmlProducer();
                 outputMessage.getHeaders().setContentType(MediaType.APPLICATION_XML);
-                OutputStreamWriter writer = new OutputStreamWriter(outputMessage.getBody(), "utf-8");
+                OutputStreamWriter writer = new OutputStreamWriter(outputMessage.getBody(), StandardCharsets.UTF_8);
                 xmlProducer.outputXml(writer, dataModel, namespace, templateId, false);
             }break;
         }

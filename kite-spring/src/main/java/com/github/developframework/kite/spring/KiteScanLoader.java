@@ -43,8 +43,8 @@ public class KiteScanLoader {
             final Set<ConfigurationSource> sources = new HashSet<>();
             for (String locationOne : locationsArray) {
                 final Resource[] resources = resolver.getResources(locationOne);
-                for (int i = 0; i < resources.length; i++) {
-                    sources.add(new SpringResourceConfigurationSource(resources[i]));
+                for (Resource resource : resources) {
+                    sources.add(new SpringResourceConfigurationSource(resource));
                 }
             }
             final KiteConfigurationSaxReader reader = new KiteConfigurationSaxReader(sources);

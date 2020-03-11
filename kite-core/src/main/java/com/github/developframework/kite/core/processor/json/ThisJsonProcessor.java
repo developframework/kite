@@ -21,8 +21,8 @@ public class ThisJsonProcessor extends ContainerJsonProcessor<ThisKiteElement, O
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    protected boolean prepare(ContentJsonProcessor parentProcessor) {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    protected boolean prepare(ContentJsonProcessor<?, ?> parentProcessor) {
         if (element.getConverterValue().isPresent()) {
             String converterValue = element.getConverterValue().get();
             if (converterValue.startsWith("this.")) {
