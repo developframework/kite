@@ -3,7 +3,7 @@
     <parent>
         <artifactId>kite</artifactId>
         <groupId>com.github.developframework</groupId>
-        <version>0.18</version>
+        <version>0.19-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>kite-core</artifactId>
