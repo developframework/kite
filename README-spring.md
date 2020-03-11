@@ -98,7 +98,7 @@ public class HelloController {
     @TemplateId("hello-view")
     @GetMapping("/hello")
     public DataModel hello() {
-        return HashDataModel.singleton("sayHello", "Hello kite-spring!");
+        return DataModel.singleton("sayHello", "Hello kite-spring!");
     }
 }
 ```

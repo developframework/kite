@@ -32,7 +32,7 @@ maven
 
 ```java
 KiteFactory kiteFactory = new KiteFactory("/kite/kite-demo.xml");
-DataModel dataModel = new HashDataModel();
+DataModel dataModel = new DataModel();
 dataModel.putData("sayHello", "Hello Kite!");
 JsonProducer jsonProducer = kiteFactory.getJsonProducer();
 // 生成json
@@ -80,11 +80,10 @@ System.out.println(xml);
 #### **3.1.1. DataModel**
 
 `com.github.developframework.kite.data.DataModel`接口是Kite框架的数据模型。用于装载需要在json视图中渲染的数据或函数接口实现，数据由键值对构成。接口提供存入和取出数据的方法。
-目前实现类仅有`com.github.developframework.kite.data.HashDataModel`
 存取数据范例：
 
 ```java
-DataModel dataModel = new HashDataModel();
+DataModel dataModel = new DataModel();
 dataModel.putData("sayHello", "Hello Kite!");
 Optional<Object> value = dataModel.getData("sayHello");
 value.ifPresent(System.out::println);
@@ -613,7 +612,7 @@ public class SchoolClass {
 // Application.java    main()
 KiteFactory factory = new KiteFactory("/kite/kite-student.xml");
 JsonProducer jsonProducer = factory.getJsonProducer();
-DataModel dataModel = new HashDataModel();
+DataModel dataModel = new DataModel();
 Student peter = new Student(1, "Peter", 1, "1995-01-01");
 dataModel.putData("student", peter);
 String json = jsonProducer.produce(dataModel, "kite-student", "student-detail");
@@ -713,7 +712,7 @@ dataModel.putData("datetime", LocalDateTime.of(2016, 1, 1, 0, 0, 0));
 该标签可以把非0数字转换成true，0转换成false
 
 ```java
-DataModel dataModel = new HashDataModel();
+DataModel dataModel = new DataModel();
 dataModel.putData("number1", 1);
 dataModel.putData("number2", 0);
 ```
