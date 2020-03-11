@@ -4,7 +4,7 @@
 
     <groupId>com.github.developframework</groupId>
     <artifactId>kite</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <modules>
         <module>kite-core</module>
         <module>kite-spring</module>
@@ -42,7 +42,7 @@
         <connection>scm:git:git@github.com:developframework/kite.git</connection>
         <developerConnection>scm:git:git@github.com:developframework/kite.git</developerConnection>
         <url>https://github.com/developframework/kite</url>
-        <tag>${project.version}</tag>
+        <tag>v1.0</tag>
     </scm>
 
     <properties>
@@ -103,17 +103,17 @@
             <dependency>
                 <groupId>com.github.developframework</groupId>
                 <artifactId>kite-core</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0</version>
             </dependency>
             <dependency>
                 <groupId>com.github.developframework</groupId>
                 <artifactId>kite-spring</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0</version>
             </dependency>
             <dependency>
                 <groupId>com.github.developframework</groupId>
                 <artifactId>kite-spring-boot-starter</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
