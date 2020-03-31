@@ -124,24 +124,39 @@
 					</xs:complexType>
 				</xs:element>
 
-				<!-- property-unixtimestamp -->
-				<xs:element name="property-unixtimestamp">
-					<xs:complexType>
-						<xs:complexContent>
-							<xs:extension base="propertyElementType" />
-						</xs:complexContent>
-					</xs:complexType>
-				</xs:element>
+                <!-- property-unixtimestamp -->
+                <xs:element name="property-unixtimestamp">
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="propertyElementType"/>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
 
-				<!-- property-ignore -->
-				<xs:element name="property-ignore">
-					<xs:complexType>
-						<xs:attribute name="name" type="xs:string" use="required" />
-					</xs:complexType>
-				</xs:element>
+                <!-- property-enum -->
+                <xs:element name="property-enum">
+                    <xs:complexType>
+                        <xs:sequence maxOccurs="unbounded">
+                            <xs:element name="enum">
+                                <xs:complexType>
+                                    <xs:attribute name="value" type="xs:string" use="required"/>
+                                    <xs:attribute name="text" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attributeGroup ref="propertyElementAttributeGroup"
+                    </xs:complexType>
+                </xs:element>
 
-				<!-- json -->
-				<xs:element name="json">
+                <!-- property-ignore -->
+                <xs:element name="property-ignore">
+                    <xs:complexType>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+
+                <!-- json -->
+                <xs:element name="json">
 					<xs:complexType>
 						<xs:attributeGroup ref="contentElementAttributeGroup"/>
 					</xs:complexType>

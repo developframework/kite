@@ -11,7 +11,7 @@ public class DefaultXmlKitePropertyNamingStrategy implements KitePropertyNamingS
 
     @Override
     public String propertyShowName(KiteConfiguration configuration, String expressionString) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < expressionString.length(); i++) {
             char ch = expressionString.charAt(i);
             if(ch >= 'A' && ch <= 'Z') {

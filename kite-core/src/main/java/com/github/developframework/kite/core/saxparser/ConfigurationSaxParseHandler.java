@@ -2,7 +2,6 @@ package com.github.developframework.kite.core.saxparser;
 
 import com.github.developframework.kite.core.KiteConfiguration;
 import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ class ConfigurationSaxParseHandler extends DefaultHandler{
 
     public ConfigurationSaxParseHandler(KiteConfiguration configuration) {
         this.configuration = configuration;
-        this.elementSaxParserChain = new ArrayList<>(22);
+        this.elementSaxParserChain = new ArrayList<>(24);
         this.parseContext = new ParseContext(configuration);
         registerDefaultElementSaxParser();
     }
@@ -38,6 +37,8 @@ class ConfigurationSaxParseHandler extends DefaultHandler{
         registerElementSaxParser(new ArrayElementSaxParser(configuration));
         registerElementSaxParser(new IncludeElementSaxParser(configuration));
         registerElementSaxParser(new VirtualObjectElementSaxParser(configuration));
+        registerElementSaxParser(new EnumElementSaxParser());
+        registerElementSaxParser(new EnumPropertyElementSaxParser(configuration));
         registerElementSaxParser(new UnixTimestampPropertyElementSaxParser(configuration));
         registerElementSaxParser(new BooleanPropertyElementSaxParser(configuration));
         registerElementSaxParser(new XmlAttributeElementSaxParser(configuration));
@@ -67,23 +68,22 @@ class ConfigurationSaxParseHandler extends DefaultHandler{
 
     /**
      * SAX开始文档处理
-     * @throws SAXException
      */
     @Override
-    public void startDocument() throws SAXException {
+    public void startDocument() {
         parseContext.getStack().clear();
     }
 
     /**
      * SAX开始节点处理
+     *
      * @param uri
      * @param localName
      * @param qName
      * @param attributes
-     * @throws SAXException
      */
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) {
         for (ElementSaxParser parser : elementSaxParserChain) {
             if (parser.qName().equals(qName)) {
                 parser.handleAtStartElement(parseContext, attributes);
@@ -93,13 +93,13 @@ class ConfigurationSaxParseHandler extends DefaultHandler{
 
     /**
      * SAX结束节点处理
+     *
      * @param uri
      * @param localName
      * @param qName
-     * @throws SAXException
      */
     @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {
+    public void endElement(String uri, String localName, String qName) {
         for (ElementSaxParser parser : elementSaxParserChain) {
             if (parser.qName().equals(qName)) {
                 parser.handleAtEndElement(parseContext);
