@@ -12,7 +12,7 @@ Kite框架构建于jackson和dom4j框架之上，实现通过XML文件配置来�
 
 ### **1.1. 运行环境**
 
-JDK8及以上
+JDK11及以上
 
 ### **1.2. 使用方式**
 
@@ -262,6 +262,7 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 - `<property-unixtimestamp>`
 
 - `<property-boolean>`
+- `<property-enum>` `enum`
 
 ##### **3.2.2.1. 基本型标签**
 
@@ -537,6 +538,10 @@ Kite框架提供模块化设计json结构视图的功能。在一个`<template>`
 
 该标签拓展于`<property>`，可以将数字类型（short、int、long）变为boolean型，非0值为true，0值为false。详见[4.3.3节](#chapter433)
 
+###### d) property-enum
+
+该标签拓展于`<property>`，可以将值映射成另一个固定值。详见[4.3.4节](#chapter434)
+
 ## <a name="chapter4">**4. 基本使用**</a>
 
 模型声明（以下各小节示例代码均使用这些模型实体类）：
@@ -719,6 +724,26 @@ dataModel.putData("number2", 0);
 
 ```json
 {"number1" : true, "number2" : false}
+```
+
+#### <a name="chapter434">**4.3.4 使用property-enum映射**</a>
+
+该标签可以把值映射成另一个固定值，该标签不仅可以处理枚举类型，字符串或者基本类型都可以处理
+
+```xml
+<property-enum data="sex">
+	<enum value="MALE" text="男"/>
+    <enum value="FEMALE" text="女"/>
+</property-enum>
+```
+
+```java
+DataModel dataModel = new DataModel();
+dataModel.putData("sex", Sex.MALE);
+```
+
+```json
+{"sex": "男"}
 ```
 
 ### **4.4. 使用null-hidden隐藏值为null的属性**
