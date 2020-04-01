@@ -1426,6 +1426,7 @@ Kite内置接口实现：
 
 + JacksonKitePropertyNamingStrategy  用Jackson的策略命名
 + DefaultXmlKitePropertyNamingStrategy  默认的xml命名策略，AbCd => ab-cd
++ UnderlineXmlKitePropertyNamingStrategy  下划线xml命名策略，AbCd => ab_cd
 + DoNothingKitePropertyNamingStrategy  什么都不做，使用原名
 
 
@@ -1436,16 +1437,16 @@ Kite框架使用slf4j-api日志接口，提供内部日志打印功能。可以�
 
 ```xml
 <configuration scan="true" scanPeriod="60 seconds" debug="false">
-	<contextName>kite-log</contextName>
-	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-		<encoder>
-			<pattern>%d{HH:mm:ss.SSS} %-5level - %msg%n
-			</pattern>
-		</encoder>
-	</appender>
-	<logger name="com.github.developframework.kite" level="INFO" additivity="false">
-		<appender-ref ref="STDOUT" />
-	</logger>
+  <contextName>kite-log</contextName>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} %-5level - %msg%n
+      </pattern>
+    </encoder>
+  </appender>
+  <logger name="com.github.developframework.kite" level="INFO" additivity="false">
+    <appender-ref ref="STDOUT" />
+  </logger>
 </configuration>
 ```
 
