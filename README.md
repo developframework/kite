@@ -20,9 +20,9 @@ maven
 
 ```xml
 <dependency>
-	<groupId>com.github.developframework</groupId>
-	<artifactId>kite-core</artifactId>
-	<version>${version.kite}</version>
+  <groupId>com.github.developframework</groupId>
+  <artifactId>kite-core</artifactId>
+  <version>${version.kite}</version>
 </dependency>
 ```
 
