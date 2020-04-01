@@ -732,7 +732,7 @@ dataModel.putData("number2", 0);
 
 ```xml
 <property-enum data="sex">
-	<enum value="MALE" text="男"/>
+    <enum value="MALE" text="男"/>
     <enum value="FEMALE" text="女"/>
 </property-enum>
 ```
