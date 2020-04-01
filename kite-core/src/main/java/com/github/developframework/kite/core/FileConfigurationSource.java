@@ -13,7 +13,7 @@ public class FileConfigurationSource implements ConfigurationSource{
     private String filename;
 
     public FileConfigurationSource(String filename) {
-        this.filename = filename;
+        this.filename = filename.startsWith("/") ? filename : ("/" + filename);
     }
 
     @Override
