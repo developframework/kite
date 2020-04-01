@@ -1453,7 +1453,7 @@ Kite框架使用slf4j-api日志接口，提供内部日志打印功能。可以�
 项目启动日志：
 
 ```
-09:29:07.753 INFO  - Kite framework loaded the configuration source "/kite/kite-demo.xml".
+09:29:07.753 DEBUG  - Kite framework loaded the configuration source "/kite/kite-demo.xml".
 
 ```
 
