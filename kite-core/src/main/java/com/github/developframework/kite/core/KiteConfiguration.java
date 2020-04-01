@@ -70,7 +70,8 @@ public class KiteConfiguration {
 
     /**
      * 提取模板
-     * @param namespace 命名空间
+     *
+     * @param namespace  命名空间
      * @param templateId 模板ID
      * @return 模板
      */
@@ -78,14 +79,24 @@ public class KiteConfiguration {
         return getTemplatePackageByNamespace(namespace).getTemplateById(templateId);
     }
 
+    /**
+     * 提取模板
+     *
+     * @param templateLocation 模板位置
+     * @return 模板
+     */
+    public Template extractTemplate(TemplateLocation templateLocation) {
+        return getTemplatePackageByNamespace(templateLocation.getNamespace()).getTemplateById(templateLocation.getTemplateId());
+    }
+
     public void setForJsonStrategy(KitePropertyNamingStrategy forJsonStrategy) {
-        if(forJsonStrategy != null) {
+        if (forJsonStrategy != null) {
             this.forJsonStrategy = forJsonStrategy;
         }
     }
 
     public void setForXmlStrategy(KitePropertyNamingStrategy forXmlStrategy) {
-        if(forXmlStrategy != null) {
+        if (forXmlStrategy != null) {
             this.forXmlStrategy = forXmlStrategy;
         }
     }

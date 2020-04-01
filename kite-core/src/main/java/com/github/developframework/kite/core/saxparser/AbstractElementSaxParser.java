@@ -13,7 +13,7 @@ abstract class AbstractElementSaxParser implements ElementSaxParser{
 
     protected KiteConfiguration kiteConfiguration;
 
-    public AbstractElementSaxParser(KiteConfiguration kiteConfiguration) {
+    AbstractElementSaxParser(KiteConfiguration kiteConfiguration) {
         this.kiteConfiguration = kiteConfiguration;
     }
 

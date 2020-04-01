@@ -10,7 +10,7 @@ import com.github.developframework.kite.core.element.ThisKiteElement;
  *
  * @author qiushui on 2018-10-28.
  */
-public class ThisElementSaxParser extends ContainerElementSaxParser {
+class ThisElementSaxParser extends ContainerElementSaxParser {
 
     ThisElementSaxParser(KiteConfiguration kiteConfiguration) {
         super(kiteConfiguration);

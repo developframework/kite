@@ -10,7 +10,6 @@ import com.github.developframework.kite.core.element.ObjectKiteElement;
  */
 class ObjectElementSaxParser extends ContainerElementSaxParser<ObjectKiteElement>{
 
-
     ObjectElementSaxParser(KiteConfiguration kiteConfiguration) {
         super(kiteConfiguration);
     }

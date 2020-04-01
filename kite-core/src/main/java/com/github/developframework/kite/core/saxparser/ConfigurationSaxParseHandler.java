@@ -9,9 +9,10 @@ import java.util.List;
 
 /**
  * 配置解析Handler
+ *
  * @author qiuzhenhao
  */
-class ConfigurationSaxParseHandler extends DefaultHandler{
+public class ConfigurationSaxParseHandler extends DefaultHandler {
 
     /* 解析器链 */
     private List<ElementSaxParser> elementSaxParserChain;
@@ -87,6 +88,7 @@ class ConfigurationSaxParseHandler extends DefaultHandler{
         for (ElementSaxParser parser : elementSaxParserChain) {
             if (parser.qName().equals(qName)) {
                 parser.handleAtStartElement(parseContext, attributes);
+                break;
             }
         }
     }
@@ -103,6 +105,7 @@ class ConfigurationSaxParseHandler extends DefaultHandler{
         for (ElementSaxParser parser : elementSaxParserChain) {
             if (parser.qName().equals(qName)) {
                 parser.handleAtEndElement(parseContext);
+                break;
             }
         }
     }

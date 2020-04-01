@@ -10,7 +10,7 @@ import org.xml.sax.Attributes;
  *
  * @author qiushui on 2018-12-28.
  */
-public class JsonElementSaxParser extends ContentElementSaxParser<JsonKiteElement> {
+class JsonElementSaxParser extends ContentElementSaxParser<JsonKiteElement> {
 
     JsonElementSaxParser(KiteConfiguration kiteConfiguration) {
         super(kiteConfiguration);

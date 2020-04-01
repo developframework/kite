@@ -12,5 +12,5 @@ public class KiteXmlProperties {
 
     private String namingStrategy;
 
-    private Boolean suppressDeclaration;
+    private boolean suppressDeclaration = true;
 }

@@ -21,7 +21,7 @@ public class IncludeJsonProcessor extends FunctionalJsonProcessor<IncludeKiteEle
     @Override
     protected void handleCoreLogic(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
         KiteConfiguration kiteConfiguration = jsonProcessContext.getConfiguration();
-        Template template = kiteConfiguration.extractTemplate(element.getTargetTemplateLocation().getNamespace(), element.getTargetTemplateLocation().getTemplateId());
+        Template template = kiteConfiguration.extractTemplate(element.getTargetTemplateLocation());
         for (Iterator<KiteElement> iterator = template.childElementIterator(); iterator.hasNext();) {
             final KiteElement childElement = iterator.next();
             final JsonProcessor<? extends KiteElement, ? extends JsonNode> childProcessor = childElement.createJsonProcessor(jsonProcessContext, node);

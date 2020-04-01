@@ -17,7 +17,6 @@ import org.dom4j.Element;
  * 代理属性节点
  *
  * @author qiushui on 2018-10-17.
- * @since 0.8
  */
 public class ProxyNormalPropertyKiteElement extends NormalPropertyKiteElement {
 

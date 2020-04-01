@@ -29,7 +29,7 @@ public class TemplateXmlProcessor extends ObjectXmlProcessor {
         if (extendOptional.isPresent()) {
             Template.Extend extend = extendOptional.get();
             // 提取模板
-            Template extendTemplate = xmlProcessContext.getConfiguration().extractTemplate(extend.getExtendTemplateLocation().getNamespace(), extend.getExtendTemplateLocation().getTemplateId());
+            Template extendTemplate = xmlProcessContext.getConfiguration().extractTemplate(extend.getExtendTemplateLocation());
             // 定义扩展口回调接口实现
             final ExtendPortXmlProcessor.ExtendCallback callback = parentProcessorInCallback -> {
                 // 复制一个副本节点进行回调处理

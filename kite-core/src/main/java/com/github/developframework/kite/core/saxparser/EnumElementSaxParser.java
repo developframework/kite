@@ -9,7 +9,7 @@ import org.xml.sax.Attributes;
  *
  * @author qiushui on 2020-03-31.
  */
-public class EnumElementSaxParser implements ElementSaxParser {
+class EnumElementSaxParser implements ElementSaxParser {
 
     @Override
     public String qName() {

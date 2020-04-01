@@ -46,7 +46,7 @@ public class KiteConfigurationSaxReader {
         ConfigurationSaxParseHandler handler = new ConfigurationSaxParseHandler(kiteConfiguration);
         for (ConfigurationSource source : sources) {
             handleSingleSource(handler, source);
-            log.info("Kite framework loaded the configuration source \"{}\".", source.getSourceName());
+            log.debug("Kite framework loaded the configuration source \"{}\".", source.getSourceName());
         }
         return kiteConfiguration;
     }

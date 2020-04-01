@@ -12,7 +12,6 @@ import org.xml.sax.Attributes;
  */
 class RelevanceElementParser extends ContainerElementSaxParser<RelevanceKiteElement> {
 
-
     RelevanceElementParser(KiteConfiguration kiteConfiguration) {
         super(kiteConfiguration);
     }

@@ -10,10 +10,9 @@ import org.xml.sax.Attributes;
  *
  * @author qiushui on 2018-10-29.
  */
-public class SwitchElementSaxParser extends AbstractElementSaxParser {
+class SwitchElementSaxParser extends AbstractElementSaxParser {
 
-
-    public SwitchElementSaxParser(KiteConfiguration kiteConfiguration) {
+    SwitchElementSaxParser(KiteConfiguration kiteConfiguration) {
         super(kiteConfiguration);
     }
 

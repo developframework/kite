@@ -7,10 +7,10 @@ import org.xml.sax.Attributes;
 
 /**
  * xml属性节点解析器
+ *
  * @author qiuzhenhao
  */
-public class XmlAttributeElementSaxParser extends ContentElementSaxParser<XmlAttributeElement>{
-
+class XmlAttributeElementSaxParser extends ContentElementSaxParser<XmlAttributeElement> {
 
     XmlAttributeElementSaxParser(KiteConfiguration kiteConfiguration) {
         super(kiteConfiguration);

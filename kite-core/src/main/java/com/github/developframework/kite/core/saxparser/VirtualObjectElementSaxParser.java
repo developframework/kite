@@ -11,7 +11,6 @@ import org.xml.sax.Attributes;
  */
 class VirtualObjectElementSaxParser extends ContainerElementSaxParser<VirtualObjectKiteElement>{
 
-
     VirtualObjectElementSaxParser(KiteConfiguration kiteConfiguration) {
         super(kiteConfiguration);
     }

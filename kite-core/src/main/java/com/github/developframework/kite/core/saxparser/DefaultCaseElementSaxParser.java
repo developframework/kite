@@ -9,9 +9,9 @@ import org.xml.sax.Attributes;
  *
  * @author qiushui on 2018-10-28.
  */
-public class DefaultCaseElementSaxParser extends AbstractElementSaxParser {
+class DefaultCaseElementSaxParser extends AbstractElementSaxParser {
 
-    public DefaultCaseElementSaxParser(KiteConfiguration kiteConfiguration) {
+    DefaultCaseElementSaxParser(KiteConfiguration kiteConfiguration) {
         super(kiteConfiguration);
     }
 
