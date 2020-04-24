@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -84,19 +83,18 @@ class DefaultXmlProducer implements XmlProducer {
         DataDefinition templateDataDefinition = template.getDataDefinition();
 
         if (templateDataDefinition != DataDefinition.EMPTY_DATA_DEFINITION) {
-            Optional<Object> rootObjectOptional = dataModel.getData(templateDataDefinition.getExpression());
-            if (rootObjectOptional.isPresent()) {
-                Object rootObject = rootObjectOptional.get();
-                if (rootObject.getClass().isArray() || rootObject instanceof List || rootObject instanceof Set) {
-                    // 视为数组模板
-                    return constructRootArrayNodeTree(xmlProcessContext, template, rootObject);
-                } else {
-                    // 视为对象模板
-                    return constructRootObjectNodeTree(xmlProcessContext, template, rootObject);
-                }
-            } else {
-                throw new KiteException("Root data must not null.");
-            }
+            return dataModel
+                    .getData(templateDataDefinition.getExpression())
+                    .map(rootObject -> {
+                        if (rootObject.getClass().isArray() || rootObject instanceof List || rootObject instanceof Set) {
+                            // 视为数组模板
+                            return constructRootArrayNodeTree(xmlProcessContext, template, rootObject);
+                        } else {
+                            // 视为对象模板
+                            return constructRootObjectNodeTree(xmlProcessContext, template, rootObject);
+                        }
+                    })
+                    .orElse(null);
         } else {
             // 视为对象模板
             return constructRootObjectNodeTree(xmlProcessContext, template, null);

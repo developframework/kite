@@ -16,7 +16,6 @@ import com.github.developframework.kite.core.processor.json.JsonProcessContext;
 import com.github.developframework.kite.core.processor.json.TemplateJsonProcessor;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -39,6 +38,9 @@ class DefaultJsonProducer implements JsonProducer {
     @Override
     public String produce(DataModel dataModel, String namespace, String templateId, boolean isPretty) {
         JsonNode root = constructRootTree(dataModel, namespace, templateId);
+        if (root == null) {
+            return null;
+        }
         try {
             if (isPretty) {
                 return kiteConfiguration.getObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(root);
@@ -53,14 +55,16 @@ class DefaultJsonProducer implements JsonProducer {
     @Override
     public void outputJson(JsonGenerator jsonGenerator, DataModel dataModel, String namespace, String templateId, boolean isPretty) {
         JsonNode root = constructRootTree(dataModel, namespace, templateId);
-        try {
-            if(isPretty) {
-                kiteConfiguration.getObjectMapper().writerWithDefaultPrettyPrinter().writeValue(jsonGenerator, root);
-            } else {
-                kiteConfiguration.getObjectMapper().writer().writeValue(jsonGenerator, root);
+        if (root != null) {
+            try {
+                if (isPretty) {
+                    kiteConfiguration.getObjectMapper().writerWithDefaultPrettyPrinter().writeValue(jsonGenerator, root);
+                } else {
+                    kiteConfiguration.getObjectMapper().writer().writeValue(jsonGenerator, root);
+                }
+            } catch (Exception e) {
+                throw new KiteException("produce json string failed.");
             }
-        } catch (Exception e) {
-            throw new KiteException("produce json string failed.");
         }
     }
 
@@ -78,21 +82,19 @@ class DefaultJsonProducer implements JsonProducer {
         jsonProcessContext.setConfiguration(kiteConfiguration);
 
         DataDefinition templateDataDefinition = template.getDataDefinition();
-
         if(templateDataDefinition != null) {
-            Optional<Object> rootObjectOptional = dataModel.getData(templateDataDefinition.getExpression());
-            if (rootObjectOptional.isPresent()) {
-                Object rootObject = rootObjectOptional.get();
-                if (rootObject.getClass().isArray() || rootObject instanceof List || rootObject instanceof Set) {
-                    // 视为数组模板
-                    return constructRootArrayNodeTree(jsonProcessContext, template, rootObject);
-                } else {
-                    // 视为对象模板
-                    return constructRootObjectNodeTree(jsonProcessContext, template, rootObject);
-                }
-            } else {
-                throw new KiteException("Root data must not null.");
-            }
+            return dataModel
+                    .getData(templateDataDefinition.getExpression())
+                    .map(rootObject -> {
+                        if (rootObject.getClass().isArray() || rootObject instanceof List || rootObject instanceof Set) {
+                            // 视为数组模板
+                            return constructRootArrayNodeTree(jsonProcessContext, template, rootObject);
+                        } else {
+                            // 视为对象模板
+                            return constructRootObjectNodeTree(jsonProcessContext, template, rootObject);
+                        }
+                    })
+                    .orElse(null);
         } else {
             // 视为对象模板
             return constructRootObjectNodeTree(jsonProcessContext, template, null);
