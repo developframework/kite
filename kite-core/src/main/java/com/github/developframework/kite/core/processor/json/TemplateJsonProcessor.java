@@ -42,6 +42,7 @@ public class TemplateJsonProcessor extends ObjectJsonProcessor {
             };
             jsonProcessContext.pushExtendCallback(extend.getPort(), callback);
             JsonProcessor<? extends KiteElement, ? extends JsonNode> nextProcessor = extendTemplate.createJsonProcessor(jsonProcessContext, node);
+            nextProcessor.setValue(this.value);
             nextProcessor.process(parentProcessor);
         } else {
             super.handleCoreLogic(parentProcessor);
