@@ -39,8 +39,9 @@ public class TemplateXmlProcessor extends ObjectXmlProcessor {
                 processor.process(parentProcessorInCallback);
             };
             xmlProcessContext.pushExtendCallback(extend.getPort(), callback);
-            XmlProcessor<? extends KiteElement, ? extends Element> extendTemplateXmlProcessor = extendTemplate.createXmlProcessor(xmlProcessContext, node);
-            extendTemplateXmlProcessor.process(parentProcessor);
+            XmlProcessor<? extends KiteElement, ? extends Element> nextProcessor = extendTemplate.createXmlProcessor(xmlProcessContext, node);
+            nextProcessor.setValue(this.value);
+            nextProcessor.process(parentProcessor);
         } else {
             super.handleCoreLogic(parentProcessor);
         }
