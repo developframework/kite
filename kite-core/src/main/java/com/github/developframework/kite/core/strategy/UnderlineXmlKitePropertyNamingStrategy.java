@@ -3,6 +3,8 @@ package com.github.developframework.kite.core.strategy;
 import com.github.developframework.kite.core.KiteConfiguration;
 
 /**
+ * 下划线命名策略
+ *
  * @author qiushui on 2020-03-31.
  */
 public class UnderlineXmlKitePropertyNamingStrategy implements KitePropertyNamingStrategy {
