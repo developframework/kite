@@ -35,7 +35,7 @@ public class SwitchXmlProcessor extends FunctionalXmlProcessor<SwitchKiteElement
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected void handleCoreLogic(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
         Map<String, CaseKiteElement> caseKiteElementMap = element.getCaseKiteElementMap();
         for (String testValue : caseKiteElementMap.keySet()) {
@@ -54,13 +54,13 @@ public class SwitchXmlProcessor extends FunctionalXmlProcessor<SwitchKiteElement
         if (Objects.nonNull(value)) {
             return Optional.of(value);
         }
-        DataDefinition dataDefinition = element.getDataDefinition();
-        Optional<Object> nextValueOptional;
-        if (dataDefinition.getFunctionSign() == FunctionSign.ROOT || Objects.isNull(parentProcessor.value)) {
-            nextValueOptional = xmlProcessContext.getDataModel().getData(dataDefinition.getExpression());
+        DataDefinition checkDataDefinition = element.getCheckDataDefinition();
+        if (checkDataDefinition == DataDefinition.EMPTY_DATA_DEFINITION) {
+            return Optional.ofNullable(parentProcessor.value);
+        } else if (checkDataDefinition.getFunctionSign() == FunctionSign.ROOT || Objects.isNull(parentProcessor.value)) {
+            return xmlProcessContext.getDataModel().getData(checkDataDefinition.getExpression());
         } else {
-            nextValueOptional = xmlProcessContext.getDataModel().getData(parentProcessor.value, dataDefinition.getExpression());
+            return xmlProcessContext.getDataModel().getData(parentProcessor.value, checkDataDefinition.getExpression());
         }
-        return nextValueOptional;
     }
 }

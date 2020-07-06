@@ -27,16 +27,16 @@ import java.util.Optional;
 @Getter
 public class SwitchKiteElement extends FunctionalKiteElement {
 
-    private DataDefinition dataDefinition;
+    private final DataDefinition checkDataDefinition;
 
-    private Map<String, CaseKiteElement> caseKiteElementMap = new HashMap<>();
+    private final Map<String, CaseKiteElement> caseKiteElementMap = new HashMap<>();
 
     @Setter
     private CaseKiteElement defaultCaseKiteElement;
 
-    public SwitchKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, DataDefinition dataDefinition) {
+    public SwitchKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, DataDefinition checkDataDefinition) {
         super(configuration, templateLocation);
-        this.dataDefinition = dataDefinition;
+        this.checkDataDefinition = checkDataDefinition;
     }
 
     @Override
