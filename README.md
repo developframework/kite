@@ -495,17 +495,17 @@ Kite框架提供模块化设计json结构视图的功能。在一个`<template>`
 分支结构标签。详见[5.5.2节](#chapter552)
 
 ```xml
-<switch data="">
+<switch check-data="">
 	<case test=""></case>
 	<case test=""></case>
 	<default></default>
 </switch>
 ```
 
-| 属性 | 功能                             | 是否必须 |
-| ---- | -------------------------------- | -------- |
-| data | 取值表达式                       | 是       |
-| test | CaseTestFunction接口实现类表达式 | 是       |
+| 属性       | 功能                             | 是否必须 |
+| ---------- | -------------------------------- | -------- |
+| check-data | 取值表达式                       | 否       |
+| test       | CaseTestFunction接口实现类表达式 | 是       |
 
 
 ##### **3.2.2.3. 拓展型标签**
@@ -1365,7 +1365,7 @@ public interface CaseTestFunction<T> {
 
 ```xml
 <template id="first-view">
-  <switch data="switchData">
+  <switch check-data="switchData">
     <case test="testCase1">
         <property data="sayHello"/>
     </case>
@@ -1384,8 +1384,8 @@ dataModel.putData("switchData", 1);
 dataModel.putData("sayHello", "Hello");
 dataModel.putData("sayThanks", "Thanks");
 dataModel.putData("sayBye", "Bye");
-dataModel.putData("testCase1", (CaseTestFunction) value -> ((Integer)value) == 1);
-dataModel.putData("testCase2", (CaseTestFunction) value -> ((Integer)value) == 2);
+dataModel.putData("testCase1", (CaseTestFunction<Integer>) value -> value == 1);
+dataModel.putData("testCase2", (CaseTestFunction<Integer>) value -> value == 2);
 ```
 
 当`switchData`等于1时输出
@@ -1427,6 +1427,7 @@ Kite内置接口实现：
 + JacksonKitePropertyNamingStrategy  用Jackson的策略命名
 + DefaultXmlKitePropertyNamingStrategy  默认的xml命名策略，AbCd => ab-cd
 + UnderlineXmlKitePropertyNamingStrategy  下划线xml命名策略，AbCd => ab_cd
++ LowerCaseKitePropertyNamingStrategy  全小写命名策略， AbCd => abcd
 + DoNothingKitePropertyNamingStrategy  什么都不做，使用原名
 
 
@@ -1454,6 +1455,5 @@ Kite框架使用slf4j-api日志接口，提供内部日志打印功能。可以�
 
 ```
 09:29:07.753 DEBUG  - Kite framework loaded the configuration source "/kite/kite-demo.xml".
-
 ```
 
