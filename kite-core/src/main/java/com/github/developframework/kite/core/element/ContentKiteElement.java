@@ -7,6 +7,7 @@ import com.github.developframework.expression.ObjectExpression;
 import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.TemplateLocation;
 import com.github.developframework.kite.core.data.DataDefinition;
+import com.github.developframework.kite.core.strategy.KitePropertyNamingStrategy;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,6 +33,9 @@ public abstract class ContentKiteElement extends AbstractKiteElement {
     protected String alias;
 
     protected boolean nullHidden;
+
+    @Setter
+    protected Class<? extends KitePropertyNamingStrategy> namingStrategy;
 
     public ContentKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, DataDefinition dataDefinition, String alias) {
         super(configuration, templateLocation);

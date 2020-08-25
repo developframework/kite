@@ -33,10 +33,21 @@
 
 	<!-- 内容节点属性组 -->
 	<xs:attributeGroup name="contentElementAttributeGroup">
-		<xs:attribute name="data" type="xs:string" use="required" />
-		<xs:attribute name="alias" type="xs:string" />
-		<xs:attribute name="null-hidden" type="xs:boolean" default="false" />
+		<xs:attribute name="data" type="xs:string" use="required"/>
+		<xs:attribute name="alias" type="xs:string"/>
+		<xs:attribute name="null-hidden" type="xs:boolean" default="false"/>
 		<xs:attribute name="converter" type="xs:string"/>
+		<xs:attribute name="naming-strategy" default="default">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="default"/>
+					<xs:enumeration value="jackson"/>
+					<xs:enumeration value="doNothing"/>
+					<xs:enumeration value="lowerCase"/>
+					<xs:enumeration value="underline"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 	</xs:attributeGroup>
 
 	<!-- 容器节点属性组 -->
