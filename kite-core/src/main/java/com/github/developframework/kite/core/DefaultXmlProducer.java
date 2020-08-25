@@ -9,6 +9,8 @@ import com.github.developframework.kite.core.processor.xml.ArrayTemplateXmlProce
 import com.github.developframework.kite.core.processor.xml.ArrayXmlProcessor;
 import com.github.developframework.kite.core.processor.xml.TemplateXmlProcessor;
 import com.github.developframework.kite.core.processor.xml.XmlProcessContext;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -27,13 +29,10 @@ import java.util.Set;
  *
  * @author qiuzhenhao
  */
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 class DefaultXmlProducer implements XmlProducer {
 
-    private KiteConfiguration kiteConfiguration;
-
-    DefaultXmlProducer(KiteConfiguration kiteConfiguration) {
-        this.kiteConfiguration = kiteConfiguration;
-    }
+    private final KiteConfiguration kiteConfiguration;
 
     @Override
     public String produce(DataModel dataModel, String namespace, String templateId) {

@@ -5,6 +5,7 @@ import com.github.developframework.expression.ExpressionUtils;
 import com.github.developframework.kite.core.dynamic.*;
 import com.github.developframework.kite.core.exception.DataUndefinedException;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,13 +16,11 @@ import java.util.Optional;
  *
  * @author qiuzhenhao
  */
+@NoArgsConstructor
 public class DataModel {
 
     @Getter
-    private Map<String, Object> dataMap = new HashMap<>();
-
-    public DataModel() {
-    }
+    private final Map<String, Object> dataMap = new HashMap<>();
 
     public DataModel(Map<String, Object> dataMap) {
         this.dataMap.putAll(dataMap);
@@ -53,7 +52,6 @@ public class DataModel {
      *
      * @param dataName  数据名称
      * @param converter 转换器
-     * @return
      */
     public DataModel putConverter(String dataName, KiteConverter<?, ?> converter) {
         return putData(dataName, converter);
@@ -64,7 +62,6 @@ public class DataModel {
      *
      * @param dataName  数据名称
      * @param condition 条件
-     * @return
      */
     public DataModel putCondition(String dataName, KiteCondition<?> condition) {
         return putData(dataName, condition);
@@ -75,7 +72,6 @@ public class DataModel {
      *
      * @param dataName 数据名称
      * @param function Case test函数接口
-     * @return
      */
     public DataModel putCaseTestFunction(String dataName, CaseTestFunction<?> function) {
         return putData(dataName, function);
@@ -86,7 +82,6 @@ public class DataModel {
      *
      * @param dataName 数据名称
      * @param function 关联函数接口
-     * @return
      */
     public DataModel putRelFunction(String dataName, RelFunction<?, ?> function) {
         return putData(dataName, function);
@@ -97,7 +92,6 @@ public class DataModel {
      *
      * @param dataName 数据名称
      * @param function 数组映射接口
-     * @return
      */
     public DataModel putMapFunction(String dataName, MapFunction<?, ?> function) {
         return putData(dataName, function);

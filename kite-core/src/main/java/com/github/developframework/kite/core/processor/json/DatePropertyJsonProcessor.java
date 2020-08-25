@@ -21,7 +21,7 @@ public class DatePropertyJsonProcessor extends PropertyJsonProcessor {
 
     private static final String DEFAULT_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
-    private String pattern;
+    private final String pattern;
 
     static {
         ACCEPT_CLASS_SET.add(java.util.Date.class);

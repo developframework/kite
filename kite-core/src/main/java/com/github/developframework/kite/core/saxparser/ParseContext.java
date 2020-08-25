@@ -3,6 +3,7 @@ package com.github.developframework.kite.core.saxparser;
 import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.TemplateLocation;
 import com.github.developframework.kite.core.element.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,10 +14,11 @@ import java.util.Stack;
  * @author qiuzhenhao
  */
 @Getter
+@AllArgsConstructor
 class ParseContext {
 
     /* 配置 */
-    private KiteConfiguration configuration;
+    private final KiteConfiguration configuration;
     /* 当前模板包 */
     @Setter
     private TemplatePackage currentTemplatePackage;
@@ -27,12 +29,7 @@ class ParseContext {
     @Setter
     private SwitchKiteElement currentSwitchElement;
     /* 节点栈 */
-    private Stack<KiteElement> stack;
-
-    public ParseContext(KiteConfiguration configuration) {
-        this.configuration = configuration;
-        this.stack = new Stack<>();
-    }
+    private final Stack<KiteElement> stack = new Stack<>();
 
     public TemplateLocation getCurrentTemplateLocation() {
         return currentTemplate.getTemplateLocation();

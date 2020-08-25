@@ -10,7 +10,7 @@ import java.io.InputStream;
  */
 public class FileConfigurationSource implements ConfigurationSource{
 
-    private String filename;
+    private final String filename;
 
     public FileConfigurationSource(String filename) {
         this.filename = filename.startsWith("/") ? filename : ("/" + filename);

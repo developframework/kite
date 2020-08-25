@@ -21,17 +21,16 @@ public class IfJsonProcessor extends FunctionalJsonProcessor<IfKiteElement, Obje
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected void handleCoreLogic(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
         element.getConditionValue().ifPresent(conditionValue -> {
             Boolean flag = (Boolean) jsonProcessContext.getDataModel()
                     .getData(conditionValue)
                     .filter(v -> v instanceof Boolean)
-                    .orElse(null);
-            if (flag == null) {
-                KiteCondition condition = KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), conditionValue, KiteCondition.class, "condition");
-                flag = condition.verify(jsonProcessContext.getDataModel(), parentProcessor.value);
-            }
+                    .orElseGet(() -> {
+                        KiteCondition condition = KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), conditionValue, KiteCondition.class, "condition");
+                        return condition.verify(jsonProcessContext.getDataModel(), parentProcessor.value);
+                    });
             if (flag) {
                 // 执行if
                 executeIfTrue(parentProcessor);
@@ -44,8 +43,6 @@ public class IfJsonProcessor extends FunctionalJsonProcessor<IfKiteElement, Obje
 
     /**
      * 执行条件真的逻辑
-     *
-     * @param parentProcessor
      */
     private void executeIfTrue(final ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
         for (Iterator<KiteElement> iterator = element.childElementIterator(); iterator.hasNext(); ) {
@@ -57,8 +54,6 @@ public class IfJsonProcessor extends FunctionalJsonProcessor<IfKiteElement, Obje
 
     /**
      * 执行条件假的逻辑
-     *
-     * @param parentProcessor
      */
     private void executeIfFalse(final ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
         element.getElseElement().ifPresent(elseElement -> {

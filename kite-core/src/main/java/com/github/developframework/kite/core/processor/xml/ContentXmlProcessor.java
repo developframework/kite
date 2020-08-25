@@ -29,7 +29,7 @@ public abstract class ContentXmlProcessor<ELEMENT extends ContentKiteElement, NO
      * @param parentProcessor 上层处理器
      * @return 值
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected Optional<Object> getDataValue(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
         if (Objects.nonNull(value)) {
             return Optional.of(value);

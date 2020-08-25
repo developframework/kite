@@ -21,15 +21,15 @@ import java.util.Set;
 public class KiteConfigurationSaxReader {
 
     @Getter
-    private Set<ConfigurationSource> sources;
+    private final Set<ConfigurationSource> sources;
 
     public KiteConfigurationSaxReader(String config) {
-        this.sources = new HashSet<>(1);
+        this.sources = new HashSet<>();
         sources.add(new FileConfigurationSource(config));
     }
 
     public KiteConfigurationSaxReader(ConfigurationSource source) {
-        this.sources = new HashSet<>(1);
+        this.sources = new HashSet<>();
         sources.add(source);
     }
 

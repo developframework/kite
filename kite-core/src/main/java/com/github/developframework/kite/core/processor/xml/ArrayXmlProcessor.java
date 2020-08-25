@@ -39,7 +39,7 @@ public class ArrayXmlProcessor extends ContainerXmlProcessor<ArrayKiteElement, E
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected void handleCoreLogic(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
         Object[] array = (Object[]) value;
         // 处理comparator功能
@@ -63,7 +63,7 @@ public class ArrayXmlProcessor extends ContainerXmlProcessor<ArrayKiteElement, E
                 } else {
                     MapFunction mapFunction = element.getMapFunctionValue()
                             .map(mfv -> KiteUtils.getComponentInstance(xmlProcessContext.getDataModel(), mfv, MapFunction.class, "map"))
-                            .get();
+                            .orElseThrow();
                     itemValue = mapFunction.apply(array[i], i);
                 }
                 empty(itemValue);

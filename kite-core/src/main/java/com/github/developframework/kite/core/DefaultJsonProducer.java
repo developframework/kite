@@ -14,6 +14,8 @@ import com.github.developframework.kite.core.processor.json.ArrayJsonProcessor;
 import com.github.developframework.kite.core.processor.json.ArrayTemplateJsonProcessor;
 import com.github.developframework.kite.core.processor.json.JsonProcessContext;
 import com.github.developframework.kite.core.processor.json.TemplateJsonProcessor;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 
 import java.util.List;
 import java.util.Set;
@@ -22,13 +24,10 @@ import java.util.Set;
  * 默认的Json生成器
  * @author qiuzhenhao
  */
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 class DefaultJsonProducer implements JsonProducer {
 
-    private KiteConfiguration kiteConfiguration;
-
-    DefaultJsonProducer(KiteConfiguration kiteConfiguration) {
-        this.kiteConfiguration = kiteConfiguration;
-    }
+    private final KiteConfiguration kiteConfiguration;
 
     @Override
     public String produce(DataModel dataModel, String namespace, String templateId) {

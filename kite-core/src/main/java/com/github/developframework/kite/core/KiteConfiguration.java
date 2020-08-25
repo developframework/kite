@@ -25,7 +25,7 @@ public class KiteConfiguration {
     private ObjectMapper objectMapper;
 
     /* 模板包Map */
-    private Map<String, TemplatePackage> templatePackages;
+    private final Map<String, TemplatePackage> templatePackages = new HashMap<>();
 
     /* json节点的命名策略 */
     @Getter
@@ -38,10 +38,6 @@ public class KiteConfiguration {
     @Getter
     @Setter
     private boolean xmlSuppressDeclaration = true;
-
-    public KiteConfiguration() {
-        this.templatePackages = new HashMap<>();
-    }
 
     /**
      * 增加模板包

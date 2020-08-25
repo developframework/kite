@@ -15,7 +15,7 @@ import java.util.Set;
  */
 public class DatePropertyXmlProcessor extends PropertyXmlProcessor {
 
-    private DateFormat dateFormat;
+    private final DateFormat dateFormat;
     // 支持的类型集合
     private static final Set<Class<?>> ACCEPT_CLASS_SET = new HashSet<>();
 

@@ -34,7 +34,7 @@ public class RelevanceJsonProcessor extends ArrayJsonProcessor {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected boolean prepare(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
         index = ((ObjectInArrayJsonProcessor) parentProcessor).getIndex();
         Optional<Object> valueOptional = getDataValue(parentProcessor);
@@ -43,7 +43,7 @@ public class RelevanceJsonProcessor extends ArrayJsonProcessor {
 
             RelFunction relFunction = ((RelevanceKiteElement) element).getRelFunctionValue()
                     .map(relFunctionValue -> KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), relFunctionValue, RelFunction.class, "rel"))
-                    .get();
+                    .orElseThrow();
             Object[] targets = KiteUtils.objectToArray(valueOptional.get(), element);
             List<Integer> indexList = new LinkedList<>();
             for (int i = 0; i < targets.length; i++) {
@@ -130,11 +130,8 @@ public class RelevanceJsonProcessor extends ArrayJsonProcessor {
 
     /**
      * 内嵌转换器
-     *
-     * @param valueArray
-     * @return
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private Object[] forInnerConverter(Object[] valueArray) {
         Optional<String> innerConverterValue = ((RelevanceKiteElement) element).getInnerConverterValue();
         // 处理转换器

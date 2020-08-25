@@ -15,11 +15,11 @@ import java.util.List;
 public class ConfigurationSaxParseHandler extends DefaultHandler {
 
     /* 解析器链 */
-    private List<ElementSaxParser> elementSaxParserChain;
+    private final List<ElementSaxParser> elementSaxParserChain;
     /* 上下文 */
-    private ParseContext parseContext;
+    private final ParseContext parseContext;
     /* 配置 */
-    private KiteConfiguration configuration;
+    private final KiteConfiguration configuration;
 
     public ConfigurationSaxParseHandler(KiteConfiguration configuration) {
         this.configuration = configuration;
@@ -77,11 +77,6 @@ public class ConfigurationSaxParseHandler extends DefaultHandler {
 
     /**
      * SAX开始节点处理
-     *
-     * @param uri
-     * @param localName
-     * @param qName
-     * @param attributes
      */
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) {
@@ -95,10 +90,6 @@ public class ConfigurationSaxParseHandler extends DefaultHandler {
 
     /**
      * SAX结束节点处理
-     *
-     * @param uri
-     * @param localName
-     * @param qName
      */
     @Override
     public void endElement(String uri, String localName, String qName) {

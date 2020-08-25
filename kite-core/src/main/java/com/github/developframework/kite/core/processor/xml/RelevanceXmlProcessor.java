@@ -33,7 +33,7 @@ public class RelevanceXmlProcessor extends ArrayXmlProcessor {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected boolean prepare(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
         index = ((ObjectInArrayXmlProcessor) parentProcessor).getIndex();
         Optional<Object> valueOptional = getDataValue(parentProcessor);
@@ -42,7 +42,7 @@ public class RelevanceXmlProcessor extends ArrayXmlProcessor {
 
             RelFunction relFunction = ((RelevanceKiteElement) element).getRelFunctionValue()
                     .map(relFunctionValue -> KiteUtils.getComponentInstance(xmlProcessContext.getDataModel(), relFunctionValue, RelFunction.class, "rel"))
-                    .get();
+                    .orElseThrow();
             Object[] targets = KiteUtils.objectToArray(valueOptional.get(), element);
             List<Integer> indexList = new LinkedList<>();
             for (int i = 0; i < targets.length; i++) {
@@ -129,7 +129,7 @@ public class RelevanceXmlProcessor extends ArrayXmlProcessor {
      * @param valueArray
      * @return
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private Object[] forInnerConverter(Object[] valueArray) {
         Optional<String> innerConverterValue = ((RelevanceKiteElement) element).getInnerConverterValue();
         // 处理转换器

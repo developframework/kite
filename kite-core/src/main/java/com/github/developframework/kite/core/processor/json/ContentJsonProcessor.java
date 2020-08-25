@@ -29,7 +29,7 @@ public abstract class ContentJsonProcessor<ELEMENT extends ContentKiteElement, N
      * @param parentProcessor 上层处理器
      * @return 值
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected Optional<Object> getDataValue(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
         if (Objects.nonNull(value)) {
             return Optional.of(value);

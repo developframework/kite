@@ -15,7 +15,7 @@ import java.util.Set;
 public class KiteFactory {
 
     @Getter
-    private KiteConfiguration kiteConfiguration;
+    private final KiteConfiguration kiteConfiguration;
 
     public KiteFactory(String... configs) {
         this(new ObjectMapper(), configs);

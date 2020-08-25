@@ -18,7 +18,7 @@ public class DataDefinition {
     /* 功能符号 */
     private FunctionSign functionSign;
     /* 表达式 */
-    private Expression expression;
+    private final Expression expression;
 
     public DataDefinition(FunctionSign functionSign, Expression expression) {
         this.functionSign = functionSign;
@@ -57,7 +57,6 @@ public class DataDefinition {
 
     @Override
     public boolean equals(Object obj) {
-
         if(obj instanceof DataDefinition) {
             DataDefinition otherDataDefinition = (DataDefinition) obj;
             return functionSign == otherDataDefinition.functionSign && expression.equals(otherDataDefinition.expression);

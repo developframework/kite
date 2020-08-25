@@ -4,8 +4,8 @@ import org.xml.sax.Attributes;
 
 /**
  * xml节点解析器基接口
- * @author qiuzhenhao
- * @date 2017/5/7
+ *
+ * @author qiuzhenhao on 2017-05-07
  */
 interface ElementSaxParser {
 
