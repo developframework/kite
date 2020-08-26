@@ -124,6 +124,7 @@ public class DataModel {
      * @param expression 表达式定义
      * @return 数据值
      */
+    @Deprecated
     public Optional<Object> getData(Object object, Expression expression) {
         return Optional.ofNullable(ExpressionUtils.getValue(object, expression));
     }

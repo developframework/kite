@@ -1,6 +1,9 @@
 package com.github.developframework.kite.core.utils;
 
+import com.github.developframework.expression.ExpressionUtils;
 import com.github.developframework.kite.core.data.DataModel;
+import com.github.developframework.kite.core.dynamic.KiteConverter;
+import com.github.developframework.kite.core.dynamic.MapFunction;
 import com.github.developframework.kite.core.element.ContentKiteElement;
 import com.github.developframework.kite.core.exception.InvalidArgumentsException;
 import com.github.developframework.kite.core.exception.KiteException;
@@ -17,9 +20,9 @@ import java.util.Set;
  * @author qiushui on 2018-10-17.
  */
 @Slf4j
+@SuppressWarnings({"unchecked", "rawtypes"})
 public final class KiteUtils {
 
-    @SuppressWarnings("unchecked")
     public static <T> T getComponentInstance(DataModel dataModel, String value, Class<T> tClass, String attributeName) {
         return (T) dataModel.getData(value).orElseGet(() -> {
             try {
@@ -58,7 +61,6 @@ public final class KiteUtils {
     /**
      * 解析children-naming-strategy
      */
-    @SuppressWarnings({"unchecked", "rawtypes"})
     public static KitePropertyNamingStrategy parseChildrenNamingStrategy(String namingStrategyStr) {
         if (StringUtils.isEmpty(namingStrategyStr) || namingStrategyStr.equals("DEFAULT")) {
             return null;
@@ -78,5 +80,29 @@ public final class KiteUtils {
             }
         }
         return null;
+    }
+
+    public static Object handleKiteConverter(DataModel dataModel, String converterValue, Object value) {
+        if (converterValue == null) {
+            return value;
+        } else if (converterValue.startsWith("this.")) {
+            return ExpressionUtils.getValue(value, converterValue.substring(5));
+        } else {
+            return KiteUtils
+                    .getComponentInstance(dataModel, converterValue, KiteConverter.class, "converter")
+                    .convert(value);
+        }
+    }
+
+    public static Object handleMapFunction(DataModel dataModel, String mapFunctionValue, Object value, int i) {
+        if (mapFunctionValue == null) {
+            return value;
+        } else if (mapFunctionValue.startsWith("this.")) {
+            return ExpressionUtils.getValue(value, mapFunctionValue.substring(5));
+        } else {
+            return KiteUtils
+                    .getComponentInstance(dataModel, mapFunctionValue, MapFunction.class, "map")
+                    .apply(value, i);
+        }
     }
 }

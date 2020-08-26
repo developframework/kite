@@ -41,9 +41,7 @@ public class RelevanceJsonProcessor extends ArrayJsonProcessor {
         if (valueOptional.isPresent()) {
             ObjectInArrayJsonProcessor objectInArrayProcessor = (ObjectInArrayJsonProcessor) parentProcessor;
 
-            RelFunction relFunction = ((RelevanceKiteElement) element).getRelFunctionValue()
-                    .map(relFunctionValue -> KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), relFunctionValue, RelFunction.class, "rel"))
-                    .orElseThrow();
+            RelFunction relFunction = KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), ((RelevanceKiteElement) element).getRelFunctionValue(), RelFunction.class, "rel");
             Object[] targets = KiteUtils.objectToArray(valueOptional.get(), element);
             List<Integer> indexList = new LinkedList<>();
             for (int i = 0; i < targets.length; i++) {
@@ -133,13 +131,13 @@ public class RelevanceJsonProcessor extends ArrayJsonProcessor {
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     private Object[] forInnerConverter(Object[] valueArray) {
-        Optional<String> innerConverterValue = ((RelevanceKiteElement) element).getInnerConverterValue();
+        String converterValue = ((RelevanceKiteElement) element).getInnerConverterValue();
         // 处理转换器
-        if (innerConverterValue.isPresent()) {
-            String converterValue = innerConverterValue.get();
+        if (converterValue != null) {
             if (converterValue.startsWith("this.")) {
                 // 简单表达式
-                return Stream.of(valueArray).map(value -> ExpressionUtils.getValue(value, converterValue.substring(5))).toArray(Object[]::new);
+                final String realConverterValue = converterValue.substring(5);
+                return Stream.of(valueArray).map(value -> ExpressionUtils.getValue(value, realConverterValue)).toArray(Object[]::new);
             } else {
                 KiteConverter converter = KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), converterValue, KiteConverter.class, "inner-converter");
                 return Stream.of(valueArray).map((Function<Object, Object>) converter::convert).toArray(Object[]::new);

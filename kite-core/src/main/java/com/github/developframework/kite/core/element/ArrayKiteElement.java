@@ -17,19 +17,17 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
-import java.util.Optional;
-
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
  * 数组节点
  * @author qiuzhenhao
  */
+@Getter
 public class ArrayKiteElement extends ContainerKiteElement{
 
     /* 元素对象节点 */
-    @Getter
-    private ObjectKiteElement itemObjectElement;
+    private final ObjectKiteElement itemObjectElement;
 
     @Setter
     protected String mapFunctionValue;
@@ -38,10 +36,8 @@ public class ArrayKiteElement extends ContainerKiteElement{
     @Setter
     protected String comparatorValue;
     @Setter
-    @Getter
     protected Integer limit;
 
-    @Getter
     protected boolean nullEmpty;
 
     public ArrayKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, DataDefinition dataDefinition, String alias) {
@@ -74,14 +70,6 @@ public class ArrayKiteElement extends ContainerKiteElement{
     public void copyChildElement(ContainerKiteElement otherContainerElement) {
         super.copyChildElement(otherContainerElement);
         this.itemObjectElement.copyChildElement(otherContainerElement);
-    }
-
-    public Optional<String> getMapFunctionValue() {
-        return Optional.ofNullable(mapFunctionValue);
-    }
-
-    public Optional<String> getComparatorValue() {
-        return Optional.ofNullable(comparatorValue);
     }
 
     public String getXmlItemName() {

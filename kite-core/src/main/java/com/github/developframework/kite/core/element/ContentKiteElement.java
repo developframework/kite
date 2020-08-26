@@ -11,8 +11,6 @@ import com.github.developframework.kite.core.strategy.KitePropertyNamingStrategy
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Optional;
-
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
@@ -38,10 +36,6 @@ public abstract class ContentKiteElement extends AbstractKiteElement {
         super(configuration, templateLocation);
         this.dataDefinition = dataDefinition;
         this.alias = alias;
-    }
-
-    public Optional<String> getConverterValue() {
-        return Optional.ofNullable(converterValue);
     }
 
     public void setNullHidden(String nullHiddenStr) {

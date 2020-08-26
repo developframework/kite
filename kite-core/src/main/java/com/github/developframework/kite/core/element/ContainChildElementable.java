@@ -33,10 +33,4 @@ public interface ContainChildElementable {
      * @return 子节点列表
      */
     List<KiteElement> getChildKiteElements();
-
-    /**
-     * 复制其它容器的子节点
-     * @param otherContainer 其它容器
-     */
-    void copyChildElement(ContainChildElementable otherContainer);
 }

@@ -2,8 +2,6 @@ package com.github.developframework.kite.core.processor.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.expression.ExpressionUtils;
-import com.github.developframework.kite.core.dynamic.KiteConverter;
 import com.github.developframework.kite.core.element.ContentKiteElement;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.element.ThisKiteElement;
@@ -21,20 +19,8 @@ public class ThisJsonProcessor extends ContainerJsonProcessor<ThisKiteElement, O
     }
 
     @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
     protected boolean prepare(ContentJsonProcessor<?, ?> parentProcessor) {
-        if (element.getConverterValue().isPresent()) {
-            String converterValue = element.getConverterValue().get();
-            if (converterValue.startsWith("this.")) {
-                // 简单表达式
-                value = ExpressionUtils.getValue(parentProcessor.value, converterValue.substring(5));
-            } else {
-                KiteConverter converter = KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), converterValue, KiteConverter.class, "converter");
-                value = converter.convert(parentProcessor.value);
-            }
-        } else {
-            value = parentProcessor.value;
-        }
+        value = KiteUtils.handleKiteConverter(jsonProcessContext.getDataModel(), element.getConverterValue(), parentProcessor.value);
         if (value == null && !element.isNullHidden()) {
             ((ObjectNode) parentProcessor.node).putNull(showName(parentProcessor));
             return false;

@@ -22,7 +22,7 @@ import java.util.Optional;
  */
 public class IfKiteElement extends ContainerFunctionalKiteElement {
 
-    private String conditionValue;
+    private final String conditionValue;
     @Setter
     private ElseKiteElement elseElement;
 

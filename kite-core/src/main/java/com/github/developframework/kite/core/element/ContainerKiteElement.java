@@ -87,12 +87,6 @@ public abstract class ContainerKiteElement extends ContentKiteElement implements
         childKiteElements.add(kiteElement);
     }
 
-
-    @Override
-    public final void copyChildElement(ContainChildElementable otherContainer) {
-        this.childKiteElements.addAll(otherContainer.getChildKiteElements());
-    }
-
     @Override
     public final Iterator<KiteElement> childElementIterator() {
         return childKiteElements.iterator();

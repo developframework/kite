@@ -14,7 +14,7 @@ public class TemplatePackage extends HashMap<String, Template>{
 
     /* 命名空间 */
     @Getter
-    private String namespace;
+    private final String namespace;
 
     public TemplatePackage(String namespace) {
         super();

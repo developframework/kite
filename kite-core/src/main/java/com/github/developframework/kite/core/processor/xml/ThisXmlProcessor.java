@@ -1,7 +1,5 @@
 package com.github.developframework.kite.core.processor.xml;
 
-import com.github.developframework.expression.ExpressionUtils;
-import com.github.developframework.kite.core.dynamic.KiteConverter;
 import com.github.developframework.kite.core.element.ContentKiteElement;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.element.ThisKiteElement;
@@ -21,20 +19,8 @@ public class ThisXmlProcessor extends ContainerXmlProcessor<ThisKiteElement, Ele
     }
 
     @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
     protected boolean prepare(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
-        if (element.getConverterValue().isPresent()) {
-            String converterValue = element.getConverterValue().get();
-            if (converterValue.startsWith("this.")) {
-                // 简单表达式
-                value = ExpressionUtils.getValue(parentProcessor.value, converterValue.substring(5));
-            } else {
-                KiteConverter converter = KiteUtils.getComponentInstance(xmlProcessContext.getDataModel(), converterValue, KiteConverter.class, "converter");
-                value = converter.convert(parentProcessor.value);
-            }
-        } else {
-            value = parentProcessor.value;
-        }
+        value = KiteUtils.handleKiteConverter(xmlProcessContext.getDataModel(), element.getConverterValue(), parentProcessor.value);
         if (value == null && !element.isNullHidden()) {
             parentProcessor.node.addElement(showName(parentProcessor));
             return false;

@@ -71,11 +71,11 @@ public class Template extends ObjectKiteElement {
     }
 
     @Getter
-    public class Extend {
+    public static class Extend {
 
-        private TemplateLocation extendTemplateLocation;
+        private final TemplateLocation extendTemplateLocation;
 
-        private String port;
+        private final String port;
 
         public Extend(String extendValue, String defaultNamespace) {
             String front = StringUtils.substringBefore(extendValue, ":");

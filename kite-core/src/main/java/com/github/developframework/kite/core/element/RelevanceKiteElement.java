@@ -16,19 +16,17 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
-import java.util.Optional;
-
 /**
  * 关联节点
  *
  * @author qiuzhenhao
  */
-
+@Getter
 public class RelevanceKiteElement extends ArrayKiteElement {
 
     @Setter
     private String relFunctionValue;
-    @Getter
+
     private RelevanceType relevanceType;
 
     @Setter
@@ -75,14 +73,6 @@ public class RelevanceKiteElement extends ArrayKiteElement {
         arrayKiteElement.setConverterValue(converterValue);
         arrayKiteElement.setChildrenNamingStrategy(childrenNamingStrategy);
         return arrayKiteElement;
-    }
-
-    public Optional<String> getRelFunctionValue() {
-        return Optional.ofNullable(relFunctionValue);
-    }
-
-    public Optional<String> getInnerConverterValue() {
-        return Optional.ofNullable(innerConverterValue);
     }
 
     /**

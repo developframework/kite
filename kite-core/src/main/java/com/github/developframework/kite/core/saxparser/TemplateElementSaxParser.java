@@ -38,7 +38,7 @@ class TemplateElementSaxParser extends ContainerElementSaxParser<Template>{
         }
         if (StringUtils.isNotEmpty(extend)) {
             String defaultNamespace = parseContext.getCurrentTemplatePackage().getNamespace();
-            template.setExtend(template.new Extend(extend.trim(), defaultNamespace));
+            template.setExtend(new Template.Extend(extend.trim(), defaultNamespace));
         }
         if (StringUtils.isNotEmpty(mapFunctionValue)) {
             template.setMapFunctionValue(mapFunctionValue);

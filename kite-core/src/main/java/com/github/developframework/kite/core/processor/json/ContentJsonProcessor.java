@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.github.developframework.expression.ExpressionUtils;
 import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.data.FunctionSign;
-import com.github.developframework.kite.core.dynamic.KiteConverter;
 import com.github.developframework.kite.core.element.ContentKiteElement;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.utils.KiteUtils;
@@ -29,32 +28,20 @@ public abstract class ContentJsonProcessor<ELEMENT extends ContentKiteElement, N
      * @param parentProcessor 上层处理器
      * @return 值
      */
-    @SuppressWarnings({"unchecked", "rawtypes"})
     protected Optional<Object> getDataValue(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
         if (Objects.nonNull(value)) {
             return Optional.of(value);
         }
         DataDefinition dataDefinition = element.getDataDefinition();
-        Optional<Object> nextValueOptional;
+        Object nextValue;
         if (dataDefinition.getFunctionSign() == FunctionSign.ROOT || Objects.isNull(parentProcessor.value)) {
-            nextValueOptional = jsonProcessContext.getDataModel().getData(dataDefinition.getExpression());
+            nextValue = jsonProcessContext.getDataModel().getData(dataDefinition.getExpression()).orElse(null);
         } else {
-            nextValueOptional = jsonProcessContext.getDataModel().getData(parentProcessor.value, dataDefinition.getExpression());
+            nextValue = ExpressionUtils.getValue(parentProcessor.value, dataDefinition.getExpression());
         }
-        final Object nextValue = nextValueOptional.orElse(null);
         // 处理转换器
-        if (element.getConverterValue().isPresent()) {
-            String converterValue = element.getConverterValue().get();
-            if (converterValue.startsWith("this.")) {
-                // 简单表达式
-                return Optional.ofNullable(ExpressionUtils.getValue(parentProcessor.value, converterValue.substring(5)));
-            } else {
-                KiteConverter converter = KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), converterValue, KiteConverter.class, "converter");
-                return Optional.ofNullable(converter.convert(nextValue));
-            }
-        } else {
-            return nextValueOptional;
-        }
+        nextValue = KiteUtils.handleKiteConverter(jsonProcessContext.getDataModel(), element.getConverterValue(), nextValue);
+        return Optional.ofNullable(nextValue);
     }
 
     protected String showName(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {

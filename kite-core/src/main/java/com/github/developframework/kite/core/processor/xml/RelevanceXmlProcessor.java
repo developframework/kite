@@ -40,9 +40,7 @@ public class RelevanceXmlProcessor extends ArrayXmlProcessor {
         if (valueOptional.isPresent()) {
             ObjectInArrayXmlProcessor objectInArrayProcessor = (ObjectInArrayXmlProcessor) parentProcessor;
 
-            RelFunction relFunction = ((RelevanceKiteElement) element).getRelFunctionValue()
-                    .map(relFunctionValue -> KiteUtils.getComponentInstance(xmlProcessContext.getDataModel(), relFunctionValue, RelFunction.class, "rel"))
-                    .orElseThrow();
+            RelFunction relFunction = KiteUtils.getComponentInstance(xmlProcessContext.getDataModel(), ((RelevanceKiteElement) element).getRelFunctionValue(), RelFunction.class, "rel");
             Object[] targets = KiteUtils.objectToArray(valueOptional.get(), element);
             List<Integer> indexList = new LinkedList<>();
             for (int i = 0; i < targets.length; i++) {
@@ -89,8 +87,8 @@ public class RelevanceXmlProcessor extends ArrayXmlProcessor {
     /**
      * 生成对象结构
      *
-     * @param parentProcessor  上层处理器
-     * @param matchItems 匹配的元素
+     * @param parentProcessor 上层处理器
+     * @param matchItems      匹配的元素
      */
     private void generateObjectStructure(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor, Object[] matchItems) {
         if (matchItems.length > 0) {
@@ -113,8 +111,8 @@ public class RelevanceXmlProcessor extends ArrayXmlProcessor {
     /**
      * 生成数组结构
      *
-     * @param parentProcessor  上层处理器
-     * @param matchItems 匹配的元素
+     * @param parentProcessor 上层处理器
+     * @param matchItems      匹配的元素
      */
     private void generateArrayStructure(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor, Object[] matchItems) {
         ContentKiteElement contentElement = ((RelevanceKiteElement) element).createProxyArrayElement();
@@ -125,19 +123,16 @@ public class RelevanceXmlProcessor extends ArrayXmlProcessor {
 
     /**
      * 内嵌转换器
-     *
-     * @param valueArray
-     * @return
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     private Object[] forInnerConverter(Object[] valueArray) {
-        Optional<String> innerConverterValue = ((RelevanceKiteElement) element).getInnerConverterValue();
+        String converterValue = ((RelevanceKiteElement) element).getInnerConverterValue();
         // 处理转换器
-        if (innerConverterValue.isPresent()) {
-            String converterValue = innerConverterValue.get();
+        if (converterValue != null) {
             if (converterValue.startsWith("this.")) {
                 // 简单表达式
-                return Stream.of(valueArray).map(value -> ExpressionUtils.getValue(value, converterValue.substring(5))).toArray(Object[]::new);
+                final String realConverterValue = converterValue.substring(5);
+                return Stream.of(valueArray).map(value -> ExpressionUtils.getValue(value, realConverterValue)).toArray(Object[]::new);
             } else {
                 KiteConverter converter = KiteUtils.getComponentInstance(xmlProcessContext.getDataModel(), converterValue, KiteConverter.class, "inner-converter");
                 return Stream.of(valueArray).map((Function<Object, Object>) converter::convert).toArray(Object[]::new);
