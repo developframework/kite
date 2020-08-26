@@ -26,7 +26,7 @@ public class PrototypeXmlProcessor extends ContentXmlProcessor<PrototypeKiteElem
             return true;
         }
         if (!element.isNullHidden()) {
-            node.addElement(element.showNameXML());
+            node.addElement(showName(parentProcessor));
         }
         return false;
     }

@@ -26,7 +26,7 @@ class SwitchElementSaxParser extends AbstractElementSaxParser {
         final DataDefinition checkDataDefinition = new DataDefinition(attributes.getValue("check-data"));
         SwitchKiteElement switchKiteElement = new SwitchKiteElement(kiteConfiguration, parseContext.getCurrentTemplateLocation(), checkDataDefinition);
         parseContext.setCurrentSwitchElement(switchKiteElement);
-        addChildElement(parseContext, switchKiteElement);
+        addToParentElement(parseContext, switchKiteElement);
         parseContext.getStack().push(switchKiteElement);
     }
 

@@ -7,7 +7,7 @@ import com.github.developframework.kite.core.KiteConfiguration;
  *
  * @author qiushui on 2020-03-31.
  */
-public class UnderlineXmlKitePropertyNamingStrategy implements KitePropertyNamingStrategy {
+public class UnderlineKitePropertyNamingStrategy implements KitePropertyNamingStrategy {
 
     @Override
     public String propertyShowName(KiteConfiguration configuration, String expressionString) {

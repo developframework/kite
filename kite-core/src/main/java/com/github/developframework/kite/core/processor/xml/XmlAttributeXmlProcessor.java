@@ -29,6 +29,6 @@ public class XmlAttributeXmlProcessor extends ContentXmlProcessor<XmlAttributeEl
 
     @Override
     protected void handleCoreLogic(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
-        this.node.addAttribute(element.showNameXML(), value.toString());
+        this.node.addAttribute(showName(parentProcessor), value.toString());
     }
 }

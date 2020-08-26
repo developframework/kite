@@ -29,11 +29,11 @@ public class ArrayXmlProcessor extends ContainerXmlProcessor<ArrayKiteElement, E
         Optional<Object> valueOptional = getDataValue(parentProcessor);
         if (valueOptional.isPresent()) {
             this.value = KiteUtils.objectToArray(valueOptional.get(), element);
-            this.node = parentProcessor.node.addElement(element.showNameXML());
+            this.node = parentProcessor.node.addElement(showName(parentProcessor));
             return true;
         }
         if (!element.isNullHidden()) {
-            parentProcessor.node.addElement(element.showNameXML());
+            parentProcessor.node.addElement(showName(parentProcessor));
         }
         return false;
     }

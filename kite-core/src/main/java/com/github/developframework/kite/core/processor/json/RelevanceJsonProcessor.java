@@ -56,9 +56,9 @@ public class RelevanceJsonProcessor extends ArrayJsonProcessor {
         }
         if (!element.isNullHidden()) {
             if (element.isNullEmpty()) {
-                ((ObjectNode) parentProcessor.node).putArray(element.showNameJSON());
+                ((ObjectNode) parentProcessor.node).putArray(showName(parentProcessor));
             } else {
-                ((ObjectNode) parentProcessor.node).putNull(element.showNameJSON());
+                ((ObjectNode) parentProcessor.node).putNull(showName(parentProcessor));
             }
         }
         return false;
@@ -110,7 +110,7 @@ public class RelevanceJsonProcessor extends ArrayJsonProcessor {
             nextProcessor.process(parentProcessor);
         } else {
             if (!element.isNullHidden()) {
-                ((ObjectNode) parentProcessor.node).putNull(element.showNameJSON());
+                ((ObjectNode) parentProcessor.node).putNull(showName(parentProcessor));
             }
         }
     }

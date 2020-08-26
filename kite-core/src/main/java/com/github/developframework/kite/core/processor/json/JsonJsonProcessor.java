@@ -32,7 +32,7 @@ public class JsonJsonProcessor extends ContentJsonProcessor<JsonKiteElement, Obj
             return true;
         }
         if (!element.isNullHidden()) {
-            ((ObjectNode) parentProcessor.node).putNull(element.showNameJSON());
+            ((ObjectNode) parentProcessor.node).putNull(showName(parentProcessor));
         }
         return false;
     }
@@ -41,7 +41,7 @@ public class JsonJsonProcessor extends ContentJsonProcessor<JsonKiteElement, Obj
     protected void handleCoreLogic(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
         try {
             JsonNode jsonNode = jsonProcessContext.getConfiguration().getObjectMapper().readTree((String) value);
-            node.set(element.showNameJSON(), jsonNode);
+            node.set(showName(parentProcessor), jsonNode);
         } catch (IOException e) {
             throw new KiteException("json element data \"%s\" parse failed in template \"%s\".", element.getDataDefinition(), element.getTemplateLocation());
         }

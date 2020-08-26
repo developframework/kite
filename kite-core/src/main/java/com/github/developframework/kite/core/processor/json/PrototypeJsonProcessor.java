@@ -27,7 +27,7 @@ public class PrototypeJsonProcessor extends ContentJsonProcessor<PrototypeKiteEl
             return true;
         }
         if (!element.isNullHidden()) {
-            node.putNull(element.showNameJSON());
+            node.putNull(showName(parentProcessor));
         }
         return false;
     }
@@ -36,6 +36,6 @@ public class PrototypeJsonProcessor extends ContentJsonProcessor<PrototypeKiteEl
     protected void handleCoreLogic(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
         ObjectMapper objectMapper = jsonProcessContext.getConfiguration().getObjectMapper();
         JsonNode jsonNode = objectMapper.valueToTree(value);
-        node.set(element.showNameJSON(), jsonNode);
+        node.set(showName(parentProcessor), jsonNode);
     }
 }

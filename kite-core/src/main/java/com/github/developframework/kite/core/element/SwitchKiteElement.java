@@ -52,4 +52,9 @@ public class SwitchKiteElement extends FunctionalKiteElement {
     public Optional<CaseKiteElement> getDefaultCaseKiteElement() {
         return Optional.ofNullable(defaultCaseKiteElement);
     }
+
+    public void putCase(String testValue, CaseKiteElement caseKiteElement) {
+        caseKiteElementMap.put(testValue, caseKiteElement);
+        caseKiteElement.setChildrenNamingStrategy(this.childrenNamingStrategy);
+    }
 }

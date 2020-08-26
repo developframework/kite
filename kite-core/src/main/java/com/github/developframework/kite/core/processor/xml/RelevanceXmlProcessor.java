@@ -54,7 +54,7 @@ public class RelevanceXmlProcessor extends ArrayXmlProcessor {
             return true;
         }
         if (!element.isNullHidden()) {
-            parentProcessor.getNode().addElement(element.showNameXML());
+            parentProcessor.getNode().addElement(showName(parentProcessor));
         }
         return false;
     }
@@ -105,7 +105,7 @@ public class RelevanceXmlProcessor extends ArrayXmlProcessor {
             nextProcessor.process(parentProcessor);
         } else {
             if (!element.isNullHidden()) {
-                parentProcessor.getNode().addElement(element.showNameXML());
+                parentProcessor.getNode().addElement(showName(parentProcessor));
             }
         }
     }

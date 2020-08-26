@@ -24,7 +24,7 @@ class IfElementSaxParser extends AbstractElementSaxParser {
         final String condition = attributes.getValue("condition").trim();
         final IfKiteElement ifElement = new IfKiteElement(kiteConfiguration, parseContext.getCurrentTemplateLocation(), condition);
         parseContext.setCurrentIfElement(ifElement);
-        addChildElement(parseContext, ifElement);
+        addToParentElement(parseContext, ifElement);
         parseContext.getStack().push(ifElement);
     }
 

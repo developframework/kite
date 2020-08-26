@@ -21,7 +21,7 @@ public class ThisXmlProcessor extends ContainerXmlProcessor<ThisKiteElement, Ele
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected boolean prepare(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
         if (element.getConverterValue().isPresent()) {
             String converterValue = element.getConverterValue().get();
@@ -36,7 +36,7 @@ public class ThisXmlProcessor extends ContainerXmlProcessor<ThisKiteElement, Ele
             value = parentProcessor.value;
         }
         if (value == null && !element.isNullHidden()) {
-            parentProcessor.node.addElement(element.showNameXML());
+            parentProcessor.node.addElement(showName(parentProcessor));
             return false;
         }
         return true;

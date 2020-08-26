@@ -32,21 +32,21 @@ public class ArrayJsonProcessor extends ContainerJsonProcessor<ArrayKiteElement,
         Optional<Object> valueOptional = getDataValue(parentProcessor);
         if (valueOptional.isPresent()) {
             this.value = KiteUtils.objectToArray(valueOptional.get(), element);
-            this.node = ((ObjectNode) parentProcessor.node).putArray(element.showNameJSON());
+            this.node = ((ObjectNode) parentProcessor.node).putArray(showName(parentProcessor));
             return true;
         }
         if (!element.isNullHidden()) {
             if (element.isNullEmpty()) {
-                ((ObjectNode) parentProcessor.node).putArray(element.showNameJSON());
+                ((ObjectNode) parentProcessor.node).putArray(showName(parentProcessor));
             } else {
-                ((ObjectNode) parentProcessor.node).putNull(element.showNameJSON());
+                ((ObjectNode) parentProcessor.node).putNull(showName(parentProcessor));
             }
         }
         return false;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected void handleCoreLogic(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
         Object[] array = (Object[]) value;
         // 处理comparator功能
@@ -70,7 +70,7 @@ public class ArrayJsonProcessor extends ContainerJsonProcessor<ArrayKiteElement,
                 } else {
                     MapFunction mapFunction = element.getMapFunctionValue()
                             .map(mfv -> KiteUtils.getComponentInstance(jsonProcessContext.getDataModel(), mfv, MapFunction.class, "map"))
-                            .get();
+                            .orElseThrow();
                     itemValue = mapFunction.apply(array[i], i);
                 }
                 empty(itemValue);

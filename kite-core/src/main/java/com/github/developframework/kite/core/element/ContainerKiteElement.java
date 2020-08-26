@@ -73,12 +73,13 @@ public abstract class ContainerKiteElement extends ContentKiteElement implements
     }
 
     public void copyChildElement(ContainerKiteElement otherContainerElement) {
-        this.childKiteElements.addAll(otherContainerElement.getChildKiteElements());
+        this.childKiteElements.addAll(otherContainerElement.childKiteElements);
         this.ignorePropertyNames.addAll(otherContainerElement.ignorePropertyNames);
         this.alias = otherContainerElement.alias;
         this.forClass = otherContainerElement.forClass;
         this.nullHidden = otherContainerElement.nullHidden;
         this.templateLocation = otherContainerElement.templateLocation;
+        this.childrenNamingStrategy = otherContainerElement.childrenNamingStrategy;
     }
 
     @Override

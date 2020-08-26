@@ -22,7 +22,7 @@ class JsonElementSaxParser extends ContentElementSaxParser<JsonKiteElement> {
     }
 
     @Override
-    protected void addOtherAttributes(JsonKiteElement element, Attributes attributes) {
+    protected void addOtherAttributes(ParseContext parseContext, JsonKiteElement element, Attributes attributes) {
 
     }
 

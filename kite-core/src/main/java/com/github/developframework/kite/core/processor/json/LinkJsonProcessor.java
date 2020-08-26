@@ -37,7 +37,7 @@ public class LinkJsonProcessor extends ObjectJsonProcessor {
             return true;
         }
         if (!element.isNullHidden()) {
-            node.putNull(element.showNameJSON());
+            node.putNull(showName(parentProcessor));
         }
         return false;
     }

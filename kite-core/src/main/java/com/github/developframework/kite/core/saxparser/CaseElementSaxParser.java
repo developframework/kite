@@ -24,7 +24,7 @@ class CaseElementSaxParser extends AbstractElementSaxParser {
     public void handleAtStartElement(ParseContext parseContext, Attributes attributes) {
         final String testValue = attributes.getValue("test");
         CaseKiteElement caseKiteElement = new CaseKiteElement(kiteConfiguration, parseContext.getCurrentTemplateLocation(), testValue);
-        parseContext.getCurrentSwitchElement().getCaseKiteElementMap().put(testValue, caseKiteElement);
+        parseContext.getCurrentSwitchElement().putCase(testValue, caseKiteElement);
         parseContext.getStack().push(caseKiteElement);
     }
 

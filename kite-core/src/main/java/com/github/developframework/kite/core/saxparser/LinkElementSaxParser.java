@@ -27,8 +27,8 @@ class LinkElementSaxParser extends ContainerElementSaxParser<LinkKiteElement>  {
     }
 
     @Override
-    protected void addOtherAttributes(LinkKiteElement element, Attributes attributes) {
-        super.addOtherAttributes(element, attributes);
+    protected void addOtherAttributes(ParseContext parseContext, LinkKiteElement element, Attributes attributes) {
+        super.addOtherAttributes(parseContext, element, attributes);
         element.setMapFunctionValue(attributes.getValue("map"));
     }
 }

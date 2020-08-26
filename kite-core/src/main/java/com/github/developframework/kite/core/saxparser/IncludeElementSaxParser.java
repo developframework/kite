@@ -27,7 +27,7 @@ class IncludeElementSaxParser extends AbstractElementSaxParser{
         String namespace = attributes.getValue("namespace");
         namespace = StringUtils.isNotEmpty(namespace) ? namespace.trim() : parseContext.getCurrentTemplatePackage().getNamespace();
         final IncludeKiteElement includeElement = new IncludeKiteElement(kiteConfiguration, parseContext.getCurrentTemplateLocation(), new TemplateLocation(namespace, templateId));
-        addChildElement(parseContext, includeElement);
+        addToParentElement(parseContext, includeElement);
     }
 
     @Override

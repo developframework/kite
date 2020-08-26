@@ -27,7 +27,7 @@ class PropertyElementSaxParser extends ContainerElementSaxParser<PropertyKiteEle
     }
 
     @Override
-    protected void addOtherAttributes(PropertyKiteElement element, Attributes attributes) {
+    protected void addOtherAttributes(ParseContext parseContext, PropertyKiteElement element, Attributes attributes) {
         element.setNullHidden(attributes.getValue("null-hidden"));
         element.setXmlCdata(attributes.getValue("xml-cdata"));
     }

@@ -27,8 +27,8 @@ class RelevanceElementParser extends ContainerElementSaxParser<RelevanceKiteElem
     }
 
     @Override
-    protected void addOtherAttributes(RelevanceKiteElement element, Attributes attributes) {
-        super.addOtherAttributes(element, attributes);
+    protected void addOtherAttributes(ParseContext parseContext, RelevanceKiteElement element, Attributes attributes) {
+        super.addOtherAttributes(parseContext, element, attributes);
         element.setRelFunctionValue(attributes.getValue("rel"));
         element.setMapFunctionValue(attributes.getValue("map"));
         element.setComparatorValue(attributes.getValue("comparator"));

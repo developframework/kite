@@ -50,6 +50,9 @@ class TemplateElementSaxParser extends ContainerElementSaxParser<Template>{
             template.setXmlItemName(xmlItemName);
         }
         template.setForClass(attributes.getValue("for-class"));
+        template.setChildrenNamingStrategy(
+                parseChildrenNamingStrategy(parseContext, attributes.getValue("children-naming-strategy"))
+        );
         parseContext.setCurrentTemplate(template);
         parseContext.getStack().push(template);
     }
@@ -68,7 +71,7 @@ class TemplateElementSaxParser extends ContainerElementSaxParser<Template>{
     }
 
     @Override
-    protected void addOtherAttributes(Template element, Attributes attributes) {
+    protected void addOtherAttributes(ParseContext parseContext, Template element, Attributes attributes) {
         // 无操作
     }
 }

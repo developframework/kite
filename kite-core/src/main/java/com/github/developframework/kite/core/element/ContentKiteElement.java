@@ -34,9 +34,6 @@ public abstract class ContentKiteElement extends AbstractKiteElement {
 
     protected boolean nullHidden;
 
-    @Setter
-    protected Class<? extends KitePropertyNamingStrategy> namingStrategy;
-
     public ContentKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, DataDefinition dataDefinition, String alias) {
         super(configuration, templateLocation);
         this.dataDefinition = dataDefinition;
@@ -53,26 +50,30 @@ public abstract class ContentKiteElement extends AbstractKiteElement {
 
     /**
      * 生成显示名称（json）
+     *
      * @return 显示名称
      */
-    public String showNameJSON() {
+    public String showNameJSON(KitePropertyNamingStrategy parentNamingStrategy) {
         if (isNotEmpty(alias)) {
             return alias;
         }
         final String expressionString = expressionString();
-        return configuration.getForJsonStrategy().propertyShowName(configuration, expressionString);
+        final KitePropertyNamingStrategy ns = parentNamingStrategy == null ? configuration.getForJsonStrategy() : parentNamingStrategy;
+        return ns.propertyShowName(configuration, expressionString);
     }
 
     /**
      * 生成显示名称（xml）
+     *
      * @return 显示名称
      */
-    public String showNameXML() {
+    public String showNameXML(KitePropertyNamingStrategy parentNamingStrategy) {
         if (isNotEmpty(alias)) {
             return alias;
         }
         final String expressionString = expressionString();
-        return configuration.getForXmlStrategy().propertyShowName(configuration, expressionString);
+        final KitePropertyNamingStrategy ns = parentNamingStrategy == null ? configuration.getForXmlStrategy() : parentNamingStrategy;
+        return ns.propertyShowName(configuration, expressionString);
     }
 
     private String expressionString() {
@@ -89,5 +90,4 @@ public abstract class ContentKiteElement extends AbstractKiteElement {
             throw new AssertionError();
         }
     }
-
 }

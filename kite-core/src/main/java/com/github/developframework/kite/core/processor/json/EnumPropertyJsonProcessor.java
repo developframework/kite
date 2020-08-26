@@ -28,7 +28,7 @@ public class EnumPropertyJsonProcessor extends ContentJsonProcessor<EnumProperty
             return true;
         }
         if (!element.isNullHidden()) {
-            ((ObjectNode) parentProcessor.getNode()).putNull(element.showNameJSON());
+            ((ObjectNode) parentProcessor.getNode()).putNull(showName(parentProcessor));
         }
         return false;
     }
@@ -40,6 +40,6 @@ public class EnumPropertyJsonProcessor extends ContentJsonProcessor<EnumProperty
         if (enumText == null) {
             throw new KiteException("No enum value for \"%s\" in template \"%s\".", enumValue, element.getTemplateLocation());
         }
-        node.put(element.showNameJSON(), enumText);
+        node.put(showName(parentProcessor), enumText);
     }
 }

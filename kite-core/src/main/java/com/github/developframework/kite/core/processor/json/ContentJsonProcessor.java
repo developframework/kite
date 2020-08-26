@@ -56,4 +56,8 @@ public abstract class ContentJsonProcessor<ELEMENT extends ContentKiteElement, N
             return nextValueOptional;
         }
     }
+
+    protected String showName(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
+        return element.showNameJSON(parentProcessor.element.getChildrenNamingStrategy());
+    }
 }

@@ -23,11 +23,11 @@ public abstract class PropertyXmlProcessor extends ContainerXmlProcessor<Propert
         Optional<Object> valueOptional = getDataValue(parentProcessor);
         if (valueOptional.isPresent()) {
             value = valueOptional.get();
-            this.node = parentProcessor.node.addElement(element.showNameXML());
+            this.node = parentProcessor.node.addElement(showName(parentProcessor));
             return true;
         }
         if (!element.isNullHidden()) {
-            this.node = parentProcessor.node.addElement(element.showNameXML());
+            this.node = parentProcessor.node.addElement(showName(parentProcessor));
         }
         return false;
     }

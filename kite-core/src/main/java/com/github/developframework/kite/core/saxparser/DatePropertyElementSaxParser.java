@@ -27,8 +27,8 @@ class DatePropertyElementSaxParser extends PropertyElementSaxParser {
     }
 
     @Override
-    protected void addOtherAttributes(PropertyKiteElement element, Attributes attributes) {
-        super.addOtherAttributes(element, attributes);
-        ((DatePropertyKiteElement)element).setPattern(attributes.getValue("pattern"));
+    protected void addOtherAttributes(ParseContext parseContext, PropertyKiteElement element, Attributes attributes) {
+        super.addOtherAttributes(parseContext, element, attributes);
+        ((DatePropertyKiteElement) element).setPattern(attributes.getValue("pattern"));
     }
 }

@@ -11,15 +11,27 @@
 								<xs:complexType>
 									<xs:complexContent>
 										<xs:extension base="contentElementType">
-											<xs:group ref="childElementGroup"/>
-											<xs:attribute name="id" type="xs:string" use="required" />
-											<xs:attribute name="data" type="xs:string" />
-											<xs:attribute name="for-class" type="xs:string" />
-											<xs:attribute name="extend" type="xs:string" />
-											<xs:attribute name="xml-root" type="xs:string" />
-											<xs:attribute name="converter" type="xs:string"/>
-											<xs:attributeGroup ref="arrayTypeElementAttributeGroup"/>
-										</xs:extension>
+                                            <xs:group ref="childElementGroup"/>
+                                            <xs:attribute name="id" type="xs:string" use="required"/>
+                                            <xs:attribute name="data" type="xs:string"/>
+                                            <xs:attribute name="for-class" type="xs:string"/>
+                                            <xs:attribute name="extend" type="xs:string"/>
+                                            <xs:attribute name="xml-root" type="xs:string"/>
+                                            <xs:attribute name="converter" type="xs:string"/>
+                                            <xs:attribute name="children-naming-strategy">
+                                                <xs:simpleType>
+                                                    <xs:restriction base="xs:string">
+                                                        <xs:enumeration value="DEFAULT"/>
+                                                        <xs:enumeration value="JACKSON"/>
+                                                        <xs:enumeration value="DO_NOTHING"/>
+                                                        <xs:enumeration value="LOWER_CASE"/>
+                                                        <xs:enumeration value="UNDERLINE"/>
+                                                        <xs:enumeration value="MIDDLE_LINE"/>
+                                                    </xs:restriction>
+                                                </xs:simpleType>
+                                            </xs:attribute>
+                                            <xs:attributeGroup ref="arrayTypeElementAttributeGroup"/>
+                                        </xs:extension>
 									</xs:complexContent>
 								</xs:complexType>
 							</xs:element>
@@ -27,33 +39,34 @@
 						<xs:attribute name="namespace" type="xs:string" use="required" />
 					</xs:complexType>
 				</xs:element>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-	<!-- 内容节点属性组 -->
-	<xs:attributeGroup name="contentElementAttributeGroup">
-		<xs:attribute name="data" type="xs:string" use="required"/>
-		<xs:attribute name="alias" type="xs:string"/>
-		<xs:attribute name="null-hidden" type="xs:boolean" default="false"/>
-		<xs:attribute name="converter" type="xs:string"/>
-		<xs:attribute name="naming-strategy" default="default">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:enumeration value="default"/>
-					<xs:enumeration value="jackson"/>
-					<xs:enumeration value="doNothing"/>
-					<xs:enumeration value="lowerCase"/>
-					<xs:enumeration value="underline"/>
-				</xs:restriction>
-			</xs:simpleType>
+    <!-- 内容节点属性组 -->
+    <xs:attributeGroup name="contentElementAttributeGroup">
+        <xs:attribute name="data" type="xs:string" use="required"/>
+        <xs:attribute name="alias" type="xs:string"/>
+        <xs:attribute name="null-hidden" type="xs:boolean" default="false"/>
+        <xs:attribute name="converter" type="xs:string"/>
+    </xs:attributeGroup>
+
+    <!-- 容器节点属性组 -->
+    <xs:attributeGroup name="containerElementAttributeGroup">
+        <xs:attributeGroup ref="contentElementAttributeGroup"/>
+        <xs:attribute name="for-class" type="xs:string"/>
+        <xs:attribute name="children-naming-strategy">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="DEFAULT"/>
+                    <xs:enumeration value="JACKSON"/>
+                    <xs:enumeration value="DO_NOTHING"/>
+                    <xs:enumeration value="LOWER_CASE"/>
+                    <xs:enumeration value="UNDERLINE"/>
+                    <xs:enumeration value="MIDDLE_LINE"/>
+                </xs:restriction>
+            </xs:simpleType>
 		</xs:attribute>
-	</xs:attributeGroup>
-
-	<!-- 容器节点属性组 -->
-	<xs:attributeGroup name="containerElementAttributeGroup">
-		<xs:attributeGroup ref="contentElementAttributeGroup" />
-		<xs:attribute name="for-class" type="xs:string" />
 	</xs:attributeGroup>
 
 	<!-- 数组类型的节点属性组 -->

@@ -22,7 +22,7 @@ class XmlAttributeElementSaxParser extends ContentElementSaxParser<XmlAttributeE
     }
 
     @Override
-    protected void addOtherAttributes(XmlAttributeElement element, Attributes attributes) {
+    protected void addOtherAttributes(ParseContext parseContext, XmlAttributeElement element, Attributes attributes) {
         // 无操作
     }
 

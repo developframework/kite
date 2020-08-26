@@ -23,7 +23,7 @@ class ExtendPortElementSaxParser extends AbstractElementSaxParser {
     public void handleAtStartElement(ParseContext parseContext, Attributes attributes) {
         final String portName = attributes.getValue("port-name");
         final ExtendPortKiteElement extendPortElement = new ExtendPortKiteElement(kiteConfiguration, parseContext.getCurrentTemplateLocation(), portName);
-        addChildElement(parseContext, extendPortElement);
+        addToParentElement(parseContext, extendPortElement);
     }
 
     @Override

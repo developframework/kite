@@ -58,4 +58,8 @@ public abstract class ContentXmlProcessor<ELEMENT extends ContentKiteElement, NO
         }
         return Optional.empty();
     }
+
+    protected String showName(ContentXmlProcessor<? extends KiteElement, ? extends Element> parentProcessor) {
+        return element.showNameXML(parentProcessor.element.getChildrenNamingStrategy());
+    }
 }

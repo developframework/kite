@@ -27,8 +27,8 @@ class ArrayElementSaxParser extends ContainerElementSaxParser<ArrayKiteElement> 
     }
 
     @Override
-    protected void addOtherAttributes(ArrayKiteElement element, Attributes attributes) {
-        super.addOtherAttributes(element, attributes);
+    protected void addOtherAttributes(ParseContext parseContext, ArrayKiteElement element, Attributes attributes) {
+        super.addOtherAttributes(parseContext, element, attributes);
         element.setMapFunctionValue(attributes.getValue("map"));
         element.setXmlItemName(attributes.getValue("xml-item"));
         element.setComparatorValue(attributes.getValue("comparator"));

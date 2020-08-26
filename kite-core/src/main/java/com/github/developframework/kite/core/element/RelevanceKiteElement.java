@@ -54,11 +54,7 @@ public class RelevanceKiteElement extends ArrayKiteElement {
      * @param relevanceTypeValue 关联类型值
      */
     public void setRelevanceType(String relevanceTypeValue) {
-        if (StringUtils.isNotEmpty(relevanceTypeValue)) {
-            this.relevanceType = RelevanceType.valueOf(relevanceTypeValue.toUpperCase());
-        } else {
-            this.relevanceType = RelevanceType.MULTIPLE;
-        }
+        this.relevanceType = StringUtils.isNotEmpty(relevanceTypeValue) ? RelevanceType.valueOf(relevanceTypeValue.toUpperCase()) : RelevanceType.MULTIPLE;
     }
 
     public ContentKiteElement createProxyObjectElement() {
@@ -71,12 +67,13 @@ public class RelevanceKiteElement extends ArrayKiteElement {
         }
     }
 
-    public ContentKiteElement createProxyArrayElement() {
+    public ArrayKiteElement createProxyArrayElement() {
         ArrayKiteElement arrayKiteElement = new ArrayKiteElement(configuration, this, dataDefinition);
         arrayKiteElement.setXmlItemName(xmlItemName);
         arrayKiteElement.setMapFunctionValue(mapFunctionValue);
         arrayKiteElement.setComparatorValue(comparatorValue);
         arrayKiteElement.setConverterValue(converterValue);
+        arrayKiteElement.setChildrenNamingStrategy(childrenNamingStrategy);
         return arrayKiteElement;
     }
 

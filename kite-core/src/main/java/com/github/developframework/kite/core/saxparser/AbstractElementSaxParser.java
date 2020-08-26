@@ -1,6 +1,7 @@
 package com.github.developframework.kite.core.saxparser;
 
 import com.github.developframework.kite.core.KiteConfiguration;
+import com.github.developframework.kite.core.element.AbstractKiteElement;
 import com.github.developframework.kite.core.element.ContainChildElementable;
 import com.github.developframework.kite.core.element.KiteElement;
 
@@ -9,7 +10,7 @@ import com.github.developframework.kite.core.element.KiteElement;
  *
  * @author qiuzhenhao
  */
-abstract class AbstractElementSaxParser implements ElementSaxParser{
+abstract class AbstractElementSaxParser implements ElementSaxParser {
 
     protected KiteConfiguration kiteConfiguration;
 
@@ -17,9 +18,12 @@ abstract class AbstractElementSaxParser implements ElementSaxParser{
         this.kiteConfiguration = kiteConfiguration;
     }
 
-    protected void addChildElement(ParseContext parseContext, KiteElement kiteElement) {
-        KiteElement parentKiteElement = parseContext.getStack().peek();
-        if(parentKiteElement instanceof ContainChildElementable) {
+    protected void addToParentElement(ParseContext parseContext, KiteElement kiteElement) {
+        AbstractKiteElement parentKiteElement = (AbstractKiteElement) parseContext.getStack().peek();
+        if (kiteElement instanceof AbstractKiteElement) {
+            ((AbstractKiteElement) kiteElement).setChildrenNamingStrategy(parentKiteElement.getChildrenNamingStrategy());
+        }
+        if (parentKiteElement instanceof ContainChildElementable) {
             ((ContainChildElementable) parentKiteElement).addChildElement(kiteElement);
         }
     }

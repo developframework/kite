@@ -36,7 +36,7 @@ public class ThisJsonProcessor extends ContainerJsonProcessor<ThisKiteElement, O
             value = parentProcessor.value;
         }
         if (value == null && !element.isNullHidden()) {
-            ((ObjectNode) parentProcessor.node).putNull(element.showNameJSON());
+            ((ObjectNode) parentProcessor.node).putNull(showName(parentProcessor));
             return false;
         }
         return true;

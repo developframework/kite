@@ -27,7 +27,7 @@ public abstract class PropertyJsonProcessor extends ContentJsonProcessor<Propert
             return true;
         }
         if (!element.isNullHidden()) {
-            ((ObjectNode) parentProcessor.getNode()).putNull(element.showNameJSON());
+            ((ObjectNode) parentProcessor.getNode()).putNull(showName(parentProcessor));
         }
         return false;
     }
@@ -36,7 +36,7 @@ public abstract class PropertyJsonProcessor extends ContentJsonProcessor<Propert
     protected void handleCoreLogic(ContentJsonProcessor<? extends KiteElement, ? extends JsonNode> parentProcessor) {
         Class<?> valueClass = value.getClass();
         if (support(valueClass)) {
-            handle(node, valueClass, value, element.showNameJSON());
+            handle(node, valueClass, value, showName(parentProcessor));
         }
     }
 

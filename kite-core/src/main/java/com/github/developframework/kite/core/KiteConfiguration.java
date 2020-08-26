@@ -5,9 +5,8 @@ import com.github.developframework.kite.core.element.Template;
 import com.github.developframework.kite.core.element.TemplatePackage;
 import com.github.developframework.kite.core.exception.ResourceNotUniqueException;
 import com.github.developframework.kite.core.exception.TemplatePackageUndefinedException;
-import com.github.developframework.kite.core.strategy.DefaultXmlKitePropertyNamingStrategy;
-import com.github.developframework.kite.core.strategy.JacksonKitePropertyNamingStrategy;
 import com.github.developframework.kite.core.strategy.KitePropertyNamingStrategy;
+import com.github.developframework.kite.core.strategy.NamingStrategy;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,11 +28,11 @@ public class KiteConfiguration {
 
     /* json节点的命名策略 */
     @Getter
-    private KitePropertyNamingStrategy forJsonStrategy = new JacksonKitePropertyNamingStrategy();
+    private KitePropertyNamingStrategy forJsonStrategy = NamingStrategy.JACKSON.getNamingStrategy();
 
     /* xml节点的命名策略 */
     @Getter
-    private KitePropertyNamingStrategy forXmlStrategy = new DefaultXmlKitePropertyNamingStrategy();
+    private KitePropertyNamingStrategy forXmlStrategy = NamingStrategy.MIDDLE_LINE.getNamingStrategy();
 
     @Getter
     @Setter

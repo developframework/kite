@@ -26,7 +26,7 @@ class VirtualObjectElementSaxParser extends ContainerElementSaxParser<VirtualObj
     }
 
     @Override
-    protected void addOtherAttributes(VirtualObjectKiteElement element, Attributes attributes) {
+    protected void addOtherAttributes(ParseContext parseContext, VirtualObjectKiteElement element, Attributes attributes) {
         // 无操作
     }
 }
