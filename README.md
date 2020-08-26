@@ -1424,11 +1424,23 @@ public interface KitePropertyNamingStrategy {
 
 Kite内置接口实现：
 
-+ JacksonKitePropertyNamingStrategy  用Jackson的策略命名
-+ DefaultXmlKitePropertyNamingStrategy  默认的xml命名策略，AbCd => ab-cd
-+ UnderlineXmlKitePropertyNamingStrategy  下划线xml命名策略，AbCd => ab_cd
-+ LowerCaseKitePropertyNamingStrategy  全小写命名策略， AbCd => abcd
-+ DoNothingKitePropertyNamingStrategy  什么都不做，使用原名
++ **JACKSON** JacksonKitePropertyNamingStrategy  用Jackson配置的策略命名
++ **MIDDLE_LINE** MiddleLineKitePropertyNamingStrategy  中划线命名策略，AbCd => ab-cd
++ **UNDERLINE** UnderlineXmlKitePropertyNamingStrategy  下划线xml命名策略，AbCd => ab_cd
++ **LOWDER_CASE** LowerCaseKitePropertyNamingStrategy  全小写命名策略， AbCd => abcd
++ **ORIGINAL** OriginalKitePropertyNamingStrategy  什么都不做，使用原名
++ **DEFAULT** json默认使用**JACKSON**策略，xml默认使用**MIDDLE_LINE**策略
+
+可以在容器节点上配置`children-naming-strategy` 属性强制使用某个策略
+
+```xml
+<template id="" data="" children-naming-strategy="MIDDLE_LINE">
+    <property data=""/>
+    <object data="" children-naming-strategy="UNDERLINE">
+    	<property data=""/>
+    </object>
+</template>
+```
 
 
 ## <a name="chapter6">**6. 日志**</a>
@@ -1441,8 +1453,7 @@ Kite框架使用slf4j-api日志接口，提供内部日志打印功能。可以�
   <contextName>kite-log</contextName>
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
-      <pattern>%d{HH:mm:ss.SSS} %-5level - %msg%n
-      </pattern>
+      <pattern>%d{HH:mm:ss.SSS} %-5level - %msg%n</pattern>
     </encoder>
   </appender>
   <logger name="com.github.developframework.kite" level="INFO" additivity="false">
