@@ -26,11 +26,6 @@ public abstract class ContainerFunctionalKiteElement extends FunctionalKiteEleme
     }
 
     @Override
-    public void copyChildElement(ContainChildElementable otherContainer) {
-        this.childElements.addAll(otherContainer.getChildKiteElements());
-    }
-
-    @Override
     public final Iterator<KiteElement> childElementIterator() {
         return childElements.iterator();
     }

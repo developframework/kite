@@ -1,5 +1,6 @@
 package com.github.developframework.kite.core.processor.xml;
 
+import com.github.developframework.expression.ExpressionUtils;
 import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.data.FunctionSign;
 import com.github.developframework.kite.core.dynamic.CaseTestFunction;
@@ -60,7 +61,7 @@ public class SwitchXmlProcessor extends FunctionalXmlProcessor<SwitchKiteElement
         } else if (checkDataDefinition.getFunctionSign() == FunctionSign.ROOT || Objects.isNull(parentProcessor.value)) {
             return xmlProcessContext.getDataModel().getData(checkDataDefinition.getExpression());
         } else {
-            return xmlProcessContext.getDataModel().getData(parentProcessor.value, checkDataDefinition.getExpression());
+            return Optional.ofNullable(ExpressionUtils.getValue(parentProcessor.value, checkDataDefinition.getExpression()));
         }
     }
 }

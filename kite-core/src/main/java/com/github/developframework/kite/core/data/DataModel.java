@@ -27,16 +27,6 @@ public class DataModel {
     }
 
     /**
-     * 是否包含某个数据
-     *
-     * @param dataName 数据名称
-     * @return 是否包含
-     */
-    public boolean contains(String dataName) {
-        return dataMap.containsKey(dataName);
-    }
-
-    /**
      * 放入数据
      *
      * @param dataName 数据名称
@@ -118,29 +108,6 @@ public class DataModel {
     }
 
     /**
-     * 从Object获得数据
-     *
-     * @param object     对象
-     * @param expression 表达式定义
-     * @return 数据值
-     */
-    @Deprecated
-    public Optional<Object> getData(Object object, Expression expression) {
-        return Optional.ofNullable(ExpressionUtils.getValue(object, expression));
-    }
-
-    /**
-     * 从Object获得数据
-     *
-     * @param object          对象
-     * @param expressionValue 表达式字符串
-     * @return 数据值
-     */
-    public Optional<Object> getData(Object object, String expressionValue) {
-        return getData(object, Expression.parse(expressionValue));
-    }
-
-    /**
      * 获得数据 如果没有抛出异常
      *
      * @param expression 表达式定义
@@ -148,21 +115,6 @@ public class DataModel {
      */
     public Object getDataRequired(Expression expression) {
         Object value = ExpressionUtils.getValue(dataMap, expression);
-        if (value == null) {
-            throw new DataUndefinedException(expression.toString());
-        }
-        return value;
-    }
-
-    /**
-     * 从Object获得数据 如果没有抛出异常
-     *
-     * @param object     对象
-     * @param expression 表达式定义
-     * @return 数据值
-     */
-    public Object getDataRequired(Object object, Expression expression) {
-        Object value = ExpressionUtils.getValue(object, expression);
         if (value == null) {
             throw new DataUndefinedException(expression.toString());
         }
@@ -178,22 +130,6 @@ public class DataModel {
     public Object getDataRequired(String expressionValue) {
         return getDataRequired(Expression.parse(expressionValue));
     }
-
-    /**
-     * 从Object获得数据 如果没有抛出异常
-     *
-     * @param object          对象
-     * @param expressionValue 表达式字符串
-     * @return 数据值
-     */
-    public Object getDataRequired(Object object, String expressionValue) {
-        Object value = ExpressionUtils.getValue(object, expressionValue);
-        if (value == null) {
-            throw new DataUndefinedException(expressionValue);
-        }
-        return value;
-    }
-
 
     /**
      * 构造只有一个数据的DataModel
