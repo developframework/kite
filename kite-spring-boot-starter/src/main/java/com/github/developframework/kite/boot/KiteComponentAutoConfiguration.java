@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.KiteFactory;
 import com.github.developframework.kite.core.exception.KiteException;
-import com.github.developframework.kite.core.strategy.DoNothingKitePropertyNamingStrategy;
 import com.github.developframework.kite.core.strategy.KitePropertyNamingStrategy;
+import com.github.developframework.kite.core.utils.KiteUtils;
 import com.github.developframework.kite.spring.KiteScanLoader;
 import com.github.developframework.kite.spring.mvc.DataModelReturnValueHandler;
 import com.github.developframework.kite.spring.mvc.KiteResponseReturnValueHandler;
@@ -83,23 +83,12 @@ public class KiteComponentAutoConfiguration {
 
     private KitePropertyNamingStrategy getKitePropertyNamingStrategy(String namingStrategyValue) {
         if (StringUtils.isNotEmpty(namingStrategyValue)) {
-
             // 识别内置的命名策略
-            if ("doNothing".equals(namingStrategyValue.toLowerCase())) {
-                return new DoNothingKitePropertyNamingStrategy();
+            KitePropertyNamingStrategy kitePropertyNamingStrategy = KiteUtils.parseChildrenNamingStrategy(namingStrategyValue);
+            if (kitePropertyNamingStrategy == null) {
+                throw new KiteException("NamingStrategy \"%s\" invalid.", namingStrategyValue);
             }
-            try {
-                Class<?> namingStrategyClass = Class.forName(namingStrategyValue);
-                if (KitePropertyNamingStrategy.class.isAssignableFrom(namingStrategyClass)) {
-                    return (KitePropertyNamingStrategy) namingStrategyClass.getConstructor().newInstance();
-                } else {
-                    throw new KiteException("Class \"%s\" is not subclass \"%s\".", namingStrategyValue, KitePropertyNamingStrategy.class.getName());
-                }
-            } catch (ClassNotFoundException e) {
-                throw new KiteException("Class \"%s\" is not found.", namingStrategyValue);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            return kitePropertyNamingStrategy;
         }
         return null;
     }

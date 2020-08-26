@@ -1,6 +1,7 @@
 package com.github.developframework.kite.spring;
 
 import com.github.developframework.kite.core.ConfigurationSource;
+import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -11,14 +12,11 @@ import java.io.InputStream;
  *
  * @author qiuzhenhao
  */
+@AllArgsConstructor
 public class SpringResourceConfigurationSource implements ConfigurationSource {
 
     /* spring的Resource接口 */
-    private Resource resource;
-
-    public SpringResourceConfigurationSource(Resource resource) {
-        this.resource = resource;
-    }
+    private final Resource resource;
 
     @Override
     public InputStream getInputStream() throws IOException {

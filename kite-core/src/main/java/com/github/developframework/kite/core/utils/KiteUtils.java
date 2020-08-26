@@ -4,6 +4,10 @@ import com.github.developframework.kite.core.data.DataModel;
 import com.github.developframework.kite.core.element.ContentKiteElement;
 import com.github.developframework.kite.core.exception.InvalidArgumentsException;
 import com.github.developframework.kite.core.exception.KiteException;
+import com.github.developframework.kite.core.strategy.KitePropertyNamingStrategy;
+import com.github.developframework.kite.core.strategy.NamingStrategy;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -12,6 +16,7 @@ import java.util.Set;
 /**
  * @author qiushui on 2018-10-17.
  */
+@Slf4j
 public final class KiteUtils {
 
     @SuppressWarnings("unchecked")
@@ -48,5 +53,30 @@ public final class KiteUtils {
 
     public static boolean isArrayOrCollection(Object object) {
         return object != null && (object.getClass().isArray() || object instanceof List<?> || object instanceof Set<?>);
+    }
+
+    /**
+     * 解析children-naming-strategy
+     */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static KitePropertyNamingStrategy parseChildrenNamingStrategy(String namingStrategyStr) {
+        if (StringUtils.isEmpty(namingStrategyStr) || namingStrategyStr.equals("DEFAULT")) {
+            return null;
+        } else {
+            try {
+                NamingStrategy namingStrategy = NamingStrategy.valueOf(namingStrategyStr);
+                return namingStrategy.getNamingStrategy();
+            } catch (IllegalArgumentException e) {
+                try {
+                    Class clazz = Class.forName(namingStrategyStr);
+                    if (KitePropertyNamingStrategy.class.isAssignableFrom(clazz)) {
+                        return (KitePropertyNamingStrategy) clazz.getConstructor().newInstance();
+                    }
+                } catch (Exception ex) {
+                    // 不处理
+                }
+            }
+        }
+        return null;
     }
 }

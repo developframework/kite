@@ -5,20 +5,23 @@ import com.github.developframework.kite.core.KiteFactory;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * KiteFactory 的 FactoryBean
+ *
  * @author qiuzhenhao
  */
-public class KiteFactoryFactoryBean implements FactoryBean<KiteFactory>  {
+public class KiteFactoryFactoryBean implements FactoryBean<KiteFactory> {
 
     @Getter
     @Setter
     private String[] configs;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
+
+    public KiteFactoryFactoryBean(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     @Override
     public KiteFactory getObject() {

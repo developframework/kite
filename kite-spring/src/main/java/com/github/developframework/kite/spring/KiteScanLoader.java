@@ -6,6 +6,7 @@ import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.KiteFactory;
 import com.github.developframework.kite.core.exception.KiteException;
 import com.github.developframework.kite.core.saxparser.KiteConfigurationSaxReader;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.Resource;
@@ -22,19 +23,14 @@ import java.util.Set;
  *
  * @author qiuzhenhao
  */
+@AllArgsConstructor
 public class KiteScanLoader {
 
     @Getter
-    private String locations;
-
-    public KiteScanLoader(String locations) {
-        this.locations = locations;
-    }
+    private final String locations;
 
     /**
      * 创建kiteConfiguration
-     *
-     * @return kiteConfiguration
      */
     public KiteConfiguration createKiteConfiguration() {
         final String[] locationsArray = StringUtils.tokenizeToStringArray(locations, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
@@ -56,8 +52,6 @@ public class KiteScanLoader {
 
     /**
      * 根据默认的ObjectMapper创建KiteFactory
-     *
-     * @return KiteFactory
      */
     public KiteFactory createKiteFactory() {
         return new KiteFactory(new ObjectMapper(), createKiteConfiguration());
@@ -65,9 +59,6 @@ public class KiteScanLoader {
 
     /**
      * 根据自定义的ObjectMapper创建KiteFactory
-     *
-     * @param objectMapper
-     * @return KiteFactory
      */
     public KiteFactory createKiteFactory(ObjectMapper objectMapper) {
         return new KiteFactory(objectMapper, createKiteConfiguration());

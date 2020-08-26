@@ -4,7 +4,7 @@ import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.element.ContainerKiteElement;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.strategy.KitePropertyNamingStrategy;
-import com.github.developframework.kite.core.strategy.NamingStrategy;
+import com.github.developframework.kite.core.utils.KiteUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.Attributes;
@@ -46,7 +46,6 @@ abstract class ContainerElementSaxParser<T extends ContainerKiteElement> extends
     /**
      * 解析children-naming-strategy
      */
-    @SuppressWarnings({"unchecked", "rawtypes"})
     protected final KitePropertyNamingStrategy parseChildrenNamingStrategy(ParseContext parseContext, String namingStrategyStr) {
         if (StringUtils.isEmpty(namingStrategyStr)) {
             Stack<KiteElement> stack = parseContext.getStack();
@@ -56,23 +55,13 @@ abstract class ContainerElementSaxParser<T extends ContainerKiteElement> extends
                     return ((ContainerKiteElement) parentKiteElement).getChildrenNamingStrategy();
                 }
             }
-        } else if (namingStrategyStr.equals("DEFAULT")) {
             return null;
         } else {
-            try {
-                NamingStrategy namingStrategy = NamingStrategy.valueOf(namingStrategyStr);
-                return namingStrategy.getNamingStrategy();
-            } catch (IllegalArgumentException e) {
-                try {
-                    Class clazz = Class.forName(namingStrategyStr);
-                    if (KitePropertyNamingStrategy.class.isAssignableFrom(clazz)) {
-                        return (KitePropertyNamingStrategy) clazz.getConstructor().newInstance();
-                    }
-                } catch (Exception ex) {
-                    log.warn("\"children-naming-strategy\" value \"{}\" cloud not parse.", namingStrategyStr);
-                }
+            KitePropertyNamingStrategy kitePropertyNamingStrategy = KiteUtils.parseChildrenNamingStrategy(namingStrategyStr);
+            if (kitePropertyNamingStrategy == null) {
+                log.warn("\"children-naming-strategy\" value \"{}\" cloud not parse.", namingStrategyStr);
             }
+            return kitePropertyNamingStrategy;
         }
-        return null;
     }
 }
