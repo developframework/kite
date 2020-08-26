@@ -12,7 +12,7 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum NamingStrategy {
 
-    DO_NOTHING(new DoNothingKitePropertyNamingStrategy()),
+    ORIGINAL(new OriginalKitePropertyNamingStrategy()),
 
     JACKSON(new JacksonKitePropertyNamingStrategy()),
 

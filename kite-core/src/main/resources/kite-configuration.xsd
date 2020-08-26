@@ -23,7 +23,7 @@
                                                     <xs:restriction base="xs:string">
                                                         <xs:enumeration value="DEFAULT"/>
                                                         <xs:enumeration value="JACKSON"/>
-                                                        <xs:enumeration value="DO_NOTHING"/>
+                                                        <xs:enumeration value="ORIGINAL"/>
                                                         <xs:enumeration value="LOWER_CASE"/>
                                                         <xs:enumeration value="UNDERLINE"/>
                                                         <xs:enumeration value="MIDDLE_LINE"/>
@@ -60,7 +60,7 @@
                 <xs:restriction base="xs:string">
                     <xs:enumeration value="DEFAULT"/>
                     <xs:enumeration value="JACKSON"/>
-                    <xs:enumeration value="DO_NOTHING"/>
+					<xs:enumeration value="ORIGINAL"/>
                     <xs:enumeration value="LOWER_CASE"/>
                     <xs:enumeration value="UNDERLINE"/>
                     <xs:enumeration value="MIDDLE_LINE"/>
