@@ -14,41 +14,37 @@ import org.springframework.core.annotation.AnnotationUtils;
  */
 public abstract class AnnotationKiteReturnValueHandler<T> extends AbstractKiteReturnValueHandler <T>{
 
-
     public AnnotationKiteReturnValueHandler(KiteFactory kiteFactory) {
         super(kiteFactory);
     }
 
     @Override
     protected String namespace(T returnValue, MethodParameter methodParameter) {
-        if (methodParameter.hasMethodAnnotation(KiteNamespace.class)) {
-            return methodParameter.getMethodAnnotation(KiteNamespace.class).value();
-        } else {
-            final KiteNamespace annotation = AnnotationUtils.findAnnotation(methodParameter.getContainingClass(), KiteNamespace.class);
-            if (annotation != null) {
-                return annotation.value();
-            } else {
+        KiteNamespace annotation = methodParameter.getMethodAnnotation(KiteNamespace.class);
+        if (annotation == null) {
+            annotation = AnnotationUtils.findAnnotation(methodParameter.getContainingClass(), KiteNamespace.class);
+            if (annotation == null) {
                 throw new KiteException("@KiteNamespace is not found in Class \"%s\" with Method \"%s\".", methodParameter.getContainingClass(), methodParameter.getMethod().getName());
             }
         }
+        return annotation.value();
     }
 
     @Override
     protected String templateId(T returnValue, MethodParameter methodParameter) {
-
-        if (methodParameter.hasMethodAnnotation(TemplateId.class)) {
-            return methodParameter.getMethodAnnotation(TemplateId.class).value();
-        } else {
+        final TemplateId annotation = methodParameter.getMethodAnnotation(TemplateId.class);
+        if (annotation == null) {
             throw new KiteException("@TemplateId is not found in Class \"%s\" with Method \"%s\".", methodParameter.getContainingClass(), methodParameter.getMethod().getName());
         }
+        return annotation.value();
     }
 
     @Override
     protected TemplateType templateType(T returnValue, MethodParameter methodParameter) {
-        if (methodParameter.hasMethodAnnotation(TemplateId.class)) {
-            return methodParameter.getMethodAnnotation(TemplateId.class).type();
-        } else {
+        final TemplateId annotation = methodParameter.getMethodAnnotation(TemplateId.class);
+        if (annotation == null) {
             throw new KiteException("@TemplateId is not found in Class \"%s\" with Method \"%s\".", methodParameter.getContainingClass(), methodParameter.getMethod().getName());
         }
+        return annotation.type();
     }
 }

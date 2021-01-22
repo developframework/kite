@@ -47,7 +47,7 @@
 
     <properties>
         <version.lombok>1.18.12</version.lombok>
-        <version.expression>1.5.0</version.expression>
+        <version.expression>1.5.1</version.expression>
         <version.jackson>2.11.3</version.jackson>
         <version.dom4j>1.6.1</version.dom4j>
         <version.slf4j-api>1.7.30</version.slf4j-api>
@@ -55,6 +55,18 @@
         <version.spring>5.2.10.RELEASE</version.spring>
         <version.spring-boot>2.3.5.RELEASE</version.spring-boot>
     </properties>
+
+    <!-- 配置私库地址 -->
+    <distributionManagement>
+        <snapshotRepository>
+            <id>hclc nexus</id>
+            <url>http://nexus.hclc-tech.com:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>hclc nexus</id>
+            <url>http://nexus.hclc-tech.com:8081/repository/maven-releases/</url>
+        </repository>
+    </distributionManagement>
 
     <dependencyManagement>
         <dependencies>

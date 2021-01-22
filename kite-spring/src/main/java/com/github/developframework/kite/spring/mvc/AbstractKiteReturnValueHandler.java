@@ -7,6 +7,7 @@ import com.github.developframework.kite.core.KiteFactory;
 import com.github.developframework.kite.core.XmlProducer;
 import com.github.developframework.kite.core.data.DataModel;
 import com.github.developframework.kite.spring.mvc.annotation.TemplateType;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpOutputMessage;
@@ -27,16 +28,15 @@ import java.nio.charset.StandardCharsets;
  *
  * @author qiuzhenhao
  */
+@RequiredArgsConstructor
 public abstract class AbstractKiteReturnValueHandler<T> implements HandlerMethodReturnValueHandler {
 
-    protected KiteFactory kiteFactory;
-
-    public AbstractKiteReturnValueHandler(KiteFactory kiteFactory) {
-        this.kiteFactory = kiteFactory;
-    }
+    protected final KiteFactory kiteFactory;
 
     protected ServletServerHttpResponse createOutputMessage(NativeWebRequest webRequest) {
-        ServletServerHttpResponse res = new ServletServerHttpResponse(webRequest.getNativeResponse(HttpServletResponse.class));
+        final HttpServletResponse response = webRequest.getNativeResponse(HttpServletResponse.class);
+        Assert.state(response != null, "No HttpServletResponse");
+        ServletServerHttpResponse res = new ServletServerHttpResponse(response);
         final HttpHeaders headers = res.getHeaders();
         if (headers.getContentType() == null) {
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -72,61 +72,64 @@ public abstract class AbstractKiteReturnValueHandler<T> implements HandlerMethod
         final String templateId = templateId(t, methodParameter);
         final TemplateType templateType = templateType(t, methodParameter);
         final DataModel dataModel = dataModel(t, methodParameter);
-        switch(templateType) {
+        switch (templateType) {
             case JSON: {
                 final JsonProducer jsonProducer = kiteFactory.getJsonProducer();
                 JsonEncoding encoding = this.getJsonEncoding(outputMessage.getHeaders().getContentType());
                 JsonGenerator generator = kiteFactory.getObjectMapper().getFactory().createGenerator(outputMessage.getBody(), encoding);
                 jsonProducer.outputJson(generator, dataModel, namespace, templateId, false);
-            }break;
-            case XML:{
+            }
+            break;
+            case XML: {
                 final XmlProducer xmlProducer = kiteFactory.getXmlProducer();
                 outputMessage.getHeaders().setContentType(MediaType.APPLICATION_XML);
                 OutputStreamWriter writer = new OutputStreamWriter(outputMessage.getBody(), StandardCharsets.UTF_8);
                 xmlProducer.outputXml(writer, dataModel, namespace, templateId, false);
-            }break;
+            }
+            break;
         }
     }
 
     /**
      * 取得返回类型
      *
-     * @return
+     * @return 返回类型
      */
     protected abstract Class<T> returnType();
 
     /**
      * 取得 kite template 命名空间
      *
-     * @param returnValue
-     * @param methodParameter
-     * @return
+     * @param returnValue     返回值
+     * @param methodParameter controller方法参数
+     * @return 命名空间
      */
     protected abstract String namespace(T returnValue, MethodParameter methodParameter);
 
     /**
      * 取得 kite template id
      *
-     * @param returnValue
-     * @param methodParameter
-     * @return
+     * @param returnValue     返回值
+     * @param methodParameter controller方法参数
+     * @return 模板ID
      */
     protected abstract String templateId(T returnValue, MethodParameter methodParameter);
 
     /**
      * 取得 template type
-     * @param returnValue
-     * @param methodParameter
-     * @return
+     *
+     * @param returnValue     返回值
+     * @param methodParameter controller方法参数
+     * @return 模板类型
      */
     protected abstract TemplateType templateType(T returnValue, MethodParameter methodParameter);
 
     /**
      * 取得 dataModel
      *
-     * @param returnValue
-     * @param methodParameter
-     * @return
+     * @param returnValue     返回值
+     * @param methodParameter controller方法参数
+     * @return 数据模型
      */
     protected abstract DataModel dataModel(T returnValue, MethodParameter methodParameter);
 }
