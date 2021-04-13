@@ -39,7 +39,7 @@ public abstract class AbstractKiteReturnValueHandler<T> implements HandlerMethod
         ServletServerHttpResponse res = new ServletServerHttpResponse(response);
         final HttpHeaders headers = res.getHeaders();
         if (headers.getContentType() == null) {
-            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         }
         return res;
     }
