@@ -3,6 +3,8 @@ package com.github.developframework.kite.core;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.developframework.kite.core.data.DataDefinition;
@@ -40,12 +42,11 @@ class DefaultJsonProducer implements JsonProducer {
         if (root == null) {
             return null;
         }
+        final ObjectMapper objectMapper = kiteConfiguration.getObjectMapper();
+        final ObjectWriter writer = isPretty ? objectMapper.writerWithDefaultPrettyPrinter() : objectMapper.writer();
         try {
-            if (isPretty) {
-                return kiteConfiguration.getObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(root);
-            } else {
-                return kiteConfiguration.getObjectMapper().writeValueAsString(root);
-            }
+
+            return writer.writeValueAsString(root);
         } catch (JsonProcessingException e) {
             throw new KiteException("produce json string failed.");
         }
@@ -55,12 +56,10 @@ class DefaultJsonProducer implements JsonProducer {
     public void outputJson(JsonGenerator jsonGenerator, DataModel dataModel, String namespace, String templateId, boolean isPretty) {
         JsonNode root = constructRootTree(dataModel, namespace, templateId);
         if (root != null) {
+            final ObjectMapper objectMapper = kiteConfiguration.getObjectMapper();
+            final ObjectWriter writer = isPretty ? objectMapper.writerWithDefaultPrettyPrinter() : objectMapper.writer();
             try {
-                if (isPretty) {
-                    kiteConfiguration.getObjectMapper().writerWithDefaultPrettyPrinter().writeValue(jsonGenerator, root);
-                } else {
-                    kiteConfiguration.getObjectMapper().writer().writeValue(jsonGenerator, root);
-                }
+                writer.writeValue(jsonGenerator, root);
             } catch (Exception e) {
                 throw new KiteException("produce json string failed.");
             }
