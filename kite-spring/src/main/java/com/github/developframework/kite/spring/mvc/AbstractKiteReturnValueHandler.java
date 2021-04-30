@@ -6,7 +6,7 @@ import com.github.developframework.kite.core.JsonProducer;
 import com.github.developframework.kite.core.KiteFactory;
 import com.github.developframework.kite.core.XmlProducer;
 import com.github.developframework.kite.core.data.DataModel;
-import com.github.developframework.kite.spring.KiteResponseBodyAdvice;
+import com.github.developframework.kite.spring.KiteResponseBodyProcessor;
 import com.github.developframework.kite.spring.mvc.annotation.TemplateType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public abstract class AbstractKiteReturnValueHandler<T> implements HandlerMethod
     protected final KiteFactory kiteFactory;
 
     @Autowired(required = false)
-    protected KiteResponseBodyAdvice kiteResponseBodyAdvice;
+    protected KiteResponseBodyProcessor kiteResponseBodyProcessor;
 
     protected ServletServerHttpResponse createOutputMessage(NativeWebRequest webRequest) {
         final HttpServletResponse response = webRequest.getNativeResponse(HttpServletResponse.class);
@@ -80,14 +80,14 @@ public abstract class AbstractKiteReturnValueHandler<T> implements HandlerMethod
         switch (templateType) {
             case JSON: {
                 final JsonProducer jsonProducer = kiteFactory.getJsonProducer();
-                if (kiteResponseBodyAdvice == null) {
+                if (kiteResponseBodyProcessor == null) {
                     final JsonEncoding encoding = this.getJsonEncoding(outputMessage.getHeaders().getContentType());
                     final JsonGenerator generator = kiteFactory.getObjectMapper().getFactory().createGenerator(outputMessage.getBody(), encoding);
                     jsonProducer.outputJson(generator, dataModel, namespace, templateId, false);
                 } else {
                     final OutputStreamWriter writer = new OutputStreamWriter(outputMessage.getBody(), StandardCharsets.UTF_8);
                     final String json = jsonProducer.produce(dataModel, namespace, templateId, false);
-                    kiteResponseBodyAdvice.beforeWrite(methodParameter, webRequest, json);
+                    kiteResponseBodyProcessor.beforeWrite(methodParameter, webRequest, json);
                     writer.write(json);
                     writer.flush();
                 }
@@ -97,11 +97,11 @@ public abstract class AbstractKiteReturnValueHandler<T> implements HandlerMethod
                 final OutputStreamWriter writer = new OutputStreamWriter(outputMessage.getBody(), StandardCharsets.UTF_8);
                 outputMessage.getHeaders().setContentType(MediaType.APPLICATION_XML);
                 final XmlProducer xmlProducer = kiteFactory.getXmlProducer();
-                if (kiteResponseBodyAdvice == null) {
+                if (kiteResponseBodyProcessor == null) {
                     xmlProducer.outputXml(writer, dataModel, namespace, templateId, false);
                 } else {
                     final String xml = xmlProducer.produce(dataModel, namespace, templateId);
-                    kiteResponseBodyAdvice.beforeWrite(methodParameter, webRequest, xml);
+                    kiteResponseBodyProcessor.beforeWrite(methodParameter, webRequest, xml);
                     writer.write(xml);
                     writer.flush();
                 }

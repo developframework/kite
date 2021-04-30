@@ -4,11 +4,11 @@ import org.springframework.core.MethodParameter;
 import org.springframework.web.context.request.NativeWebRequest;
 
 /**
- * kite 响应体内容增强处理
+ * kite 响应体内容处理器
  *
  * @author qiuzhenhao on 2021-04-28.
  */
-public interface KiteResponseBodyAdvice {
+public interface KiteResponseBodyProcessor {
 
     /**
      * 在响应内容写出到输出流前处理
