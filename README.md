@@ -31,17 +31,19 @@ maven
 一个最简单的kite使用示例：
 
 ```java
-KiteFactory kiteFactory = new KiteFactory("/kite/kite-demo.xml");
-DataModel dataModel = new DataModel();
-dataModel.putData("sayHello", "Hello Kite!");
-JsonProducer jsonProducer = kiteFactory.getJsonProducer();
+KiteOptions options=new KiteOptions();
+        KiteFactory kiteFactory=KiteFactoryBuilder.buildFromClasspathXml(options,"/kite/kite-demo.xml");
+        ObjectMapper objectMapper=new ObjectMapper();
+        kiteFactory.useJsonFramework(new JacksonFramework(objectMapper));
+        kiteFactory.useXmlFramework(new Dom4jFramework());
+
+        DataModel dataModel=DataModel.singleton("sayHello","Hello Kite!");
 // 生成json
-String json = jsonProducer.produce(dataModel, "kite-demo", "first-view");
-System.out.println(json);
+        String json=kiteFactory.getJsonProducer(dataModel,"kite-demo","first-view").produce(false);
+        System.out.println(json);
 // 生成xml
-XmlProducer xmlProducer = kiteFactory.getXmlProducer();
-String xml = xmlProducer.produce(dataModel, "kite-demo", "first-view");
-System.out.println(xml);
+        String xml=kiteFactory.getXmlProducer(dataModel,"kite-demo","first-view").produce(false);
+        System.out.println(xml);
 ```
 
 你需要一份Kite XML配置，位置在上述声明的/kite/kite-demo.xml：
@@ -52,10 +54,10 @@ System.out.println(xml);
                         xsi:schemaLocation="
 	https://github.com/developframework/kite/schema kite-configuration.xsd">
 
-    <template-package namespace="kite-demo">
+  <template-package namespace="kite-demo">
 
-        <template id="first-view" xml-root="xml">
-            <property data="sayHello" />
+    <template id="first-view">
+      <property data="sayHello"/>
         </template>
 
     </template-package>
@@ -79,14 +81,10 @@ System.out.println(xml);
 
 #### **3.1.1. DataModel**
 
-`com.github.developframework.kite.data.DataModel`接口是Kite框架的数据模型。用于装载需要在json视图中渲染的数据或函数接口实现，数据由键值对构成。接口提供存入和取出数据的方法。
-存取数据范例：
+`com.github.developframework.kite.data.DataModel`接口是Kite框架的数据模型。用于装载需要在视图中渲染的数据或函数接口实现，数据由键值对构成。接口提供存入和取出数据的方法，支持链式写法。
 
 ```java
-DataModel dataModel = new DataModel();
-dataModel.putData("sayHello", "Hello Kite!");
-Optional<Object> value = dataModel.getData("sayHello");
-value.ifPresent(System.out::println);
+DataModel dataModel=DataModel.singleton("sayHello","Hello Kite!");
 ```
 
 #### **3.1.2. Expression**
@@ -102,90 +100,38 @@ value.ifPresent(System.out::println);
 
 `Expression` 的详细使用请查看独立项目[expression](https://github.com/developframework/expression)
 
-#### **3.1.3. KiteFactory**
+#### **3.1.3. KiteOptions**
+
+`com.github.developframework.kite.core.KiteOptions`类为Kite框架的配置类。
+
+```java
+KiteOptions options=new KiteOptions();
+        options.getJson().setNamingStrategy(NamingStrategy.LOWER_CASE);
+```
+
+#### **3.1.4. KiteFactory**
 
 `com.github.developframework.kite.core.KiteFactory`类是Kite框架的构建工厂。使用Kite框架的第一步就是建立该对象。
 建立该对象需要提供配置文件路径的字符串，多份配置文件可以采用字符串数组。
 
 ```java
-final String[] configs = {"config1.xml", "config2.xml"};
-KiteFactory kiteFactory = new KiteFactory(configs);
+final String[]xmlFiles={"config1.xml","config2.xml"};
+        KiteFactory kiteFactory=KiteFactoryBuilder.buildFromClasspathXml(options,xmlFiles);
 ```
 
-#### **3.1.4. KiteConfiguration**
+#### **3.1.5. Framework**
 
-`com.github.developframework.kite.core.KiteConfiguration`类为Kite框架的总配置文件，可以从KiteFactory中得到该对象。
+#### **3.1.6. Producer**
 
-```java
-KiteConfiguration kiteConfiguration = kiteFactory.getKiteConfiguration();
-```
-
-#### **3.1.5. Producer**
-
-#### **3.1.5.1. JsonProducer**
-
-`com.github.developframework.kite.core.JsonProducer`接口是json字符串建造类，执行一次生成json字符串的操作需要构建该对象。JsonProducer由KiteFactory生成。
-该对象提供三个构建json字符串的方法：
+`com.github.developframework.kite.core.Producer`接口是json字符串建造类，根据`kiteFactory.useFramework()`方法传入的`Framework`
+对象不同可以得出不同实现的Producer。
 
 ```java
-String produce(DataModel dataModel, String namespace, String templateId, boolean isPretty);
-```
+// 直接生成字符串结果
+String produce(boolean pretty);
 
-返回json字符串
-
-- isPretty=true时可以美化json
-
-```java
-String produce(DataModel dataModel, String namespace, String templateId);
-```
-
-返回json字符串，不美化
-
-```java
-void outputJson(JsonGenerator jsonGenerator, DataModel dataModel, String namespace, String templateId, boolean isPretty);
-```
-
-将json输出到ObjectMapper的JsonGenerator对象
-
-#### **3.1.5.1. XmlProducer**
-
-`com.github.developframework.kite.core.XmlProducer`接口是xml字符串建造类，执行一次生成xml字符串的操作需要构建该对象。XmlProducer由KiteFactory生成。
-该对象提供三个构建xml字符串的方法：
-
-```java
-String produce(DataModel dataModel, String namespace, String templateId, boolean isPretty);
-```
-
-返回json字符串
-
-- isPretty=true时可以美化xml
-
-```java
-String produce(DataModel dataModel, String namespace, String templateId);
-```
-
-返回json字符串，不美化
-
-```java
-void outputXml(Writer writer, DataModel dataModel, String namespace, String templateId, boolean isPretty);
-```
-
-将xml输出到Writer
-
-#### **3.1.6. Template**
-
-`com.github.developframework.kite.core.element.Template`类，一个Template类的实例代表一种视图模板。它由`namespace`和`id`唯一确定。可以通过以下方法得到Template实例：
-
-```java
-Template template = kiteConfiguration.extractTemplate("namespace", "id");
-```
-
-#### **3.1.7. TemplatePackage**
-
-`com.github.developframework.kite.core.element.TemplatePackage`类，一个TemplatePackage实例是一个命名空间，可以装载若干个Template实例。推荐将Template按功能有序存放于TemplatePackage。通过以下方法得TemplatePackage对象：
-
-```java
-TemplatePackage templatePackage = kiteConfiguration.getTemplatePackageByNamespace("namespace");
+// 向输出流输出结果
+        void output(OutputStream outputStream,Charset charset,boolean pretty);
 ```
 
 #### **3.1.8. 异常**
@@ -241,7 +187,7 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 - `<property>`
 - `<this>`
 - `<prototype>`
-- `json`
+- `raw`
 - `<xml-attribute>`
 
 功能型标签
@@ -250,8 +196,7 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 - `<link>`
 - `<relevance>`
 - `<object-virtual>`
-- `<property-ignore>`
-- `<extend-port>`
+- `<slot>`
 - `<if>`、 `<else>`
 - `<switch>`、`<case>`、`<default>`
 
@@ -271,15 +216,17 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
   当你需要声明一个json格式模板时，你将会使用到`<template>`标签。
 
   ```xml
-  <template id="" data="" for-class="" converter=""></template>
+
+<template id="">
+
+</template>
   ```
 
 | 属性         | 功能                                                         | 是否必须 |
 | ------------ | ------------------------------------------------------------ | -------- |
 | id           | 声明模板编号，在命名空间中唯一                               | 是       |
 | data         | 取值表达式                                                   | 否       |
-| for-class    | 声明data表达式指向的对象类型                                 | 否       |
-| extend       | 声明继承的kite和端口，格式为namespace.id:port（namespace不填时默认为当前namespace） | 否       |
+| extend       | 声明继承的kite和端口，格式为**namespace.id**（namespace不填时默认为当前namespace） | 否       |
 | converter | 类型转换器全限定类名或expression表达式。详见[5.1.1节](#chapter511) | 否 |
 | map | 仅当data指代的数据为数组或List时有效。MapFunction的实现类全名或Expression表达式。详见[5.1.2节](#chapter512) | 否       |
 | xml-root     | 生成xml时的根节点名称                                        | 否       |
@@ -290,14 +237,16 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 当你需要在json中构建一个对象结构时，你将会使用到`<object>`标签。详见[4.1.节](#chapter41)
 
 ```xml
-<object data="" alias="" for-class="" null-hidden="true" converter=""></object>
+
+<object data="">
+
+</object>
 ```
 
 | 属性        | 功能                                                         | 是否必须 |
 | ----------- | ------------------------------------------------------------ | -------- |
 | data        | 取值表达式                                                   | 是       |
 | alias       | 别名，你可以重新定义显示名                                   | 否       |
-| for-class   | 声明data表达式指向的对象类型                                 | 否       |
 | null-hidden | true时表示表达式取的值为null时隐藏该节点，默认为false        | 否       |
 | converter   | 类型转换器全限定类名或expression表达式。详见[5.1.1节](#chapter511) | 否       |
 
@@ -306,14 +255,16 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 当你需要在json中构建一个数组结构时，你将会使用到`<array>`标签。详见[4.6.节](#chapter46)
 
 ```xml
-<array data="" alias="" for-class="" null-hidden="true" converter=""></array>
+
+<array data="">
+
+</array>
 ```
 
 | 属性         | 功能                                                         | 是否必须 |
 | ------------ | ------------------------------------------------------------ | -------- |
 | data         | 取值表达式                                                   | 是       |
 | alias        | 别名，你可以重新定义显示名                                   | 否       |
-| for-class    | 声明data表达式指向的对象类型                                 | 否       |
 | null-hidden  | true时表示表达式取的值为null时隐藏该节点，默认为false        | 否       |
 | converter | 类型转换器全限定类名或expression表达式。详见[5.1.1节](#chapter511) | 否 |
 | map | MapFunction的实现类全名或Expression表达式。详见[5.1.2节](#chapter512) | 否       |

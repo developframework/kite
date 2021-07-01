@@ -8,12 +8,11 @@ import lombok.Setter;
  * @author qiushui on 2021-06-28.
  */
 @Getter
-@Setter
 public class KiteOptions {
 
-    private JsonOptions json = new JsonOptions();
+    private final JsonOptions json = new JsonOptions();
 
-    private XmlOptions xml = new XmlOptions();
+    private final XmlOptions xml = new XmlOptions();
 
     @Getter
     @Setter
