@@ -56,18 +56,6 @@
         <version.spring-boot>2.3.5.RELEASE</version.spring-boot>
     </properties>
 
-    <!-- 配置私库地址 -->
-    <distributionManagement>
-        <snapshotRepository>
-            <id>hclc aliyun nexus</id>
-            <url>http://nexus.hclcaliyun.com:8082/repository/maven-snapshots/</url>
-        </snapshotRepository>
-        <repository>
-            <id>hclc aliyun nexus</id>
-            <url>http://nexus.hclcaliyun.com:8082/repository/maven-releases/</url>
-        </repository>
-    </distributionManagement>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
