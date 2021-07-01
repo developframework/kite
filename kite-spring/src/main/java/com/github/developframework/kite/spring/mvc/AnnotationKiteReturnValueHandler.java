@@ -10,9 +10,10 @@ import org.springframework.core.annotation.AnnotationUtils;
 
 /**
  * 基于注解的ReturnValueHandler
+ *
  * @author qiuzhenhao
  */
-public abstract class AnnotationKiteReturnValueHandler<T> extends AbstractKiteReturnValueHandler <T>{
+public abstract class AnnotationKiteReturnValueHandler<T> extends AbstractKiteReturnValueHandler<T> {
 
     public AnnotationKiteReturnValueHandler(KiteFactory kiteFactory) {
         super(kiteFactory);

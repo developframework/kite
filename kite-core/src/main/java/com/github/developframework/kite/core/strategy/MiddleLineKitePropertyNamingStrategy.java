@@ -1,6 +1,6 @@
 package com.github.developframework.kite.core.strategy;
 
-import com.github.developframework.kite.core.KiteConfiguration;
+import com.github.developframework.kite.core.Framework;
 
 /**
  * 中划线命名规则
@@ -11,7 +11,7 @@ import com.github.developframework.kite.core.KiteConfiguration;
 public class MiddleLineKitePropertyNamingStrategy implements KitePropertyNamingStrategy {
 
     @Override
-    public String propertyShowName(KiteConfiguration configuration, String expressionString) {
+    public String propertyDisplayName(Framework<?> framework, String expressionString) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < expressionString.length(); i++) {
             char ch = expressionString.charAt(i);
@@ -19,7 +19,7 @@ public class MiddleLineKitePropertyNamingStrategy implements KitePropertyNamingS
                 if (i > 0) {
                     sb.append('-');
                 }
-                sb.append((char)(ch + 32));
+                sb.append((char) (ch + 32));
             } else {
                 sb.append(ch);
             }

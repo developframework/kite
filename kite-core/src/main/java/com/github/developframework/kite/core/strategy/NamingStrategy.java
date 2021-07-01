@@ -1,20 +1,20 @@
 package com.github.developframework.kite.core.strategy;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 命名策略
  *
  * @author qiushui on 2020-08-26.
  */
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum NamingStrategy {
 
-    ORIGINAL(new OriginalKitePropertyNamingStrategy()),
+    FRAMEWORK(null),
 
-    JACKSON(new JacksonKitePropertyNamingStrategy()),
+    ORIGINAL(new OriginalKitePropertyNamingStrategy()),
 
     LOWER_CASE(new LowerCaseKitePropertyNamingStrategy()),
 

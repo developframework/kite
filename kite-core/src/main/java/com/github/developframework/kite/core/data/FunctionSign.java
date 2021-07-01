@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * 功能符号
+ *
  * @author qiuzhenhao
  */
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)

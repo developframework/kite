@@ -8,6 +8,7 @@ import org.springframework.web.context.request.NativeWebRequest;
  *
  * @author qiuzhenhao on 2021-04-28.
  */
+@FunctionalInterface
 public interface KiteResponseBodyProcessor {
 
     /**

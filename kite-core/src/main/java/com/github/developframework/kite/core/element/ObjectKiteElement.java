@@ -1,40 +1,32 @@
 package com.github.developframework.kite.core.element;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.kite.core.KiteConfiguration;
-import com.github.developframework.kite.core.TemplateLocation;
-import com.github.developframework.kite.core.data.DataDefinition;
-import com.github.developframework.kite.core.processor.json.JsonProcessContext;
-import com.github.developframework.kite.core.processor.json.JsonProcessor;
-import com.github.developframework.kite.core.processor.json.ObjectJsonProcessor;
-import com.github.developframework.kite.core.processor.xml.ObjectXmlProcessor;
-import com.github.developframework.kite.core.processor.xml.XmlProcessContext;
-import com.github.developframework.kite.core.processor.xml.XmlProcessor;
-import org.dom4j.Element;
+import com.github.developframework.kite.core.AssembleContext;
+import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.utils.KiteUtils;
+
+import java.util.Optional;
 
 /**
- * 对象节点
- * @author qiuzhenhao
+ * 对象元素
+ *
+ * @author qiushui on 2021-06-24.
  */
 public class ObjectKiteElement extends ContainerKiteElement {
 
-    public ObjectKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, DataDefinition dataDefinition, String alias) {
-        super(configuration, templateLocation, dataDefinition, alias);
-    }
-
-    public ObjectKiteElement(KiteConfiguration configuration, ContainerKiteElement containerElement, DataDefinition dataDefinition) {
-        super(configuration, containerElement.templateLocation, dataDefinition, containerElement.alias);
-        this.copyChildElement(containerElement);
+    public ObjectKiteElement(TemplateLocation templateLocation) {
+        super(templateLocation);
     }
 
     @Override
-    public JsonProcessor<? extends KiteElement, ? extends JsonNode> createJsonProcessor(JsonProcessContext jsonProcessContext, ObjectNode parentNode) {
-        return new ObjectJsonProcessor(jsonProcessContext, this);
-    }
-
-    @Override
-    public XmlProcessor<? extends KiteElement, ? extends Element> createXmlProcessor(XmlProcessContext xmlProcessContext, Element parentNode) {
-        return new ObjectXmlProcessor(xmlProcessContext, this);
+    public void assemble(AssembleContext context) {
+        final Optional<Object> dataValue = KiteUtils.getDataValue(context, this);
+        if (dataValue.isPresent()) {
+            context.parentPutNodeProxyAndPush(displayName(context));
+            context.pushValue(dataValue.get());
+            forEachAssemble(context);
+            context.pop();
+        } else if (!contentAttributes.nullHidden) {
+            context.peekNodeProxy().putNull(displayName(context));
+        }
     }
 }

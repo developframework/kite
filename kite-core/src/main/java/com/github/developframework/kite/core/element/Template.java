@@ -1,108 +1,97 @@
 package com.github.developframework.kite.core.element;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.kite.core.KiteConfiguration;
-import com.github.developframework.kite.core.TemplateLocation;
+import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.data.DataDefinition;
-import com.github.developframework.kite.core.exception.KiteException;
-import com.github.developframework.kite.core.processor.json.JsonProcessContext;
-import com.github.developframework.kite.core.processor.json.JsonProcessor;
-import com.github.developframework.kite.core.processor.json.TemplateJsonProcessor;
-import com.github.developframework.kite.core.processor.xml.TemplateXmlProcessor;
-import com.github.developframework.kite.core.processor.xml.XmlProcessContext;
-import com.github.developframework.kite.core.processor.xml.XmlProcessor;
+import com.github.developframework.kite.core.exception.InvalidAttributeException;
+import com.github.developframework.kite.core.structs.ElementDefinition;
+import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.utils.KiteUtils;
 import lombok.Getter;
-import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Element;
 
 import java.util.Optional;
 
 /**
- * Kite 模板
+ * 模板
  *
- * @author qiuzhenhao
+ * @author qiushui on 2021-06-23.
  */
-public class Template extends ObjectKiteElement {
+@Getter
+public final class Template extends ContainerKiteElement {
 
-    /* 扩展口 */
-    @Setter
-    private Extend extend;
+    // 模板的ID
+    private String id;
 
-    @Setter
-    @Getter
-    private String mapFunctionValue;
+    // xml根节点名称
+    private String xmlRoot;
 
-    @Setter
-    private String xmlRootName;
+    // extend指向的模板地址
+    private TemplateLocation templateLocationExtend;
 
-    @Setter
-    private String xmlItemName;
+    // 内置array节点
+    private ArrayKiteElement innerArrayKiteElement;
 
-    public Template(KiteConfiguration configuration, TemplateLocation templateLocation) {
-        super(configuration, templateLocation, null, null);
+    public Template(TemplateLocation templateLocation) {
+        super(templateLocation);
     }
 
     @Override
-    public JsonProcessor<? extends KiteElement, ? extends JsonNode> createJsonProcessor(JsonProcessContext jsonProcessContext, ObjectNode parentNode) {
-        TemplateJsonProcessor templateProcessor = new TemplateJsonProcessor(jsonProcessContext, this);
-        templateProcessor.setNode(parentNode);
-        return templateProcessor;
+    public void configure(ElementDefinition elementDefinition) {
+        super.configure(elementDefinition);
+        id = elementDefinition.getString(ElementDefinition.Attribute.ID);
+        xmlRoot = elementDefinition.getString(ElementDefinition.Attribute.XML_ROOT, "xml");
+        if (contentAttributes.dataDefinition != DataDefinition.EMPTY) {
+            // 如果data不为空的话需要构建一个内置array节点
+            innerArrayKiteElement = new ArrayKiteElement(templateLocation);
+            innerArrayKiteElement.configure(elementDefinition);
+        }
+        // 解析extend指向的模板地址
+        templateLocationExtend = parseExtend(elementDefinition);
     }
 
     @Override
-    public XmlProcessor<? extends KiteElement, ? extends Element> createXmlProcessor(XmlProcessContext xmlProcessContext, Element parentNode) {
-        TemplateXmlProcessor templateProcessor = new TemplateXmlProcessor(xmlProcessContext, this);
-        templateProcessor.setNode(parentNode);
-        return templateProcessor;
-    }
-
-    public Optional<Extend> getExtend() {
-        return Optional.ofNullable(extend);
+    public void assemble(AssembleContext context) {
+        if (templateLocationExtend == null) {
+            if (contentAttributes.dataDefinition == DataDefinition.EMPTY) {
+                // data为空时直接迭代组装子节点
+                forEachAssemble(context);
+            } else {
+                final Optional<Object> dataValue = KiteUtils.getDataValue(context, this);
+                if (dataValue.isPresent()) {
+                    context.pushValue(dataValue.get());
+                    forEachAssemble(context);
+                    context.pop();
+                } else if (!contentAttributes.nullHidden) {
+                    context.peekNodeProxy().putNull(displayName(context));
+                }
+            }
+        } else {
+            context.slotStack.push(this);
+            context
+                    .getConfiguration()
+                    .getTemplatePackageRegistry()
+                    .extractTemplate(templateLocationExtend)
+                    .assemble(context);
+            context.slotStack.pop();
+        }
     }
 
     /**
-     * 创建一个副本模板节点
-     * @return 副本模板节点
+     * 解析extend指向的模板地址
      */
-    public DuplicateTemplateKiteElement createDuplicateTemplateKiteElement() {
-        return new DuplicateTemplateKiteElement(configuration, this);
-    }
-
-    @Getter
-    public static class Extend {
-
-        private final TemplateLocation extendTemplateLocation;
-
-        private final String port;
-
-        public Extend(String extendValue, String defaultNamespace) {
-            String front = StringUtils.substringBefore(extendValue, ":");
-            this.port = StringUtils.substringAfter(extendValue, ":");
-            String namespace, templateId;
-            if (front.contains(".")) {
-                namespace = StringUtils.substringBefore(front, ".");
-                templateId = StringUtils.substringAfter(front, ".");
+    private TemplateLocation parseExtend(ElementDefinition elementDefinition) {
+        final String extend = elementDefinition.getString(ElementDefinition.Attribute.EXTEND);
+        if (extend != null) {
+            if (extend.matches("^(.+\\.)?.+$")) {
+                final String[] parts = extend.split("\\.");
+                if (parts.length == 1) {
+                    return new TemplateLocation(templateLocation.getNamespace(), parts[0]);
+                } else {
+                    return new TemplateLocation(parts[0], parts[1]);
+                }
             } else {
-                namespace = defaultNamespace;
-                templateId = front;
+                throw new InvalidAttributeException(ElementDefinition.Attribute.EXTEND, extend, "format error");
             }
-            extendTemplateLocation = new TemplateLocation(namespace, templateId);
         }
-    }
-
-    public String getXmlRootName() {
-        if (StringUtils.isEmpty(xmlRootName) && dataDefinition == DataDefinition.EMPTY_DATA_DEFINITION) {
-            throw new KiteException("\"xml-root\" is undefined in template \"%s\".", templateLocation);
-        }
-        return xmlRootName;
-    }
-
-    public String getXmlItemName() {
-        if (StringUtils.isEmpty(xmlItemName)) {
-            throw new KiteException("\"xml-item\" is undefined in template \"%s\".", templateLocation);
-        }
-        return xmlItemName;
+        return null;
     }
 }

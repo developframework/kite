@@ -1,105 +1,74 @@
 package com.github.developframework.kite.core.element;
 
-import com.github.developframework.kite.core.KiteConfiguration;
-import com.github.developframework.kite.core.TemplateLocation;
-import com.github.developframework.kite.core.data.DataDefinition;
-import com.github.developframework.kite.core.exception.KiteParseXmlException;
-import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
+import com.github.developframework.kite.core.AssembleContext;
+import com.github.developframework.kite.core.structs.ElementDefinition;
+import com.github.developframework.kite.core.structs.TemplateLocation;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * 容器节点
- * @author qiuzhenhao
+ * @author qiushui on 2021-06-23.
  */
-public abstract class ContainerKiteElement extends ContentKiteElement implements ContainChildElementable{
+public abstract class ContainerKiteElement extends ContentKiteElement implements Iterable<KiteElement> {
 
     /* 子节点列表 */
-    protected List<KiteElement> childKiteElements = new ArrayList<>();
+    protected List<KiteElement> elements;
 
-    /* for-class定义的类型 */
-    @Getter
-    protected Class<?> forClass;
+    public ContainerKiteElement(TemplateLocation templateLocation) {
+        super(templateLocation);
+    }
 
-    /* 忽略的属性名称列表 */
-    protected List<String> ignorePropertyNames = new ArrayList<>();
+    @Override
+    public void configure(ElementDefinition elementDefinition) {
+        super.configure(elementDefinition);
+        elements = childrenElementLoadHandle(elementDefinition);
+    }
 
-    public ContainerKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, DataDefinition dataDefinition, String alias) {
-        super(configuration, templateLocation, dataDefinition, alias);
+    @Override
+    public Iterator<KiteElement> iterator() {
+        return elements.iterator();
     }
 
     /**
-     * 设置for-class
-     * @param className 类名
+     * 遍历组装子节点
      */
-    public void setForClass(String className) {
-        if (StringUtils.isNotEmpty(className)) {
-            try {
-                forClass = Class.forName(className);
-            } catch (ClassNotFoundException e) {
-                throw new KiteParseXmlException("Class \"%s\" is not found, please check configuration file.", className);
-            }
-        }
-    }
-
-    /**
-     * 增加忽略属性
-     * @param propertyName 属性名称
-     */
-    public final void addIgnoreProperty(String propertyName) {
-        ignorePropertyNames.add(propertyName);
-    }
-
-    /**
-     * 加载for-class的全部属性
-     */
-    public final void loadForClassAllProperty() {
-        if (forClass != null) {
-            Field[] fields = forClass.getDeclaredFields();
-            for (Field field : fields) {
-                if (!ignorePropertyNames.contains(field.getName())) {
-                    DataDefinition dataDefinition = new DataDefinition(field.getName());
-                    PropertyKiteElement propertyElement = new NormalPropertyKiteElement(configuration, templateLocation, dataDefinition, null);
-                    if (!childKiteElements.contains(propertyElement)) {
-                        addChildElement(propertyElement);
-                    }
+    public final void forEachAssemble(AssembleContext context) {
+        for (KiteElement element : elements) {
+            if (element instanceof SlotKiteElement) {
+                // 特殊处理插槽节点 调用对应的插槽模板
+                if (!context.slotStack.isEmpty()) {
+                    // 先出栈处理子节点后再入栈
+                    final Template template = context.slotStack.pop();
+                    template.forEachAssemble(context);
+                    context.slotStack.push(template);
                 }
+            } else {
+                element.assemble(context);
             }
         }
     }
 
-    public void copyChildElement(ContainerKiteElement otherContainerElement) {
-        this.childKiteElements.addAll(otherContainerElement.childKiteElements);
-        this.ignorePropertyNames.addAll(otherContainerElement.ignorePropertyNames);
-        this.alias = otherContainerElement.alias;
-        this.forClass = otherContainerElement.forClass;
-        this.nullHidden = otherContainerElement.nullHidden;
-        this.templateLocation = otherContainerElement.templateLocation;
-        this.childrenNamingStrategy = otherContainerElement.childrenNamingStrategy;
-    }
-
-    @Override
-    public void addChildElement(KiteElement kiteElement) {
-        childKiteElements.add(kiteElement);
-    }
-
-    @Override
-    public final Iterator<KiteElement> childElementIterator() {
-        return childKiteElements.iterator();
-    }
-
-    @Override
-    public final boolean isChildElementEmpty() {
-        return childKiteElements.isEmpty();
-    }
-
-
-    @Override
-    public final List<KiteElement> getChildKiteElements() {
-        return childKiteElements;
+    /**
+     * 处理子节点
+     */
+    protected List<KiteElement> childrenElementLoadHandle(ElementDefinition elementDefinition) {
+        KiteElement previous = null;
+        final List<KiteElement> children = elementDefinition.getChildren();
+        final List<KiteElement> list = new ArrayList<>(children.size());
+        for (KiteElement child : children) {
+            // 发现else节点时需要拼接到上层的if节点
+            if (child instanceof ElseKiteElement) {
+                if (previous instanceof IfKiteElement) {
+                    ((IfKiteElement) previous).setElseKiteElement((ElseKiteElement) child);
+                }
+            } else {
+                previous = child;
+                list.add(child);
+            }
+        }
+        return Collections.unmodifiableList(list);
     }
 }

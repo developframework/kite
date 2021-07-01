@@ -1,5 +1,6 @@
 package com.github.developframework.kite.boot;
 
+import com.github.developframework.kite.core.strategy.NamingStrategy;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +11,5 @@ import lombok.Setter;
 @Setter
 public class KiteJsonProperties {
 
-    private boolean useDefault;
-
-    private String namingStrategy;
+    private NamingStrategy namingStrategy = NamingStrategy.FRAMEWORK;
 }

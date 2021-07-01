@@ -1,20 +1,19 @@
 package com.github.developframework.kite.boot;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.developframework.kite.core.KiteConfiguration;
+import com.github.developframework.kite.core.Framework;
 import com.github.developframework.kite.core.KiteFactory;
-import com.github.developframework.kite.core.exception.KiteException;
-import com.github.developframework.kite.core.strategy.KitePropertyNamingStrategy;
-import com.github.developframework.kite.core.utils.KiteUtils;
+import com.github.developframework.kite.core.KiteOptions;
+import com.github.developframework.kite.dom4j.Dom4jFramework;
+import com.github.developframework.kite.jackson.JacksonFramework;
 import com.github.developframework.kite.spring.KiteScanLoader;
 import com.github.developframework.kite.spring.mvc.DataModelReturnValueHandler;
 import com.github.developframework.kite.spring.mvc.KiteResponseReturnValueHandler;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import org.dom4j.Document;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,31 +22,40 @@ import org.springframework.context.annotation.Import;
 /**
  * 自动配置Kite
  */
+@Slf4j
 @Configuration
 @Import(KiteWebMvcConfigurer.class)
 @EnableConfigurationProperties(KiteProperties.class)
-@AutoConfigureAfter(JacksonAutoConfiguration.class)
-@Slf4j
 public class KiteComponentAutoConfiguration {
 
-    @Bean("defaultKiteFactory")
-    @ConditionalOnProperty(name = "kite.json.useDefault", havingValue = "true", matchIfMissing = true)
-    public KiteFactory kiteFactoryForDefaultObjectMapper(KiteProperties kiteProperties, ObjectMapper objectMapper) {
-        log.info("Kite framework use Jackson default ObjectMapper.");
+    @ConditionalOnMissingBean
+    @Bean
+    public KiteFactory defaultKiteFactory(
+            KiteProperties kiteProperties,
+            @Qualifier("jsonFramework") Framework<?> jsonFramework,
+            @Qualifier("xmlFramework") Framework<?> xmlFramework
+    ) {
+        log.info("【Kite Boot】 create default Kite Factory");
         final KiteScanLoader loader = new KiteScanLoader(kiteProperties.getLocations());
-        KiteFactory kiteFactory = loader.createKiteFactory(objectMapper);
-        configKiteConfiguration(kiteFactory.getKiteConfiguration(), kiteProperties);
-        return kiteFactory;
+        final KiteOptions options = new KiteOptions();
+        configureOptions(options, kiteProperties);
+        return loader.createKiteFactory(jsonFramework, xmlFramework, options);
     }
 
-    @Bean("defaultKiteFactory")
-    @ConditionalOnProperty(name = "kite.json.useDefault", havingValue = "false")
-    public KiteFactory kiteFactoryForNewObjectMapper(KiteProperties kiteProperties) {
-        log.info("Kite framework use a new ObjectMapper.");
-        final KiteScanLoader loader = new KiteScanLoader(kiteProperties.getLocations());
-        KiteFactory kiteFactory = loader.createKiteFactory();
-        configKiteConfiguration(kiteFactory.getKiteConfiguration(), kiteProperties);
-        return kiteFactory;
+    @ConditionalOnClass(ObjectMapper.class)
+    @ConditionalOnMissingBean(name = "jsonFramework")
+    @Bean("jsonFramework")
+    public JacksonFramework jacksonFramework(ObjectMapper objectMapper) {
+        log.info("【Kite Boot】 load jackson Framework");
+        return new JacksonFramework(objectMapper);
+    }
+
+    @ConditionalOnClass(Document.class)
+    @ConditionalOnMissingBean(name = "xmlFramework")
+    @Bean("xmlFramework")
+    public Dom4jFramework dom4jFramework() {
+        log.info("【Kite Boot】 load dom4j Framework");
+        return new Dom4jFramework();
     }
 
     @Bean
@@ -61,35 +69,20 @@ public class KiteComponentAutoConfiguration {
     }
 
     /**
-     * 配置KiteConfiguration
+     * 配置options
      *
-     * @param kiteConfiguration    kiteConfiguration
+     * @param options        options
      * @param kiteProperties kiteProperties
      */
-    private void configKiteConfiguration(KiteConfiguration kiteConfiguration, KiteProperties kiteProperties) {
-        final String jsonNamingStrategy = kiteProperties.getJson() == null ? null : kiteProperties.getJson().getNamingStrategy();
-        final String xmlNamingStrategy = kiteProperties.getXml() == null ? null : kiteProperties.getXml().getNamingStrategy();
+    private void configureOptions(KiteOptions options, KiteProperties kiteProperties) {
+        options.getJson().setNamingStrategy(kiteProperties.getJson().getNamingStrategy());
+        log.info("The naming strategy \"{}\" is activate on json producer.", kiteProperties.getJson().getNamingStrategy());
 
-        kiteConfiguration.setForJsonStrategy(getKitePropertyNamingStrategy(jsonNamingStrategy));
-        log.info("The \"{}\" is activate on JsonProducer.", kiteConfiguration.getForJsonStrategy().getClass().getSimpleName());
+        options.getXml().setNamingStrategy(kiteProperties.getXml().getNamingStrategy());
+        log.info("The naming strategy \"{}\" is activate on xml producer.", kiteProperties.getXml().getNamingStrategy());
 
-        kiteConfiguration.setForXmlStrategy(getKitePropertyNamingStrategy(xmlNamingStrategy));
-        log.info("The \"{}\" is activate on XmlProducer.", kiteConfiguration.getForXmlStrategy().getClass().getSimpleName());
-
-        if(kiteProperties.getXml() != null) {
-            kiteConfiguration.setXmlSuppressDeclaration(kiteProperties.getXml().isSuppressDeclaration());
+        if (kiteProperties.getXml() != null) {
+            options.getXml().setSuppressDeclaration(kiteProperties.getXml().isSuppressDeclaration());
         }
-    }
-
-    private KitePropertyNamingStrategy getKitePropertyNamingStrategy(String namingStrategyValue) {
-        if (StringUtils.isNotEmpty(namingStrategyValue)) {
-            // 识别内置的命名策略
-            KitePropertyNamingStrategy kitePropertyNamingStrategy = KiteUtils.parseChildrenNamingStrategy(namingStrategyValue);
-            if (kitePropertyNamingStrategy == null) {
-                throw new KiteException("NamingStrategy \"%s\" invalid.", namingStrategyValue);
-            }
-            return kitePropertyNamingStrategy;
-        }
-        return null;
     }
 }

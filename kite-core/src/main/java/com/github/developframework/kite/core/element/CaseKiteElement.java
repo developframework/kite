@@ -1,40 +1,35 @@
 package com.github.developframework.kite.core.element;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.kite.core.KiteConfiguration;
-import com.github.developframework.kite.core.TemplateLocation;
-import com.github.developframework.kite.core.processor.json.CaseJsonProcessor;
-import com.github.developframework.kite.core.processor.json.JsonProcessContext;
-import com.github.developframework.kite.core.processor.json.JsonProcessor;
-import com.github.developframework.kite.core.processor.xml.CaseXmlProcessor;
-import com.github.developframework.kite.core.processor.xml.XmlProcessContext;
-import com.github.developframework.kite.core.processor.xml.XmlProcessor;
-import lombok.Getter;
-import org.dom4j.Element;
+import com.github.developframework.kite.core.AssembleContext;
+import com.github.developframework.kite.core.structs.ElementDefinition;
+import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.utils.KiteUtils;
 
 /**
  * case节点
  *
- * @author qiushui on 2018-10-28.
+ * @author qiushui on 2021-06-28.
  */
-public class CaseKiteElement extends ContainerFunctionalKiteElement {
+public final class CaseKiteElement extends ContainerKiteElement {
 
-    @Getter
-    private String testValue;
+    private String caseTestFunctionValue;
 
-    public CaseKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, String testValue) {
-        super(configuration, templateLocation);
-        this.testValue = testValue;
+    public CaseKiteElement(TemplateLocation templateLocation) {
+        super(templateLocation);
     }
 
     @Override
-    public JsonProcessor<? extends KiteElement, ? extends JsonNode> createJsonProcessor(JsonProcessContext jsonProcessContext, ObjectNode parentNode) {
-        return new CaseJsonProcessor(jsonProcessContext, this, parentNode);
+    public void configure(ElementDefinition elementDefinition) {
+        super.configure(elementDefinition);
+        caseTestFunctionValue = elementDefinition.getString(ElementDefinition.Attribute.CASE_TEST);
     }
 
     @Override
-    public XmlProcessor<? extends KiteElement, ? extends Element> createXmlProcessor(XmlProcessContext xmlProcessContext, Element parentNode) {
-        return new CaseXmlProcessor(xmlProcessContext, this, parentNode);
+    public void assemble(AssembleContext context) {
+        forEachAssemble(context);
+    }
+
+    public boolean match(AssembleContext context, Object value) {
+        return KiteUtils.handleCastTest(context.dataModel, caseTestFunctionValue, value);
     }
 }

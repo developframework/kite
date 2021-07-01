@@ -1,61 +1,36 @@
 package com.github.developframework.kite.core.element;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.kite.core.KiteConfiguration;
-import com.github.developframework.kite.core.TemplateLocation;
-import com.github.developframework.kite.core.data.DataDefinition;
-import com.github.developframework.kite.core.processor.json.EnumPropertyJsonProcessor;
-import com.github.developframework.kite.core.processor.json.JsonProcessContext;
-import com.github.developframework.kite.core.processor.json.JsonProcessor;
-import com.github.developframework.kite.core.processor.xml.EnumPropertyXmlProcessor;
-import com.github.developframework.kite.core.processor.xml.XmlProcessContext;
-import com.github.developframework.kite.core.processor.xml.XmlProcessor;
-import lombok.Getter;
-import org.dom4j.Element;
+import com.github.developframework.kite.core.AssembleContext;
+import com.github.developframework.kite.core.exception.KiteException;
+import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.utils.KiteUtils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 
 /**
- * 枚举属性节点
- *
- * @author qiuzhenhao on 2020-03-31.
+ * @author qiushui on 2021-06-24.
  */
-public class EnumPropertyKiteElement extends PropertyKiteElement {
+public class EnumPropertyKiteElement extends ContainerKiteElement {
 
-    @Getter
-    private Map<String, String> enumMap;
-
-    public EnumPropertyKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, DataDefinition dataDefinition, String alias) {
-        super(configuration, templateLocation, dataDefinition, alias);
+    public EnumPropertyKiteElement(TemplateLocation templateLocation) {
+        super(templateLocation);
     }
 
     @Override
-    public JsonProcessor<? extends KiteElement, ? extends JsonNode> createJsonProcessor(JsonProcessContext context, ObjectNode parentNode) {
-        EnumPropertyJsonProcessor processor = new EnumPropertyJsonProcessor(context, this);
-        processor.setNode(parentNode);
-        return processor;
-    }
-
-    @Override
-    public XmlProcessor<? extends KiteElement, ? extends Element> createXmlProcessor(XmlProcessContext context, Element parentNode) {
-        EnumPropertyXmlProcessor processor = new EnumPropertyXmlProcessor(context, this);
-        processor.setNode(parentNode);
-        return processor;
-    }
-
-    public void putEnumText(String enumValue, String text) {
-        if (enumMap == null) {
-            enumMap = new HashMap<>();
+    public void assemble(AssembleContext context) {
+        final Optional<Object> dataValue = KiteUtils.getDataValue(context, this);
+        if (dataValue.isPresent()) {
+            final String v = dataValue.get().toString();
+            for (KiteElement element : elements) {
+                EnumValueKiteElement e = (EnumValueKiteElement) element;
+                if (e.getEnumValue().equals(v)) {
+                    context.peekNodeProxy().putValue(displayName(context), e.getEnumText(), contentAttributes.xmlCDATA);
+                    return;
+                }
+            }
+            throw new KiteException("No enum value for \"%s\" in template \"%s\".", v, templateLocation);
+        } else if (!contentAttributes.nullHidden) {
+            context.peekNodeProxy().putNull(displayName(context));
         }
-        enumMap.putIfAbsent(enumValue, text);
-    }
-
-    public String getEnumText(String enumValue) {
-        if (enumMap == null) {
-            return null;
-        }
-        return enumMap.get(enumValue);
     }
 }

@@ -1,68 +1,61 @@
 package com.github.developframework.kite.core.element;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.kite.core.KiteConfiguration;
-import com.github.developframework.kite.core.TemplateLocation;
-import com.github.developframework.kite.core.data.DataDefinition;
-import com.github.developframework.kite.core.processor.json.JsonProcessContext;
-import com.github.developframework.kite.core.processor.json.JsonProcessor;
-import com.github.developframework.kite.core.processor.json.LinkJsonProcessor;
-import com.github.developframework.kite.core.processor.xml.LinkXmlProcessor;
-import com.github.developframework.kite.core.processor.xml.XmlProcessContext;
-import com.github.developframework.kite.core.processor.xml.XmlProcessor;
-import lombok.Getter;
-import lombok.Setter;
-import org.dom4j.Element;
+import com.github.developframework.kite.core.AssembleContext;
+import com.github.developframework.kite.core.exception.LinkSizeNotEqualException;
+import com.github.developframework.kite.core.structs.ElementDefinition;
+import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.utils.KiteUtils;
 
-import java.util.Collection;
+import java.util.Optional;
 
 /**
  * 一对一链接节点
  *
- * @author qiuzhenhao
+ * @author qiushui on 2021-06-24.
  */
-public class LinkKiteElement extends ObjectKiteElement {
+public final class LinkKiteElement extends ArrayKiteElement {
 
-    @Setter
-    @Getter
-    protected String mapFunctionValue;
+    // 是否合并到父节点
+    private boolean mergeParent;
 
-    public LinkKiteElement(KiteConfiguration kiteConfiguration, TemplateLocation templateLocation, DataDefinition dataDefinition, String alias) {
-        super(kiteConfiguration, templateLocation, dataDefinition, alias);
+    public LinkKiteElement(TemplateLocation templateLocation) {
+        super(templateLocation);
     }
 
     @Override
-    public JsonProcessor<? extends KiteElement, ? extends JsonNode> createJsonProcessor(JsonProcessContext context, ObjectNode parentNode) {
-        LinkJsonProcessor linkProcessor = new LinkJsonProcessor(context, this);
-        linkProcessor.setNode(parentNode);
-        return linkProcessor;
+    public void configure(ElementDefinition elementDefinition) {
+        super.configure(elementDefinition);
+        mergeParent = elementDefinition.getBoolean(ElementDefinition.Attribute.MERGE_PARENT, false);
     }
 
     @Override
-    public XmlProcessor<? extends KiteElement, ? extends Element> createXmlProcessor(XmlProcessContext context, Element parentNode) {
-        LinkXmlProcessor linkProcessor = new LinkXmlProcessor(context, this);
-        linkProcessor.setNode(parentNode);
-        return linkProcessor;
-    }
-
-    /**
-     * 创建一个代理节点处理任务
-     *
-     * @return 代理节点处理任务
-     */
-    public ContentKiteElement createProxyContentElement(Class<?> valueClass) {
-        if (valueClass.isArray() || Collection.class.isAssignableFrom(valueClass)) {
-            // 如果值类型是数组或集合，视为数组节点处理
-            ArrayKiteElement arrayKiteElement = new ArrayKiteElement(configuration, this, dataDefinition);
-            arrayKiteElement.setMapFunctionValue(mapFunctionValue);
-            return arrayKiteElement;
-        } else if (isChildElementEmpty()) {
-            // 如果没有子节点，视为普通属性节点处理
-            return new ProxyNormalPropertyKiteElement(configuration, templateLocation, dataDefinition, alias);
-        } else {
-            // 如果有子节点，视为对象节点处理
-            return new ObjectKiteElement(configuration, this, dataDefinition);
+    public void assemble(AssembleContext context) {
+        final Optional<Object> dataValue = KiteUtils.getDataValue(context, this);
+        if (dataValue.isPresent()) {
+            final Object[] array = KiteUtils.objectToArray(dataValue.get(), contentAttributes.dataDefinition);
+            // 处理comparator功能
+            KiteUtils.handleArrayComparator(context.dataModel, arrayAttributes.comparatorValue, array);
+            // 处理limit功能
+            final int length = arrayAttributes.limit != null && arrayAttributes.limit < array.length ? arrayAttributes.limit : array.length;
+            if (length != context.arrayLength) {
+                throw new LinkSizeNotEqualException(templateLocation);
+            }
+            // 处理map功能
+            final Object v = KiteUtils.handleKiteConverter(context.dataModel, arrayAttributes.mapValue, array[context.arrayIndex]);
+            if (elements.isEmpty()) {
+                context.peekNodeProxy().putValue(displayName(context), v, contentAttributes.xmlCDATA);
+            } else if (mergeParent) {
+                context.pushValue(v);
+                forEachAssemble(context);
+                context.popValue();
+            } else {
+                context.parentPutNodeProxyAndPush(displayName(context));
+                context.pushValue(v);
+                forEachAssemble(context);
+                context.pop();
+            }
+        } else if (!contentAttributes.nullHidden) {
+            context.peekNodeProxy().putNull(displayName(context));
         }
     }
 }

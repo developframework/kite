@@ -1,60 +1,70 @@
 package com.github.developframework.kite.core.element;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.kite.core.KiteConfiguration;
-import com.github.developframework.kite.core.TemplateLocation;
+import com.github.developframework.expression.ExpressionUtils;
+import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.data.DataDefinition;
-import com.github.developframework.kite.core.processor.json.JsonProcessContext;
-import com.github.developframework.kite.core.processor.json.JsonProcessor;
-import com.github.developframework.kite.core.processor.json.SwitchJsonProcessor;
-import com.github.developframework.kite.core.processor.xml.SwitchXmlProcessor;
-import com.github.developframework.kite.core.processor.xml.XmlProcessContext;
-import com.github.developframework.kite.core.processor.xml.XmlProcessor;
-import lombok.Getter;
-import lombok.Setter;
-import org.dom4j.Element;
+import com.github.developframework.kite.core.data.DataModel;
+import com.github.developframework.kite.core.data.FunctionSign;
+import com.github.developframework.kite.core.structs.ElementDefinition;
+import com.github.developframework.kite.core.structs.TemplateLocation;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 /**
- * switch节点
- *
- * @author qiushui on 2018-10-29.
+ * @author qiushui on 2021-06-28.
  */
-@Getter
-public class SwitchKiteElement extends FunctionalKiteElement {
+public final class SwitchKiteElement extends AbstractKiteElement {
 
-    private final DataDefinition checkDataDefinition;
+    private DataDefinition checkData;
 
-    private final Map<String, CaseKiteElement> caseKiteElementMap = new HashMap<>();
+    private final List<CaseKiteElement> caseElements = new LinkedList<>();
 
-    @Setter
-    private CaseKiteElement defaultCaseKiteElement;
+    private DefaultKiteElement defaultElement;
 
-    public SwitchKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, DataDefinition checkDataDefinition) {
-        super(configuration, templateLocation);
-        this.checkDataDefinition = checkDataDefinition;
+    public SwitchKiteElement(TemplateLocation templateLocation) {
+        super(templateLocation);
     }
 
     @Override
-    public JsonProcessor<? extends KiteElement, ? extends JsonNode> createJsonProcessor(JsonProcessContext jsonProcessContext, ObjectNode parentNode) {
-        return new SwitchJsonProcessor(jsonProcessContext, this, parentNode);
+    public void configure(ElementDefinition elementDefinition) {
+        super.configure(elementDefinition);
+        checkData = elementDefinition.getDataDefinition(ElementDefinition.Attribute.CHECK_DATA);
+        for (KiteElement child : elementDefinition.getChildren()) {
+            if (child instanceof CaseKiteElement) {
+                caseElements.add((CaseKiteElement) child);
+            } else if (child instanceof DefaultKiteElement) {
+                defaultElement = (DefaultKiteElement) child;
+            }
+        }
     }
 
     @Override
-    public XmlProcessor<? extends KiteElement, ? extends Element> createXmlProcessor(XmlProcessContext xmlProcessContext, Element parentNode) {
-        return new SwitchXmlProcessor(xmlProcessContext, this, parentNode);
+    public void assemble(AssembleContext context) {
+        getCheckDataValue(context, context.peekValue())
+                .ifPresent(v -> {
+                    boolean finish = false;
+                    for (CaseKiteElement caseElement : caseElements) {
+                        if (caseElement.match(context, v)) {
+                            caseElement.assemble(context);
+                            finish = true;
+                            break;
+                        }
+                    }
+                    if (!finish && defaultElement != null) {
+                        defaultElement.assemble(context);
+                    }
+                });
     }
 
-    public Optional<CaseKiteElement> getDefaultCaseKiteElement() {
-        return Optional.ofNullable(defaultCaseKiteElement);
-    }
-
-    public void putCase(String testValue, CaseKiteElement caseKiteElement) {
-        caseKiteElementMap.put(testValue, caseKiteElement);
-        caseKiteElement.setChildrenNamingStrategy(this.childrenNamingStrategy);
+    private Optional<Object> getCheckDataValue(AssembleContext context, Object parentValue) {
+        if (checkData == DataDefinition.EMPTY) {
+            return Optional.ofNullable(parentValue);
+        } else if (checkData.getFunctionSign() == FunctionSign.ROOT || parentValue instanceof DataModel) {
+            return context.dataModel.getData(checkData.getExpression());
+        } else {
+            return Optional.ofNullable(ExpressionUtils.getValue(parentValue, checkData.getExpression()));
+        }
     }
 }

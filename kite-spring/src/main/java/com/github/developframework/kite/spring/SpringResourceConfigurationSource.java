@@ -1,7 +1,7 @@
 package com.github.developframework.kite.spring;
 
-import com.github.developframework.kite.core.ConfigurationSource;
-import lombok.AllArgsConstructor;
+import com.github.developframework.kite.core.source.ConfigurationSource;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -12,10 +12,10 @@ import java.io.InputStream;
  *
  * @author qiuzhenhao
  */
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SpringResourceConfigurationSource implements ConfigurationSource {
 
-    /* spring的Resource接口 */
+    // spring的Resource接口
     private final Resource resource;
 
     @Override

@@ -1,0 +1,103 @@
+package com.github.developframework.kite.core;
+
+import com.github.developframework.kite.core.data.DataModel;
+import com.github.developframework.kite.core.element.Template;
+import com.github.developframework.kite.core.node.ObjectNodeProxy;
+import com.github.developframework.kite.core.strategy.NamingStrategy;
+import lombok.Getter;
+
+import java.util.Stack;
+
+/**
+ * 组装过程上下文
+ *
+ * @author qiushui on 2021-06-23.
+ */
+public final class AssembleContext {
+
+    private final Stack<Object> valueStack = new Stack<>();
+
+    private final Stack<ObjectNodeProxy> nodeStack = new Stack<>();
+
+    @Getter
+    private final KiteConfiguration configuration;
+
+    // true 组装json | false 组装xml
+    private final boolean assembleJson;
+
+    public DataModel dataModel;
+
+    public int arrayIndex;
+
+    public int arrayLength;
+
+    // 插槽模板 用于extend遍历后跳回原模板
+    public Stack<Template> slotStack = new Stack<>();
+
+    public AssembleContext(KiteConfiguration configuration, boolean assembleJson) {
+        this.configuration = configuration;
+        this.assembleJson = assembleJson;
+    }
+
+    /**
+     * 选择实现框架
+     */
+    public Framework<?> switchFramework() {
+        return assembleJson ? configuration.getJsonFramework() : configuration.getXmlFramework();
+    }
+
+    public NamingStrategy getOptionNamingStrategy() {
+        final KiteOptions options = configuration.getOptions();
+        return assembleJson ? options.getJson().getNamingStrategy() : options.getXml().getNamingStrategy();
+    }
+
+    public void pushNodeProxy(ObjectNodeProxy nodeProxy) {
+        this.nodeStack.push(nodeProxy);
+    }
+
+    /**
+     * 父节点拼接一个对象节点并入栈
+     *
+     * @param name
+     */
+    public void parentPutNodeProxyAndPush(String name) {
+        this.nodeStack.push(nodeStack.peek().putObjectNode(name));
+    }
+
+    /**
+     * 取栈顶节点代理
+     *
+     * @return 节点代理
+     */
+    public ObjectNodeProxy peekNodeProxy() {
+        return nodeStack.peek();
+    }
+
+    public void pushValue(Object value) {
+        this.valueStack.push(value);
+    }
+
+    public void popNodeProxy() {
+        this.nodeStack.pop();
+    }
+
+    public void popValue() {
+        this.valueStack.pop();
+    }
+
+    /**
+     * 取栈顶值
+     *
+     * @return 栈顶值
+     */
+    public Object peekValue() {
+        return valueStack.isEmpty() ? null : valueStack.peek();
+    }
+
+    public void pop() {
+        this.nodeStack.pop();
+        this.valueStack.pop();
+    }
+
+
+}

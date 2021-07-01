@@ -1,39 +1,29 @@
 package com.github.developframework.kite.core.element;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.kite.core.KiteConfiguration;
-import com.github.developframework.kite.core.TemplateLocation;
-import com.github.developframework.kite.core.data.DataDefinition;
-import com.github.developframework.kite.core.processor.json.JsonProcessContext;
-import com.github.developframework.kite.core.processor.json.JsonProcessor;
-import com.github.developframework.kite.core.processor.json.PrototypeJsonProcessor;
-import com.github.developframework.kite.core.processor.xml.PrototypeXmlProcessor;
-import com.github.developframework.kite.core.processor.xml.XmlProcessContext;
-import com.github.developframework.kite.core.processor.xml.XmlProcessor;
-import org.dom4j.Element;
+import com.github.developframework.kite.core.AssembleContext;
+import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.utils.KiteUtils;
+
+import java.util.Optional;
 
 /**
- * @author qiuzhenhao
+ * 原生节点
+ *
+ * @author qiushui on 2021-06-29.
  */
-public class PrototypeKiteElement extends PropertyKiteElement {
+public class PrototypeKiteElement extends ContentKiteElement {
 
-
-    public PrototypeKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, DataDefinition dataDefinition, String alias) {
-        super(configuration, templateLocation, dataDefinition, alias);
+    public PrototypeKiteElement(TemplateLocation templateLocation) {
+        super(templateLocation);
     }
 
     @Override
-    public JsonProcessor<? extends KiteElement, ? extends JsonNode> createJsonProcessor(JsonProcessContext context, ObjectNode parentNode) {
-        PrototypeJsonProcessor prototypeProcessor = new PrototypeJsonProcessor(context, this);
-        prototypeProcessor.setNode(parentNode);
-        return prototypeProcessor;
-    }
-
-    @Override
-    public XmlProcessor<? extends KiteElement, ? extends Element> createXmlProcessor(XmlProcessContext context, Element parentNode) {
-        PrototypeXmlProcessor prototypeProcessor = new PrototypeXmlProcessor(context, this);
-        prototypeProcessor.setNode(parentNode);
-        return prototypeProcessor;
+    public void assemble(AssembleContext context) {
+        final Optional<Object> dataValue = KiteUtils.getDataValue(context, this);
+        if (dataValue.isPresent()) {
+            context.peekNodeProxy().putPrototype(context, displayName(context), dataValue.get());
+        } else if (!contentAttributes.nullHidden) {
+            context.peekNodeProxy().putNull(displayName(context));
+        }
     }
 }

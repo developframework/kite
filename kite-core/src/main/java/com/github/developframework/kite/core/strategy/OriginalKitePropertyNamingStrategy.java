@@ -1,6 +1,6 @@
 package com.github.developframework.kite.core.strategy;
 
-import com.github.developframework.kite.core.KiteConfiguration;
+import com.github.developframework.kite.core.Framework;
 
 /**
  * 原文命名策略
@@ -10,7 +10,7 @@ import com.github.developframework.kite.core.KiteConfiguration;
 public class OriginalKitePropertyNamingStrategy implements KitePropertyNamingStrategy {
 
     @Override
-    public String propertyShowName(KiteConfiguration configuration, String expressionString) {
+    public String propertyDisplayName(Framework<?> framework, String expressionString) {
         return expressionString;
     }
 }

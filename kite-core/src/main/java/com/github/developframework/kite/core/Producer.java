@@ -1,29 +1,28 @@
 package com.github.developframework.kite.core;
 
-import com.github.developframework.kite.core.data.DataModel;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
 
 /**
  * 生产者接口
+ *
  * @author qiuzhenhao
  */
 public interface Producer {
 
     /**
-     * 生产
-     * @param dataModel 数据模型
-     * @param namespace 命名空间
-     * @param templateId 模板ID
+     * 生产字符串
+     *
+     * @param pretty 是否美化
      * @return 字符串
      */
-    String produce(DataModel dataModel, String namespace, String templateId);
+    String produce(boolean pretty);
 
     /**
-     * 生产
-     * @param dataModel 数据模型
-     * @param namespace 命名空间
-     * @param templateId 模板ID
-     * @param isPretty 是否美化
-     * @return 字符串
+     * 输出到流
+     *
+     * @param charset 字符集
+     * @param pretty  是否美化
      */
-    String produce(DataModel dataModel, String namespace, String templateId, boolean isPretty);
+    void output(OutputStream outputStream, Charset charset, boolean pretty);
 }

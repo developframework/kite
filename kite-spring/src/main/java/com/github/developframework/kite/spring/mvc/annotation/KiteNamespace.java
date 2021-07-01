@@ -7,6 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * 命名空间注解
+ *
  * @author qiuzhenhao
  */
 @Target({ElementType.TYPE, ElementType.METHOD})

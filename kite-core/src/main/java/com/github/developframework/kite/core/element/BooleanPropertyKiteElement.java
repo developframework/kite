@@ -1,41 +1,57 @@
 package com.github.developframework.kite.core.element;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.kite.core.KiteConfiguration;
-import com.github.developframework.kite.core.TemplateLocation;
-import com.github.developframework.kite.core.data.DataDefinition;
-import com.github.developframework.kite.core.processor.json.BooleanPropertyJsonProcessor;
-import com.github.developframework.kite.core.processor.json.JsonProcessContext;
-import com.github.developframework.kite.core.processor.json.JsonProcessor;
-import com.github.developframework.kite.core.processor.json.PropertyJsonProcessor;
-import com.github.developframework.kite.core.processor.xml.BooleanPropertyXmlProcessor;
-import com.github.developframework.kite.core.processor.xml.PropertyXmlProcessor;
-import com.github.developframework.kite.core.processor.xml.XmlProcessContext;
-import com.github.developframework.kite.core.processor.xml.XmlProcessor;
-import org.dom4j.Element;
+import com.github.developframework.kite.core.node.ObjectNodeProxy;
+import com.github.developframework.kite.core.structs.TemplateLocation;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * 布尔型属性节点
- * @author qiuzhenhao
+ * 布尔型属性节点处理器
+ *
+ * @author qiushui on 2021-06-24.
  */
 public class BooleanPropertyKiteElement extends PropertyKiteElement {
 
-    public BooleanPropertyKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, DataDefinition dataDefinition, String alias) {
-        super(configuration, templateLocation, dataDefinition, alias);
+    /* 允许类型列表 */
+    private static final Set<Class<?>> ACCEPT_CLASS_SET = new HashSet<>();
+
+    static {
+        ACCEPT_CLASS_SET.add(boolean.class);
+        ACCEPT_CLASS_SET.add(Boolean.class);
+        ACCEPT_CLASS_SET.add(int.class);
+        ACCEPT_CLASS_SET.add(Integer.class);
+        ACCEPT_CLASS_SET.add(long.class);
+        ACCEPT_CLASS_SET.add(Long.class);
+        ACCEPT_CLASS_SET.add(short.class);
+        ACCEPT_CLASS_SET.add(Short.class);
+    }
+
+    public BooleanPropertyKiteElement(TemplateLocation templateLocation) {
+        super(templateLocation);
     }
 
     @Override
-    public JsonProcessor<? extends KiteElement, ? extends JsonNode> createJsonProcessor(JsonProcessContext jsonProcessContext, ObjectNode parentNode) {
-        PropertyJsonProcessor processor = new BooleanPropertyJsonProcessor(jsonProcessContext, this);
-        processor.setNode(parentNode);
-        return processor;
+    protected boolean support(Class<?> sourceClass) {
+        return ACCEPT_CLASS_SET.contains(sourceClass);
     }
 
     @Override
-    public XmlProcessor<? extends KiteElement, ? extends Element> createXmlProcessor(XmlProcessContext xmlProcessContext, Element parentNode) {
-        PropertyXmlProcessor processor = new BooleanPropertyXmlProcessor(xmlProcessContext, this);
-        processor.setNode(parentNode);
-        return processor;
+    protected void handle(ObjectNodeProxy parentNode, Object value, String displayName) {
+        final Class<?> clazz = value.getClass();
+        boolean v;
+        if (clazz == Boolean.class) {
+            v = (Boolean) value;
+        } else if (clazz == Integer.class) {
+            v = (Integer) value != 0;
+        } else if (clazz == Long.class) {
+            v = (Long) value != 0;
+        } else if (clazz == Short.class) {
+            v = (Short) value != 0;
+        } else {
+            parentNode.putNull(displayName);
+            return;
+        }
+        parentNode.putValue(displayName, v, contentAttributes.xmlCDATA);
     }
 }

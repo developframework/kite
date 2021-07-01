@@ -1,10 +1,7 @@
 package com.github.developframework.kite.spring.mvc;
 
-import com.fasterxml.jackson.core.JsonEncoding;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.github.developframework.kite.core.JsonProducer;
 import com.github.developframework.kite.core.KiteFactory;
-import com.github.developframework.kite.core.XmlProducer;
+import com.github.developframework.kite.core.Producer;
 import com.github.developframework.kite.core.data.DataModel;
 import com.github.developframework.kite.spring.KiteResponseBodyProcessor;
 import com.github.developframework.kite.spring.mvc.annotation.TemplateType;
@@ -24,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 /**
  * 抽象的springmvc ReturnValueHandler
@@ -49,18 +47,6 @@ public abstract class AbstractKiteReturnValueHandler<T> implements HandlerMethod
         return res;
     }
 
-    protected JsonEncoding getJsonEncoding(MediaType contentType) {
-        if (contentType != null && contentType.getCharset() != null) {
-            Charset charset = contentType.getCharset();
-            for (JsonEncoding encoding : JsonEncoding.values()) {
-                if (charset.name().equals(encoding.getJavaName())) {
-                    return encoding;
-                }
-            }
-        }
-        return JsonEncoding.UTF8;
-    }
-
     @Override
     public boolean supportsReturnType(MethodParameter returnType) {
         return returnType().isAssignableFrom(returnType.getParameterType());
@@ -79,14 +65,13 @@ public abstract class AbstractKiteReturnValueHandler<T> implements HandlerMethod
         final DataModel dataModel = dataModel(t, methodParameter);
         switch (templateType) {
             case JSON: {
-                final JsonProducer jsonProducer = kiteFactory.getJsonProducer();
+                final Producer jsonProducer = kiteFactory.getJsonProducer(dataModel, namespace, templateId);
                 if (kiteResponseBodyProcessor == null) {
-                    final JsonEncoding encoding = this.getJsonEncoding(outputMessage.getHeaders().getContentType());
-                    final JsonGenerator generator = kiteFactory.getObjectMapper().getFactory().createGenerator(outputMessage.getBody(), encoding);
-                    jsonProducer.outputJson(generator, dataModel, namespace, templateId, false);
+                    final Charset charset = Objects.requireNonNull(outputMessage.getHeaders().getContentType()).getCharset();
+                    jsonProducer.output(outputMessage.getBody(), charset, false);
                 } else {
                     final OutputStreamWriter writer = new OutputStreamWriter(outputMessage.getBody(), StandardCharsets.UTF_8);
-                    final String json = jsonProducer.produce(dataModel, namespace, templateId, false);
+                    final String json = jsonProducer.produce(false);
                     kiteResponseBodyProcessor.beforeWrite(methodParameter, webRequest, json);
                     writer.write(json);
                     writer.flush();
@@ -94,13 +79,14 @@ public abstract class AbstractKiteReturnValueHandler<T> implements HandlerMethod
             }
             break;
             case XML: {
-                final OutputStreamWriter writer = new OutputStreamWriter(outputMessage.getBody(), StandardCharsets.UTF_8);
                 outputMessage.getHeaders().setContentType(MediaType.APPLICATION_XML);
-                final XmlProducer xmlProducer = kiteFactory.getXmlProducer();
+                final Producer xmlProducer = kiteFactory.getXmlProducer(dataModel, namespace, templateId);
                 if (kiteResponseBodyProcessor == null) {
-                    xmlProducer.outputXml(writer, dataModel, namespace, templateId, false);
+                    final Charset charset = Objects.requireNonNull(outputMessage.getHeaders().getContentType()).getCharset();
+                    xmlProducer.output(outputMessage.getBody(), charset, false);
                 } else {
-                    final String xml = xmlProducer.produce(dataModel, namespace, templateId);
+                    final OutputStreamWriter writer = new OutputStreamWriter(outputMessage.getBody(), StandardCharsets.UTF_8);
+                    final String xml = xmlProducer.produce(false);
                     kiteResponseBodyProcessor.beforeWrite(methodParameter, webRequest, xml);
                     writer.write(xml);
                     writer.flush();

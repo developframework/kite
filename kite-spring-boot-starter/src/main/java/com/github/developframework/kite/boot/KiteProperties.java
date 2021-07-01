@@ -13,7 +13,7 @@ public class KiteProperties {
 
     private String locations = "classpath*:kite/*.xml";
 
-    private KiteJsonProperties json;
+    private KiteJsonProperties json = new KiteJsonProperties();
 
-    private KiteXmlProperties xml;
+    private KiteXmlProperties xml = new KiteXmlProperties();
 }

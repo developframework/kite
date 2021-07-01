@@ -1,34 +1,21 @@
 package com.github.developframework.kite.core.element;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.kite.core.KiteConfiguration;
-import com.github.developframework.kite.core.TemplateLocation;
-import com.github.developframework.kite.core.processor.json.ElseJsonProcessor;
-import com.github.developframework.kite.core.processor.json.JsonProcessContext;
-import com.github.developframework.kite.core.processor.json.JsonProcessor;
-import com.github.developframework.kite.core.processor.xml.ElseXmlProcessor;
-import com.github.developframework.kite.core.processor.xml.XmlProcessContext;
-import com.github.developframework.kite.core.processor.xml.XmlProcessor;
-import org.dom4j.Element;
+import com.github.developframework.kite.core.AssembleContext;
+import com.github.developframework.kite.core.structs.TemplateLocation;
 
 /**
- * else节点
- * @author qiuzhenhao
+ * else 节点
+ *
+ * @author qiushui on 2021-06-27.
  */
-public class ElseKiteElement extends ContainerFunctionalKiteElement{
+public final class ElseKiteElement extends ContainerKiteElement {
 
-    public ElseKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation) {
-        super(configuration, templateLocation);
+    public ElseKiteElement(TemplateLocation templateLocation) {
+        super(templateLocation);
     }
 
     @Override
-    public JsonProcessor<? extends KiteElement, ? extends JsonNode> createJsonProcessor(JsonProcessContext context, ObjectNode parentNode) {
-        return new ElseJsonProcessor(context, this, parentNode);
-    }
-
-    @Override
-    public XmlProcessor<? extends KiteElement, ? extends Element> createXmlProcessor(XmlProcessContext context, Element parentNode) {
-        return new ElseXmlProcessor(context, this, parentNode);
+    public void assemble(AssembleContext context) {
+        forEachAssemble(context);
     }
 }

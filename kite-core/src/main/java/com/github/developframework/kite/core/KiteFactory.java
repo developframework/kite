@@ -1,77 +1,51 @@
 package com.github.developframework.kite.core;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.github.developframework.kite.core.saxparser.KiteConfigurationSaxReader;
-import lombok.Getter;
-
-import java.util.HashSet;
-import java.util.Set;
+import com.github.developframework.kite.core.data.DataModel;
+import com.github.developframework.kite.core.exception.KiteException;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Kite 工厂
+ *
  * @author qiuzhenhao
  */
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class KiteFactory {
 
-    @Getter
-    private final KiteConfiguration kiteConfiguration;
+    private final KiteConfiguration configuration;
 
-    public KiteFactory(String... configs) {
-        this(new ObjectMapper(), configs);
+    public void useJsonFramework(Framework<?> framework) {
+        configuration.setJsonFramework(framework);
     }
 
-    public KiteFactory(ObjectMapper objectMapper, String... configs) {
-        Set<ConfigurationSource> sources = new HashSet<>();
-        for (String config : configs) {
-            sources.add(new FileConfigurationSource(config));
-        }
-        KiteConfigurationSaxReader reader = new KiteConfigurationSaxReader(sources);
-        kiteConfiguration = reader.readConfiguration();
-        kiteConfiguration.setObjectMapper(objectMapper);
-    }
-
-    public KiteFactory(ObjectMapper objectMapper, Set<ConfigurationSource> sources) {
-        KiteConfigurationSaxReader reader = new KiteConfigurationSaxReader(sources);
-        kiteConfiguration = reader.readConfiguration();
-        kiteConfiguration.setObjectMapper(objectMapper);
-    }
-
-    public KiteFactory(ObjectMapper objectMapper, KiteConfiguration kiteConfiguration) {
-        kiteConfiguration.setObjectMapper(objectMapper);
-        this.kiteConfiguration = kiteConfiguration;
-    }
-
-    /**
-     * 返回ObjectMapper
-     * @return ObjectMapper
-     */
-    public ObjectMapper getObjectMapper() {
-        return kiteConfiguration.getObjectMapper();
+    public void useXmlFramework(Framework<?> framework) {
+        configuration.setXmlFramework(framework);
     }
 
     /**
      * 获得Json生成器
+     *
      * @return Json生成器
      */
-    public JsonProducer getJsonProducer() {
-        return new DefaultJsonProducer(kiteConfiguration);
+    public Producer getJsonProducer(DataModel dataModel, String namespace, String templateId) {
+        final Framework<?> framework = configuration.getJsonFramework();
+        if (framework == null) {
+            throw new KiteException("json framework uninitialized");
+        }
+        return framework.buildProducer(configuration, dataModel, namespace, templateId);
     }
 
     /**
      * 获得Xml生成器
+     *
      * @return Xml生成器
      */
-    public XmlProducer getXmlProducer() {
-        return new DefaultXmlProducer(kiteConfiguration);
+    public Producer getXmlProducer(DataModel dataModel, String namespace, String templateId) {
+        final Framework<?> framework = configuration.getXmlFramework();
+        if (framework == null) {
+            throw new KiteException("xml framework uninitialized");
+        }
+        return framework.buildProducer(configuration, dataModel, namespace, templateId);
     }
-
-    /**
-     * 设置propertyNamingStrategy
-     * @param propertyNamingStrategy propertyNamingStrategy
-     */
-    public void setPropertyNamingStrategy(PropertyNamingStrategy propertyNamingStrategy) {
-        kiteConfiguration.getObjectMapper().setPropertyNamingStrategy(propertyNamingStrategy);
-    }
-
 }

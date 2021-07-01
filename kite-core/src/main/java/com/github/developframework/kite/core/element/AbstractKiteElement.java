@@ -1,34 +1,32 @@
 package com.github.developframework.kite.core.element;
 
-import com.github.developframework.kite.core.KiteConfiguration;
-import com.github.developframework.kite.core.TemplateLocation;
-import com.github.developframework.kite.core.strategy.KitePropertyNamingStrategy;
+import com.github.developframework.kite.core.strategy.NamingStrategy;
+import com.github.developframework.kite.core.structs.ElementDefinition;
+import com.github.developframework.kite.core.structs.TemplateLocation;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
- * 抽象节点
- *
- * @author qiuzhenhao
+ * @author qiushui on 2021-06-23.
  */
-@Getter
+@RequiredArgsConstructor
 public abstract class AbstractKiteElement implements KiteElement {
 
-    /* 配置 */
-    protected KiteConfiguration configuration;
-    /* 所在位置 */
-    protected TemplateLocation templateLocation;
+    @Getter
+    protected final TemplateLocation templateLocation;
 
     @Getter
-    protected KitePropertyNamingStrategy childrenNamingStrategy;
+    protected NamingStrategy childrenNamingStrategy;
 
-    public AbstractKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation) {
-        this.configuration = configuration;
-        this.templateLocation = templateLocation;
-    }
-
-    public void setChildrenNamingStrategy(KitePropertyNamingStrategy childrenNamingStrategy) {
-        if (this.childrenNamingStrategy == null) {
-            this.childrenNamingStrategy = childrenNamingStrategy;
-        }
+    /**
+     * 对自己配置
+     *
+     * @param elementDefinition 元素定义
+     */
+    public void configure(ElementDefinition elementDefinition) {
+        childrenNamingStrategy = elementDefinition.getEnum(
+                ElementDefinition.Attribute.CHILDREN_NAMING_STRATEGY,
+                NamingStrategy.class
+        );
     }
 }

@@ -1,42 +1,28 @@
 package com.github.developframework.kite.core.element;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.kite.core.KiteConfiguration;
-import com.github.developframework.kite.core.TemplateLocation;
-import com.github.developframework.kite.core.data.DataDefinition;
-import com.github.developframework.kite.core.processor.json.JsonProcessContext;
-import com.github.developframework.kite.core.processor.json.JsonProcessor;
-import com.github.developframework.kite.core.processor.json.PropertyJsonProcessor;
-import com.github.developframework.kite.core.processor.json.UnixTimestampPropertyJsonProcessor;
-import com.github.developframework.kite.core.processor.xml.PropertyXmlProcessor;
-import com.github.developframework.kite.core.processor.xml.UnixTimestampPropertyXmlProcessor;
-import com.github.developframework.kite.core.processor.xml.XmlProcessContext;
-import com.github.developframework.kite.core.processor.xml.XmlProcessor;
-import org.dom4j.Element;
+import com.github.developframework.kite.core.node.ObjectNodeProxy;
+import com.github.developframework.kite.core.structs.TemplateLocation;
+
+import java.util.Objects;
 
 /**
- * unix时间戳型属性节点
+ * unix时间戳型属性节点处理器
  *
- * @author qiuzhenhao
+ * @author qiushui on 2021-06-24.
  */
-public class UnixTimestampPropertyKiteElement extends PropertyKiteElement {
+public class UnixTimestampPropertyKiteElement extends DatePropertyKiteElement {
 
-    public UnixTimestampPropertyKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, DataDefinition dataDefinition, String alias) {
-        super(configuration, templateLocation, dataDefinition, alias);
+    public UnixTimestampPropertyKiteElement(TemplateLocation templateLocation) {
+        super(templateLocation);
     }
 
     @Override
-    public JsonProcessor<? extends KiteElement, ? extends JsonNode> createJsonProcessor(JsonProcessContext context, ObjectNode parentNode) {
-        PropertyJsonProcessor processor = new UnixTimestampPropertyJsonProcessor(context, this);
-        processor.setNode(parentNode);
-        return processor;
-    }
-
-    @Override
-    public XmlProcessor<? extends KiteElement, ? extends Element> createXmlProcessor(XmlProcessContext context, Element parentNode) {
-        PropertyXmlProcessor processor = new UnixTimestampPropertyXmlProcessor(context, this);
-        processor.setNode(parentNode);
-        return processor;
+    protected void handle(ObjectNodeProxy parentNode, Object value, String displayName) {
+        java.util.Date date = transformDate(value);
+        if (Objects.isNull(date)) {
+            parentNode.putNull(displayName);
+            return;
+        }
+        parentNode.putValue(displayName, date.getTime() / 1000, contentAttributes.xmlCDATA);
     }
 }

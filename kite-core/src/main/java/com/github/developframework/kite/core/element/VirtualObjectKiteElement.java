@@ -1,35 +1,32 @@
 package com.github.developframework.kite.core.element;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.kite.core.KiteConfiguration;
-import com.github.developframework.kite.core.TemplateLocation;
-import com.github.developframework.kite.core.data.DataDefinition;
-import com.github.developframework.kite.core.processor.json.JsonProcessContext;
-import com.github.developframework.kite.core.processor.json.JsonProcessor;
-import com.github.developframework.kite.core.processor.json.VirtualObjectJsonProcessor;
-import com.github.developframework.kite.core.processor.xml.VirtualObjectXmlProcessor;
-import com.github.developframework.kite.core.processor.xml.XmlProcessContext;
-import com.github.developframework.kite.core.processor.xml.XmlProcessor;
-import org.dom4j.Element;
+import com.github.developframework.kite.core.AssembleContext;
+import com.github.developframework.kite.core.structs.ElementDefinition;
+import com.github.developframework.kite.core.structs.TemplateLocation;
 
 /**
  * 虚拟对象节点
- * @author qiuzhenhao
+ *
+ * @author qiushui on 2021-06-24.
  */
-public class VirtualObjectKiteElement extends ObjectKiteElement {
+public class VirtualObjectKiteElement extends ContainerKiteElement {
 
-    public VirtualObjectKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, DataDefinition dataDefinition, String alias) {
-        super(configuration, templateLocation, dataDefinition, alias);
+    private String alias;
+
+    public VirtualObjectKiteElement(TemplateLocation templateLocation) {
+        super(templateLocation);
     }
 
     @Override
-    public JsonProcessor<? extends KiteElement, ? extends JsonNode> createJsonProcessor(JsonProcessContext context, ObjectNode parentNode) {
-        return new VirtualObjectJsonProcessor(context, this);
+    public void configure(ElementDefinition elementDefinition) {
+        super.configure(elementDefinition);
+        alias = elementDefinition.getString(ElementDefinition.Attribute.ALIAS);
     }
 
     @Override
-    public XmlProcessor<? extends KiteElement, ? extends Element> createXmlProcessor(XmlProcessContext context, Element parentNode) {
-        return new VirtualObjectXmlProcessor(context, this);
+    public void assemble(AssembleContext context) {
+        context.pushNodeProxy(context.peekNodeProxy().putObjectNode(alias));
+        this.forEachAssemble(context);
+        context.popNodeProxy();
     }
 }

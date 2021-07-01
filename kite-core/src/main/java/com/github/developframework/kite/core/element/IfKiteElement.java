@@ -1,52 +1,48 @@
 package com.github.developframework.kite.core.element;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.kite.core.KiteConfiguration;
-import com.github.developframework.kite.core.TemplateLocation;
-import com.github.developframework.kite.core.processor.json.IfJsonProcessor;
-import com.github.developframework.kite.core.processor.json.JsonProcessContext;
-import com.github.developframework.kite.core.processor.json.JsonProcessor;
-import com.github.developframework.kite.core.processor.xml.IfXmlProcessor;
-import com.github.developframework.kite.core.processor.xml.XmlProcessContext;
-import com.github.developframework.kite.core.processor.xml.XmlProcessor;
+import com.github.developframework.kite.core.AssembleContext;
+import com.github.developframework.kite.core.structs.ElementDefinition;
+import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.utils.KiteUtils;
 import lombok.Setter;
-import org.dom4j.Element;
-
-import java.util.Optional;
 
 /**
- * if节点
+ * if 节点
  *
- * @author qiuzhenhao
+ * @author qiushui on 2021-06-27.
  */
-public class IfKiteElement extends ContainerFunctionalKiteElement {
+public final class IfKiteElement extends ContainerKiteElement {
 
-    private final String conditionValue;
+    private String conditionValue;
+
     @Setter
-    private ElseKiteElement elseElement;
+    private ElseKiteElement elseKiteElement;
 
-    public IfKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, String conditionValue) {
-        super(configuration, templateLocation);
-        this.conditionValue = conditionValue;
+    public IfKiteElement(TemplateLocation templateLocation) {
+        super(templateLocation);
     }
 
     @Override
-    public JsonProcessor<? extends KiteElement, ? extends JsonNode> createJsonProcessor(JsonProcessContext context, ObjectNode parentNode) {
-        return new IfJsonProcessor(context, this, parentNode);
+    public void configure(ElementDefinition elementDefinition) {
+        super.configure(elementDefinition);
+        conditionValue = elementDefinition.getString(ElementDefinition.Attribute.CONDITION);
     }
 
     @Override
-    public XmlProcessor<? extends KiteElement, ? extends Element> createXmlProcessor(XmlProcessContext context, Element parentNode) {
-        return new IfXmlProcessor(context, this, parentNode);
+    public void assemble(AssembleContext context) {
+        final Object parentValue = context.peekValue();
+        final Boolean flag =
+                context.dataModel
+                        .getData(conditionValue)
+                        .filter(v -> v instanceof Boolean)
+                        .map(v -> (Boolean) v)
+                        .orElseGet(() -> KiteUtils.handleCondition(context.dataModel, conditionValue, parentValue));
+        if (flag) {
+            // 执行条件真的逻辑
+            super.forEachAssemble(context);
+        } else {
+            // 执行条件假的逻辑
+            elseKiteElement.assemble(context);
+        }
     }
-
-    public Optional<ElseKiteElement> getElseElement() {
-        return Optional.ofNullable(elseElement);
-    }
-
-    public Optional<String> getConditionValue() {
-        return Optional.ofNullable(conditionValue);
-    }
-
 }

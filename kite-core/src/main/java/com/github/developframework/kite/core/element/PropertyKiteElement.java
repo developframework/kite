@@ -1,44 +1,49 @@
 package com.github.developframework.kite.core.element;
 
-import com.github.developframework.kite.core.KiteConfiguration;
-import com.github.developframework.kite.core.TemplateLocation;
-import com.github.developframework.kite.core.data.DataDefinition;
-import lombok.Getter;
+import com.github.developframework.kite.core.AssembleContext;
+import com.github.developframework.kite.core.node.ObjectNodeProxy;
+import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.utils.KiteUtils;
 
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import java.util.Optional;
 
 /**
- * 属性节点
- *
- * @author qiuzhenhao
+ * @author qiushui on 2021-06-23.
  */
 public abstract class PropertyKiteElement extends ContainerKiteElement {
 
-    @Getter
-    protected boolean isXmlCdata;
-
-    public PropertyKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, DataDefinition dataDefinition, String alias) {
-        super(configuration, templateLocation, dataDefinition, alias);
-    }
-
-    public void setXmlCdata(String xmlCdataStr) {
-        this.isXmlCdata = isNotEmpty(xmlCdataStr) && Boolean.parseBoolean(xmlCdataStr);
+    public PropertyKiteElement(TemplateLocation templateLocation) {
+        super(templateLocation);
     }
 
     @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = hash * 31 + templateLocation.hashCode();
-        hash = hash * 31 + dataDefinition.hashCode();
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof PropertyKiteElement)) {
-            return false;
+    public void assemble(AssembleContext context) {
+        final Optional<Object> dataValue = KiteUtils.getDataValue(context, this);
+        if (dataValue.isPresent()) {
+            Object value = dataValue.get();
+            final Class<?> valueClass = value.getClass();
+            if (support(valueClass)) {
+                handle(context.peekNodeProxy(), value, displayName(context));
+            }
+        } else if (!contentAttributes.nullHidden) {
+            context.peekNodeProxy().putNull(displayName(context));
         }
-        PropertyKiteElement otherPropertyElement = (PropertyKiteElement) obj;
-        return dataDefinition.equals(otherPropertyElement.dataDefinition);
     }
+
+    /**
+     * 判断是否支持sourceClass类型
+     *
+     * @param sourceClass 源类型
+     * @return 是否支持
+     */
+    protected abstract boolean support(Class<?> sourceClass);
+
+    /**
+     * 属性具体处理
+     *
+     * @param parentNode  父树节点
+     * @param value       值
+     * @param displayName 显示的名称
+     */
+    protected abstract void handle(ObjectNodeProxy parentNode, Object value, String displayName);
 }

@@ -1,6 +1,6 @@
 package com.github.developframework.kite.core.strategy;
 
-import com.github.developframework.kite.core.KiteConfiguration;
+import com.github.developframework.kite.core.Framework;
 
 /**
  * 下划线命名策略
@@ -10,7 +10,7 @@ import com.github.developframework.kite.core.KiteConfiguration;
 public class UnderlineKitePropertyNamingStrategy implements KitePropertyNamingStrategy {
 
     @Override
-    public String propertyShowName(KiteConfiguration configuration, String expressionString) {
+    public String propertyDisplayName(Framework<?> framework, String expressionString) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < expressionString.length(); ++i) {
             char c = expressionString.charAt(i);

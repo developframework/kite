@@ -4,74 +4,58 @@ import com.github.developframework.expression.ArrayExpression;
 import com.github.developframework.expression.Expression;
 import com.github.developframework.expression.MethodExpression;
 import com.github.developframework.expression.ObjectExpression;
-import com.github.developframework.kite.core.KiteConfiguration;
-import com.github.developframework.kite.core.TemplateLocation;
-import com.github.developframework.kite.core.data.DataDefinition;
+import com.github.developframework.kite.core.AssembleContext;
+import com.github.developframework.kite.core.Framework;
 import com.github.developframework.kite.core.strategy.KitePropertyNamingStrategy;
+import com.github.developframework.kite.core.strategy.NamingStrategy;
+import com.github.developframework.kite.core.structs.ContentAttributes;
+import com.github.developframework.kite.core.structs.ElementDefinition;
+import com.github.developframework.kite.core.structs.TemplateLocation;
 import lombok.Getter;
-import lombok.Setter;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
- * 内容节点基类
- *
- * @author qiuzhenhao
+ * @author qiushui on 2021-06-23.
  */
-@Getter
 public abstract class ContentKiteElement extends AbstractKiteElement {
 
-    @Setter
-    protected DataDefinition dataDefinition;
+    @Getter
+    protected ContentAttributes contentAttributes;
 
-    @Setter
-    protected String converterValue;
-
-    @Setter
-    protected String alias;
-
-    protected boolean nullHidden;
-
-    public ContentKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, DataDefinition dataDefinition, String alias) {
-        super(configuration, templateLocation);
-        this.dataDefinition = dataDefinition;
-        this.alias = alias;
+    public ContentKiteElement(TemplateLocation templateLocation) {
+        super(templateLocation);
     }
 
-    public void setNullHidden(String nullHiddenStr) {
-        this.nullHidden = isNotEmpty(nullHiddenStr) && Boolean.parseBoolean(nullHiddenStr);
+    @Override
+    public void configure(ElementDefinition elementDefinition) {
+        super.configure(elementDefinition);
+        contentAttributes = ContentAttributes.of(elementDefinition);
     }
 
     /**
-     * 生成显示名称（json）
+     * 经过命名策略修改决定显示名称
      *
+     * @param context 上下文
      * @return 显示名称
      */
-    public String showNameJSON(KitePropertyNamingStrategy parentNamingStrategy) {
-        if (isNotEmpty(alias)) {
-            return alias;
+    protected String displayName(AssembleContext context) {
+        if (isNotEmpty(contentAttributes.alias)) {
+            return contentAttributes.alias;
         }
-        final String expressionString = expressionString();
-        final KitePropertyNamingStrategy ns = parentNamingStrategy == null ? configuration.getForJsonStrategy() : parentNamingStrategy;
-        return ns.propertyShowName(configuration, expressionString);
+        final Framework<?> framework = context.switchFramework();
+        final NamingStrategy namingStrategy = contentAttributes.namingStrategy != null ?
+                contentAttributes.namingStrategy : context.getOptionNamingStrategy();
+        final KitePropertyNamingStrategy propertyNamingStrategy = namingStrategy == NamingStrategy.FRAMEWORK ?
+                framework.namingStrategy() : namingStrategy.getNamingStrategy();
+        return propertyNamingStrategy.propertyDisplayName(framework, determineNameFromExpression());
     }
 
     /**
-     * 生成显示名称（xml）
-     *
-     * @return 显示名称
+     * 从表达式中决定名称
      */
-    public String showNameXML(KitePropertyNamingStrategy parentNamingStrategy) {
-        if (isNotEmpty(alias)) {
-            return alias;
-        }
-        final String expressionString = expressionString();
-        final KitePropertyNamingStrategy ns = parentNamingStrategy == null ? configuration.getForXmlStrategy() : parentNamingStrategy;
-        return ns.propertyShowName(configuration, expressionString);
-    }
-
-    private String expressionString() {
-        Expression expression = dataDefinition.getExpression();
+    private String determineNameFromExpression() {
+        Expression expression = contentAttributes.dataDefinition.getExpression();
         if (expression instanceof ObjectExpression) {
             return ((ObjectExpression) expression).getPropertyName();
         } else if (expression instanceof ArrayExpression) {

@@ -2,8 +2,9 @@ package com.github.developframework.kite.spring.mvc.response;
 
 /**
  * 单例数据KiteResponse
- * @author qiuzhenhao
+ *
  * @param <T> 数据类型
+ * @author qiuzhenhao
  */
 public final class SingletonKiteResponse<T> extends EmptyKiteResponse {
 

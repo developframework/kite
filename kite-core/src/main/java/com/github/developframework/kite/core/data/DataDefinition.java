@@ -13,21 +13,16 @@ import org.apache.commons.lang3.StringUtils;
 @Getter
 public class DataDefinition {
 
-    public static final DataDefinition EMPTY_DATA_DEFINITION = new DataDefinition(null);
+    public static final DataDefinition EMPTY = new DataDefinition(null);
 
     /* 功能符号 */
     private FunctionSign functionSign;
     /* 表达式 */
     private final Expression expression;
 
-    public DataDefinition(FunctionSign functionSign, Expression expression) {
-        this.functionSign = functionSign;
-        this.expression = expression;
-    }
-
     public DataDefinition(String dataValue) {
         if (StringUtils.isEmpty(dataValue)) {
-            expression = EmptyExpression.INSTANCE;
+            this.expression = EmptyExpression.INSTANCE;
         } else {
             dataValue = dataValue.trim();
             char firstChar = dataValue.charAt(0);
@@ -57,7 +52,7 @@ public class DataDefinition {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof DataDefinition) {
+        if (obj instanceof DataDefinition) {
             DataDefinition otherDataDefinition = (DataDefinition) obj;
             return functionSign == otherDataDefinition.functionSign && expression.equals(otherDataDefinition.expression);
         }
@@ -66,7 +61,7 @@ public class DataDefinition {
 
     @Override
     public String toString() {
-        if(functionSign == null) {
+        if (functionSign == null) {
             return expression.toString();
         }
         return functionSign.getSign() + expression.toString();

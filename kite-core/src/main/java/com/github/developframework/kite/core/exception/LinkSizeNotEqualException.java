@@ -1,9 +1,10 @@
 package com.github.developframework.kite.core.exception;
 
-import com.github.developframework.kite.core.TemplateLocation;
+import com.github.developframework.kite.core.structs.TemplateLocation;
 
 /**
  * 一对一链接数组大小不一致异常
+ *
  * @author qiuzhenhao
  */
 public class LinkSizeNotEqualException extends KiteException {

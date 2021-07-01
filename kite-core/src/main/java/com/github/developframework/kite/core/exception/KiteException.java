@@ -2,6 +2,7 @@ package com.github.developframework.kite.core.exception;
 
 /**
  * Kite 异常
+ *
  * @author qiuzhenhao
  */
 public class KiteException extends RuntimeException {
@@ -10,7 +11,7 @@ public class KiteException extends RuntimeException {
         super(message);
     }
 
-	public KiteException(String format, Object... parameters) {
+    public KiteException(String format, Object... parameters) {
         super(String.format(format, parameters));
     }
 }

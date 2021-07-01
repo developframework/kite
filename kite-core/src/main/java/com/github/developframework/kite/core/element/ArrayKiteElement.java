@@ -1,85 +1,91 @@
 package com.github.developframework.kite.core.element;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.developframework.kite.core.KiteConfiguration;
-import com.github.developframework.kite.core.TemplateLocation;
-import com.github.developframework.kite.core.data.DataDefinition;
-import com.github.developframework.kite.core.exception.KiteException;
-import com.github.developframework.kite.core.processor.json.ArrayJsonProcessor;
-import com.github.developframework.kite.core.processor.json.JsonProcessContext;
-import com.github.developframework.kite.core.processor.json.JsonProcessor;
-import com.github.developframework.kite.core.processor.xml.ArrayXmlProcessor;
-import com.github.developframework.kite.core.processor.xml.XmlProcessContext;
-import com.github.developframework.kite.core.processor.xml.XmlProcessor;
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Element;
+import com.github.developframework.kite.core.AssembleContext;
+import com.github.developframework.kite.core.node.ArrayNodeProxy;
+import com.github.developframework.kite.core.structs.ArrayAttributes;
+import com.github.developframework.kite.core.structs.ElementDefinition;
+import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.utils.KiteUtils;
 
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import java.util.Optional;
 
 /**
  * 数组节点
- * @author qiuzhenhao
+ *
+ * @author qiushui on 2021-06-24.
  */
-@Getter
-public class ArrayKiteElement extends ContainerKiteElement{
+public class ArrayKiteElement extends ContainerKiteElement {
 
-    /* 元素对象节点 */
-    private final ObjectKiteElement itemObjectElement;
+    // 数组属性
+    protected ArrayAttributes arrayAttributes;
 
-    @Setter
-    protected String mapFunctionValue;
-    @Setter
-    protected String xmlItemName;
-    @Setter
-    protected String comparatorValue;
-    @Setter
-    protected Integer limit;
-
-    protected boolean nullEmpty;
-
-    public ArrayKiteElement(KiteConfiguration configuration, TemplateLocation templateLocation, DataDefinition dataDefinition, String alias) {
-        super(configuration, templateLocation, dataDefinition, alias);
-        this.itemObjectElement = new ObjectKiteElement(configuration, templateLocation, dataDefinition, alias);
-    }
-
-    public ArrayKiteElement(KiteConfiguration configuration, ContainerKiteElement containerElement, DataDefinition dataDefinition) {
-        this(configuration, containerElement.templateLocation, dataDefinition, containerElement.alias);
-        this.copyChildElement(containerElement);
+    public ArrayKiteElement(TemplateLocation templateLocation) {
+        super(templateLocation);
     }
 
     @Override
-    public JsonProcessor<? extends KiteElement, ? extends JsonNode> createJsonProcessor(JsonProcessContext context, ObjectNode parentNode) {
-        return new ArrayJsonProcessor(context, this);
+    public void configure(ElementDefinition elementDefinition) {
+        super.configure(elementDefinition);
+        arrayAttributes = ArrayAttributes.of(elementDefinition);
     }
 
     @Override
-    public XmlProcessor<? extends KiteElement, ? extends Element> createXmlProcessor(XmlProcessContext context, Element parentNode) {
-        return new ArrayXmlProcessor(context, this);
+    public void assemble(AssembleContext context) {
+        final Optional<Object> dataValue = KiteUtils.getDataValue(context, this);
+        assembleWithArrayObject(context, dataValue.orElse(null));
     }
 
-    @Override
-    public void addChildElement(KiteElement element) {
-        super.addChildElement(element);
-        this.itemObjectElement.addChildElement(element);
-    }
-
-    @Override
-    public void copyChildElement(ContainerKiteElement otherContainerElement) {
-        super.copyChildElement(otherContainerElement);
-        this.itemObjectElement.copyChildElement(otherContainerElement);
-    }
-
-    public String getXmlItemName() {
-        if (StringUtils.isEmpty(xmlItemName)) {
-            throw new KiteException("\"xml-item\" is undefined in template \"%s\".", templateLocation.toString());
+    /**
+     * 组装数组
+     *
+     * @param context  上下文
+     * @param arrayObj 数组对象
+     */
+    public final void assembleWithArrayObject(AssembleContext context, Object arrayObj) {
+        if (arrayObj != null) {
+            final ArrayNodeProxy arrayNodeProxy = context.peekNodeProxy().putArrayNode(displayName(context));
+            assembleArrayItems(context, arrayObj, arrayNodeProxy);
+        } else if (!contentAttributes.nullHidden) {
+            // 处理null-empty功能
+            if (arrayAttributes.nullEmpty) {
+                context.peekNodeProxy().putArrayNode(displayName(context));
+            } else {
+                context.peekNodeProxy().putNull(displayName(context));
+            }
         }
-        return xmlItemName;
     }
 
-    public void setNullEmpty(String nullEmptyStr) {
-        this.nullEmpty = isNotEmpty(nullEmptyStr) && Boolean.parseBoolean(nullEmptyStr);
+    /**
+     * 组装数组（指定了节点）
+     *
+     * @param context        上下文
+     * @param arrayObj       数组对象
+     * @param arrayNodeProxy 数组节点代理
+     */
+    public final void assembleArrayItems(AssembleContext context, Object arrayObj, ArrayNodeProxy arrayNodeProxy) {
+        final Object[] array = KiteUtils.objectToArray(arrayObj, contentAttributes.dataDefinition);
+        // 处理comparator功能
+        KiteUtils.handleArrayComparator(context.dataModel, arrayAttributes.comparatorValue, array);
+        // 记录上层数组长度和索引
+        final int parentLength = context.arrayLength, parentIndex = context.arrayIndex;
+
+        // 处理limit功能
+        context.arrayLength = arrayAttributes.limit != null && arrayAttributes.limit < array.length ? arrayAttributes.limit : array.length;
+        for (context.arrayIndex = 0; context.arrayIndex < context.arrayLength; context.arrayIndex++) {
+            // 处理map功能
+            final Object v = KiteUtils.handleKiteConverter(context.dataModel, arrayAttributes.mapValue, array[context.arrayIndex]);
+            if (elements.isEmpty()) {
+                arrayNodeProxy.addValue(arrayAttributes, v);
+            } else {
+                context.pushValue(v);
+                context.pushNodeProxy(arrayNodeProxy.addObject(arrayAttributes, context));
+                forEachAssemble(context);
+                context.pop();
+            }
+        }
+
+        // 恢复上层数组长度和索引
+        context.arrayLength = parentLength;
+        context.arrayIndex = parentIndex;
     }
 }

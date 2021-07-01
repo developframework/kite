@@ -1,0 +1,23 @@
+<kite-configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xmlns="https://github.com/developframework/kite/schema"
+                    xsi:schemaLocation="https://github.com/developframework/kite/schema kite-configuration.xsd">
+
+    <template-package namespace="template">
+
+        <template id="" data="">
+            <object data="">
+                <array data="">
+                    <property data="" naming-strategy="LOWER_CASE"/>
+                    <xml-attribute data=""/>
+                    <raw data=""/>
+                    <prototype data="" converter=""/>
+                    <property-enum data="">
+                        <enum value="" text=""/>
+                    </property-enum>
+                </array>
+            </object>
+        </template>
+
+    </template-package>
+
+</kite-configuration>
