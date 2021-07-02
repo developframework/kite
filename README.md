@@ -26,7 +26,7 @@ maven
 </dependency>
 ```
 
-## <a name="chapter2">**2. HelloWorld**</a>
+## 2. HelloWorld
 
 一个最简单的kite使用示例：
 
