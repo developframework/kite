@@ -107,7 +107,7 @@ DataModel dataModel=DataModel.singleton("sayHello","Hello Kite!");
 
 `Expression` 的详细使用请查看独立项目[expression](https://github.com/developframework/expression)
 
-#### **3.1.3. KiteOptions**
+#### 3.1.3. KiteOptions
 
 > com.github.developframework.kite.core.KiteOptions
 
@@ -118,7 +118,7 @@ KiteOptions options=new KiteOptions();
         options.getJson().setNamingStrategy(NamingStrategy.LOWER_CASE);
 ```
 
-#### **3.1.4. KiteFactory**
+#### 3.1.4. KiteFactory
 
 > com.github.developframework.kite.core.KiteFactory
 
@@ -129,9 +129,9 @@ final String[]xmlFiles={"config1.xml","config2.xml"};
         KiteFactory kiteFactory=KiteFactoryBuilder.buildFromClasspathXml(options,xmlFiles);
 ```
 
-#### **3.1.5. Framework**
+#### 3.1.5. Framework
 
-#### **3.1.6. Producer**
+#### 3.1.6. Producer
 
 > com.github.developframework.kite.core.Producer
 
