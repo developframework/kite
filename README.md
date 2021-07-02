@@ -49,18 +49,19 @@ KiteOptions options=new KiteOptions();
 你需要一份Kite XML配置，位置在上述声明的/kite/kite-demo.xml：
 
 ```xml
+
 <kite-configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                        xmlns="https://github.com/developframework/kite/schema"
-                        xsi:schemaLocation="
+                    xmlns="https://github.com/developframework/kite/schema"
+                    xsi:schemaLocation="
 	https://github.com/developframework/kite/schema kite-configuration.xsd">
 
   <template-package namespace="kite-demo">
 
     <template id="first-view">
       <property data="sayHello"/>
-        </template>
+    </template>
 
-    </template-package>
+  </template-package>
 
 </kite-configuration>
 ```
@@ -72,7 +73,10 @@ KiteOptions options=new KiteOptions();
 ```
 
 ```xml
-<xml><say-hello>Hello Kite!</say-hello></xml>
+
+<xml>
+  <say-hello>Hello Kite!</say-hello>
+</xml>
 ```
 
 ## <a name="chapter3">**3. 概览**</a>
@@ -81,7 +85,9 @@ KiteOptions options=new KiteOptions();
 
 #### **3.1.1. DataModel**
 
-`com.github.developframework.kite.data.DataModel`接口是Kite框架的数据模型。用于装载需要在视图中渲染的数据或函数接口实现，数据由键值对构成。接口提供存入和取出数据的方法，支持链式写法。
+> com.github.developframework.kite.data.DataModel
+
+Kite框架的数据模型。用于装载需要在视图中渲染的数据或函数接口实现，数据由键值对构成。接口提供存入和取出数据的方法，支持链式写法。
 
 ```java
 DataModel dataModel=DataModel.singleton("sayHello","Hello Kite!");
@@ -89,8 +95,9 @@ DataModel dataModel=DataModel.singleton("sayHello","Hello Kite!");
 
 #### **3.1.2. Expression**
 
-`com.github.developframework.expression.Expression`类是kite框架从DataModel中提取数据的表达式。不论dataModel存的是java实体类还是Map对象都可以使用表达式取值。
-范例：
+> com.github.developframework.expression.Expression
+
+是kite框架从DataModel中提取数据的表达式。不论dataModel存的是java实体类还是Map对象都可以使用表达式取值。 范例：
 
 - `student` 你可以从DataModel对象内取得名为student的对象
 - `#student` 你可以从DataModel对象内 **强制从根路径** 取得名为student的对象
@@ -102,7 +109,9 @@ DataModel dataModel=DataModel.singleton("sayHello","Hello Kite!");
 
 #### **3.1.3. KiteOptions**
 
-`com.github.developframework.kite.core.KiteOptions`类为Kite框架的配置类。
+> com.github.developframework.kite.core.KiteOptions
+
+Kite框架的配置类。
 
 ```java
 KiteOptions options=new KiteOptions();
@@ -111,8 +120,9 @@ KiteOptions options=new KiteOptions();
 
 #### **3.1.4. KiteFactory**
 
-`com.github.developframework.kite.core.KiteFactory`类是Kite框架的构建工厂。使用Kite框架的第一步就是建立该对象。
-建立该对象需要提供配置文件路径的字符串，多份配置文件可以采用字符串数组。
+> com.github.developframework.kite.core.KiteFactory
+
+类是Kite框架的构建工厂。使用Kite框架的第一步就是建立该对象。 建立该对象需要提供配置文件路径的字符串，多份配置文件可以采用字符串数组。
 
 ```java
 final String[]xmlFiles={"config1.xml","config2.xml"};
@@ -123,7 +133,9 @@ final String[]xmlFiles={"config1.xml","config2.xml"};
 
 #### **3.1.6. Producer**
 
-`com.github.developframework.kite.core.Producer`接口是json字符串建造类，根据`kiteFactory.useFramework()`方法传入的`Framework`
+> com.github.developframework.kite.core.Producer
+
+接口是json字符串建造类，根据`kiteFactory.useFramework()`方法传入的`Framework`
 对象不同可以得出不同实现的Producer。
 
 ```java
@@ -213,10 +225,9 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 
 ###### a) template
 
-  当你需要声明一个json格式模板时，你将会使用到`<template>`标签。
+当你需要声明一个模板时，你将会使用到`<template>`标签。
 
   ```xml
-
 <template id="">
 
 </template>
@@ -226,15 +237,14 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 | ------------ | ------------------------------------------------------------ | -------- |
 | id           | 声明模板编号，在命名空间中唯一                               | 是       |
 | data         | 取值表达式                                                   | 否       |
-| extend       | 声明继承的kite和端口，格式为**namespace.id**（namespace不填时默认为当前namespace） | 否       |
-| converter | 类型转换器全限定类名或expression表达式。详见[5.1.1节](#chapter511) | 否 |
-| map | 仅当data指代的数据为数组或List时有效。MapFunction的实现类全名或Expression表达式。详见[5.1.2节](#chapter512) | 否       |
+| extend       | 声明继承的kite和端口，格式为**namespace.id**（namespace不填时默认为当前template所在的namespace） | 否       |
 | xml-root     | 生成xml时的根节点名称                                        | 否       |
-| xml-item     | 生成xml时，子节点数组项的节点名称                            | 否       |
+
+以及包含`<array>`节点的所有属性
 
 ###### b) object
 
-当你需要在json中构建一个对象结构时，你将会使用到`<object>`标签。详见[4.1.节](#chapter41)
+当你需要构建一个对象结构时，你将会使用到`<object>`标签。详见[4.1.节](#chapter41)
 
 ```xml
 
@@ -243,19 +253,19 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 </object>
 ```
 
-| 属性        | 功能                                                         | 是否必须 |
-| ----------- | ------------------------------------------------------------ | -------- |
-| data        | 取值表达式                                                   | 是       |
-| alias       | 别名，你可以重新定义显示名                                   | 否       |
-| null-hidden | true时表示表达式取的值为null时隐藏该节点，默认为false        | 否       |
-| converter   | 类型转换器全限定类名或expression表达式。详见[5.1.1节](#chapter511) | 否       |
+| 属性            | 功能                                                         | 是否必须 |
+| --------------- | ------------------------------------------------------------ | -------- |
+| data            | 取值表达式                                                   | 是       |
+| alias           | 别名，你可以重新定义显示名                                   | 否       |
+| naming-strategy | 命名策略，默认FRAMEWORK                                      | 否       |
+| null-hidden     | true时表示表达式取的值为null时隐藏该节点，默认为false        | 否       |
+| converter       | 类型转换器全限定类名或expression表达式。详见[5.1.1节](#chapter511) | 否       |
 
 ###### c) array
 
-当你需要在json中构建一个数组结构时，你将会使用到`<array>`标签。详见[4.6.节](#chapter46)
+当你需要构建一个数组结构时，你将会使用到`<array>`标签。详见[4.6.节](#chapter46)
 
 ```xml
-
 <array data="">
 
 </array>
@@ -265,6 +275,7 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 | ------------ | ------------------------------------------------------------ | -------- |
 | data         | 取值表达式                                                   | 是       |
 | alias        | 别名，你可以重新定义显示名                                   | 否       |
+| naming-strategy | 命名策略，默认FRAMEWORK | 否 |
 | null-hidden  | true时表示表达式取的值为null时隐藏该节点，默认为false        | 否       |
 | converter | 类型转换器全限定类名或expression表达式。详见[5.1.1节](#chapter511) | 否 |
 | map | MapFunction的实现类全名或Expression表达式。详见[5.1.2节](#chapter512) | 否       |
@@ -273,74 +284,94 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 | comparator | Comparator比较器接口实现类表达式 | 否 |
 | null-empty | true时表示表达式取的值为null时设为空数组，默认为false | 否 |
 
-`<array>`标签可以没有子标签，这时表示数组为基本类型数组。
+`<array>`标签可以没有子标签，这时表示数组为基本类型数组，如果是对象将会调用它的`toString()`方法。
 
 ###### d) property
 
-当你需要在json中构建一个普通属性结构时， 你将会使用到`<property>`标签。
+当你需要构建一个普通属性结构时， 你将会使用到`<property>`标签。
 
 ```xml
-<property data="" alias="" converter="" null-hidden="true"/>
+
+<property data=""/>
 ```
 
-| 属性          | 功能                                       | 是否必须 |
-| ----------- | ---------------------------------------- | ---- |
-| data        | 取值表达式                                    | 是    |
-| alias       | 别名，你可以重新定义显示名                            | 否    |
-| converter   | 类型转换器全限定类名或expression表达式。详见[5.1.1节](#chapter511) | 否    |
-| null-hidden | true时表示表达式取的值为null时隐藏该节点，默认为false        | 否    |
+| 属性            | 功能                                                         | 是否必须 |
+| --------------- | ------------------------------------------------------------ | -------- |
+| data            | 取值表达式                                                   | 是       |
+| alias           | 别名，你可以重新定义显示名                                   | 否       |
+| naming-strategy | 命名策略，默认FRAMEWORK                                      | 否       |
+| converter       | 类型转换器全限定类名或expression表达式。详见[5.1.1节](#chapter511) | 否       |
+| null-hidden     | true时表示表达式取的值为null时隐藏该节点，默认为false        | 否       |
+| xml-cdata       | 生成xml时是否使用`<![CDATA[  ]]>`，默认false                 | 否       |
 
 ###### e) this
 
 指代节点本身值
 
 ```xml
-<this alias="" converter=""/>
+
+<this alias="">
+
+</this>
 ```
-| 属性      | 功能                                                         | 是否必须 |
-| --------- | ------------------------------------------------------------ | -------- |
-| alias     | 别名，你可以重新定义显示名                                   | 是       |
-| converter | 类型转换器全限定类名或expression表达式。详见[5.1.1节](#chapter511) | 否       |
+
+| 属性            | 功能                                                         | 是否必须 |
+| --------------- | ------------------------------------------------------------ | -------- |
+| alias           | 别名，你可以重新定义显示名                                   | 是       |
+| naming-strategy | 命名策略，默认FRAMEWORK                                      | 否       |
+| null-hidden     | true时表示表达式取的值为null时隐藏该节点，默认为false        | 否       |
+| converter       | 类型转换器全限定类名或expression表达式。详见[5.1.1节](#chapter511) | 否       |
+| xml-cdata       | 生成xml时是否使用`<![CDATA[  ]]>`，默认false                 | 否       |
 
 ###### f) prototype
 
-使用Jackson原型实体构建结构， 你将会使用到`<prototype>`标签。详见[4.7.节](#chapter47)
+原型实体构建结构，即使用实现框架自己的序列化功能， 你将会使用到`<prototype>`标签。详见[4.7.节](#chapter47)
 
 ```xml
-<prototype data="" alias="" converter="" null-hidden="true"/>
+
+<prototype data=""/>
 ```
 
-| 属性          | 功能                                       | 是否必须 |
-| ----------- | ---------------------------------------- | ---- |
-| data        | 取值表达式                                    | 是    |
-| alias       | 别名，你可以重新定义显示名                            | 否    |
-| converter   | 类型转换器全限定类名或expression表达式。详见[5.1.1节](#chapter511) | 否    |
-| null-hidden | true时表示表达式取的值为null时隐藏该节点，默认为false        | 否    |
+| 属性            | 功能                                                         | 是否必须 |
+| --------------- | ------------------------------------------------------------ | -------- |
+| data            | 取值表达式                                                   | 是       |
+| alias           | 别名，你可以重新定义显示名                                   | 否       |
+| naming-strategy | 命名策略，默认FRAMEWORK                                      | 否       |
+| converter       | 类型转换器全限定类名或expression表达式。详见[5.1.1节](#chapter511) | 否       |
+| null-hidden     | true时表示表达式取的值为null时隐藏该节点，默认为false        | 否       |
 
-###### g) json
+###### g) raw
 
-使用json字符串构建结构， 你将会使用到`<json>`标签。
+使用raw字符串构建结构， 你将会使用到`<raw>`标签。
 
 ```xml
-<json data="" alias="" converter="" null-hidden="true"/>
+
+<raw data=""/>
 ```
 
-| 属性        | 功能                                                         | 是否必须 |
-| ----------- | ------------------------------------------------------------ | -------- |
-| data        | 取值表达式                                                   | 是       |
-| alias       | 别名，你可以重新定义显示名                                   | 否       |
-| converter   | 类型转换器全限定类名或expression表达式。详见[5.1.1节](#chapter511) | 否       |
-| null-hidden | true时表示表达式取的值为null时隐藏该节点，默认为false        | 否       |
+| 属性            | 功能                                                         | 是否必须 |
+| --------------- | ------------------------------------------------------------ | -------- |
+| data            | 取值表达式                                                   | 是       |
+| alias           | 别名，你可以重新定义显示名                                   | 否       |
+| naming-strategy | 命名策略，默认FRAMEWORK                                      | 否       |
+| converter       | 类型转换器全限定类名或expression表达式。详见[5.1.1节](#chapter511) | 否       |
+| null-hidden     | true时表示表达式取的值为null时隐藏该节点，默认为false        | 否       |
 
 ###### h) xml-attribute
 
-在输出xml时，提供配置xml节点的属性。
+在输出xml时，提供配置xml节点的属性值。
 
-| 属性        | 功能                                                  | 是否必须 |
-| ----------- | ----------------------------------------------------- | -------- |
-| data        | 取值表达式                                            | 是       |
-| alias       | 别名，你可以重新定义显示名                            | 否       |
-| null-hidden | true时表示表达式取的值为null时隐藏该节点，默认为false | 否       |
+```xml
+
+<xml-attribute data=""/>
+```
+
+| 属性            | 功能                                                  | 是否必须 |
+| --------------- | ----------------------------------------------------- | -------- |
+| data            | 取值表达式                                            | 是       |
+| alias           | 别名，你可以重新定义显示名                            | 否       |
+| naming-strategy | 命名策略，默认FRAMEWORK                               | 否       |
+| null-hidden     | true时表示表达式取的值为null时隐藏该节点，默认为false | 否       |
 
 ##### **3.2.2.2. 功能型标签**
 
@@ -362,30 +393,37 @@ Kite框架提供模块化设计json结构视图的功能。在一个`<template>`
 该标签用于实现一对一链接对象功能。详见[5.4.1.节](#chapter541)。
 
 ```xml
-<link data="" alias="" for-class="" null-hidden="true"></link>
+
+<link data="">
+
+</link>
 ```
 
-| 属性          | 功能                                  | 是否必须 |
-| ----------- | ----------------------------------- | ---- |
-| data        | 取值表达式，**data必须指代一个List或array类型的对象** | 是    |
-| alias       | 别名，你可以重新定义显示名                       | 否    |
-| for-class   | 声明data表达式指向的对象类型                    | 否    |
-| null-hidden | true时表示表达式取的值为null时隐藏该节点，默认为false   | 否    |
+| 属性            | 功能                                                  | 是否必须 |
+| --------------- | ----------------------------------------------------- | -------- |
+| data            | 取值表达式，**data必须指代一个List或array类型的对象** | 是       |
+| alias           | 别名，你可以重新定义显示名                            | 否       |
+| naming-strategy | 命名策略，默认FRAMEWORK                               | 否       |
+| null-hidden     | true时表示表达式取的值为null时隐藏该节点，默认为false | 否       |
 
 ###### c) relevance
 该标签用于实现一对多关联功能。详见[5.4.2.节](#chapter542)。
 
 ```xml
-<relevance data="" alias="" rel="" null-hidden="true" null-empty="true"></relevance>
+
+<relevance data="" rel="">
+
+</relevance>
 ```
 
 | 属性           | 功能                                       | 是否必须 |
 | ------------ | ---------------------------------------- | ---- |
 | data         | 取值表达式，**data必须指代一个List或array类型的对象**      | 是    |
 | alias        | 别名，你可以重新定义显示名                            | 否    |
+| naming-strategy | 命名策略，默认FRAMEWORK | 否 |
 | rel | 关联判定器全限定类名或expression表达式                 | 是    |
 | null-hidden  | true时表示表达式取的值为null时隐藏该节点，默认为false        | 否    |
-| map | MapFunction的实现类全名或Expression表达式。详见[5.1.2节](#chapter512) | 否    |
+| map | KiteConverter的实现类全名或Expression表达式。详见[5.1.2节](#chapter512) | 否    |
 | null-empty | true时表示表达式取的值为null时设为空数组，默认为false | 否 |
 
 ###### d) object-virtual
@@ -393,36 +431,26 @@ Kite框架提供模块化设计json结构视图的功能。在一个`<template>`
 该标签用于虚拟对象结构。详见[5.2.节](#chapter52)
 
 ```xml
-<object-virtual alias=""></object-virtual>
+
+<object-virtual alias="">
+
+</object-virtual>
 ```
 
 | 属性    | 功能   | 是否必须 |
 | ----- | ---- | ---- |
 | alias | 别名   | 是    |
 
-###### e) property-ignore
+###### f) slot
 
-忽略属性，需结合`for-class`属性使用。详见[4.5.节](#chapter45)
-
-```xml
-<property-ignore name=""/>
-```
-
-| 属性   | 功能        | 是否必须 |
-| ---- | --------- | ---- |
-| name | 类中忽略的属性名称 | 是    |
-
-###### f) extend-port
-
-此标签位置作为子`<template>`的接入位置。详见[5.3.2节](#chapter532)
+此标签位置作为子`<template>`的插槽位置。和template的`extend`结合使用。详见[5.3.2节](#chapter532)
 
 ```xml
-<extend-port port-name=""/>
-```
 
-| 属性        | 功能   | 是否必须 |
-| --------- | ---- | ---- |
-| port-name | 端口名称 | 是    |
+<template id="" extend="">
+  <slot/>
+</template>
+```
 
 ###### g) if  else
 
@@ -472,7 +500,6 @@ Kite框架提供模块化设计json结构视图的功能。在一个`<template>`
 支持的时间日期类型：
 
 - java.util.Date
-- java.util.Calendar
 - java.sql.Date
 - java.sql.Time
 - java.sql.Timestamp
@@ -498,160 +525,272 @@ Kite框架提供模块化设计json结构视图的功能。在一个`<template>`
 模型声明（以下各小节示例代码均使用这些模型实体类）：
 
 ```java
-// 学生类 Student.java
+// 公司类 Company.java
 @Data
-public class Student {
-    // 编号
-    private int id;
-    // 学生名称
-    private String name;
-    // 班级ID
-    private int classId;
-    // 出生日期
-    private Date birthday;
-
-    public Student(int id, String name, int classId, String birthday) {
-        this.id = id;
-        this.name = name;
-        this.classId = classId;
-        if(birthday != null) {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-                this.birthday = dateFormat.parse(birthday);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+@RequiredArgsConstructor
+public class Company {
+  // 公司ID
+  private final Integer companyId;
+  // 公司名称
+  private final String companyName;
 }
 ```
 
 ```java
-// 账户类 Account.java   一个学生对应有一个账户
+// 部门 Department.java   一个公司多个部门
 @Data
-@AllArgsConstructor
-public class Account {
-    private String username;
-    private String password;
+@RequiredArgsConstructor
+public class Department {
+  // 部门ID
+  private final Integer departmentId;
+  // 部门名称
+  private final String departmentName;
 }
 ```
 
 ```java
-// 班级类 SchoolClass.java   一个班级对应多个学生
+// 员工 Staff.java   一个部门多个
 @Data
-@AllArgsConstructor
-public class SchoolClass {
+@RequiredArgsConstructor
+public class Staff {
+  // 员工ID
+  private final Integer staffId;
+  // 部门ID
+  private final Integer departmentId;
+  // 员工姓名
+  private final String staffName;
+  // 性别
+  private final Gender gender;
+  // 生日
+  private final LocalDate birthday;
 
-    private int id;
-
-    private String className;
+  public enum Gender {
+    MALE, FEMALE, UNKNOWN
+  }
 }
 ```
 
-### <a name="chapter41">**4.1. 简单输出模型对象**</a>
+对应的kite configuration文件配置
 
-#### **4.1.1. json**
 ```xml
-<!-- /kite/kite-student.xml --> 
 <!-- 忽略kite-configuration -->
-<template-package namespace="kite-student">
-  <template id="student-detail" data="student">
-    <property data="id"/>
-    <property data="name"/>
-    <property data="classId"/>
-    <property data="birthday"/>
+<template-package namespace="kite-demo">
+
+  <template id="company-info" data="company">
+    <property data="companyId"/>
+    <property data="companyName"/>
   </template>
+
+  <template id="department-info" data="department">
+    <property data="departmentId"/>
+    <property data="companyId"/>
+    <property data="departmentName"/>
+  </template>
+
+  <template id="staff-info" data="staff">
+    <property data="staffId"/>
+    <property data="departmentId"/>
+    <property data="staffName"/>
+    <property data="gender"/>
+    <property-date data="birthday"/>
+  </template>
+
 </template-package>
 ```
 
+伪造数据
+
 ```java
-// Application.java    main()
-KiteFactory factory = new KiteFactory("/kite/kite-student.xml");
-JsonProducer jsonProducer = factory.getJsonProducer();
-DataModel dataModel = new DataModel();
-Student peter = new Student(1, "Peter", 1, "1995-01-01");
-dataModel.putData("student", peter);
-String json = jsonProducer.produce(dataModel, "kite-student", "student-detail");
-System.out.println(json);
+public final class DemoDataMock {
+
+  public static Company[] mockCompanies() {
+    return new Company[]{
+            new Company(1, "XX科技公司"),
+            new Company(2, "YY网络公司")
+    };
+  }
+
+  public static Department[] mockDepartments() {
+    return new Department[]{
+            new Department(11, 1, "技术部"),
+            new Department(12, 2, "运营部"),
+            new Department(13, 1, "财务部"),
+            new Department(14, 2, "事业部")
+    };
+  }
+
+  public static Staff[] mockStaffs() {
+    return new Staff[]{
+            new Staff(111, 11, "小张", Staff.Gender.MALE, LocalDate.of(1988, 2, 3)),
+            new Staff(112, 12, "小王", Staff.Gender.FEMALE, LocalDate.of(1992, 12, 6)),
+            new Staff(113, 13, "小李", Staff.Gender.FEMALE, LocalDate.of(1995, 6, 15)),
+            new Staff(114, 14, "小孙", Staff.Gender.UNKNOWN, LocalDate.of(1983, 11, 8)),
+            new Staff(115, 12, "小郑", Staff.Gender.FEMALE, LocalDate.of(1986, 9, 5)),
+            new Staff(116, 13, "小钱", Staff.Gender.MALE, LocalDate.of(1984, 10, 1)),
+            new Staff(117, 14, "小潘", Staff.Gender.FEMALE, LocalDate.of(1990, 12, 12)),
+    };
+  }
+
+  public static Integer[] mockScores() {
+    return new Integer[]{70, 85, 93, 87, 81, 94, 97, 86};
+  }
+}
+```
+
+### 4.1. 简单输出模型对象
+
+```java
+// 初始化kiteFactory 后续不再赘述
+final ObjectMapper objectMapper=new ObjectMapper();
+        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
+final JavaTimeModule javaTimeModule=new JavaTimeModule();
+        javaTimeModule.addSerializer(LocalDate.class,new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        objectMapper.registerModules(javaTimeModule);
+final KiteFactory kiteFactory=KiteFactoryBuilder.buildFromClasspathXml(new KiteOptions(),"kite/kite-demo.xml");
+        kiteFactory.useJsonFramework(new JacksonFramework(objectMapper));
+        kiteFactory.useXmlFramework(new Dom4jFramework());
+
+        DataModel dataModel=DataModel.singleton("company",DemoDataMock.mockCompanies()[0]);
+        String json=kiteFactory.getJsonProducer(dataModel,"kite-demo","company-info").produce(false);
+        String xml=kiteFactory.getXmlProducer(dataModel,"kite-demo","company-info").produce(false);
+        System.out.println(json);
+        System.out.println(xml);
 ```
 
 执行结果：
 
 ```json
-{"id":1,"name":"Peter","classId":1,"birthday":"Sun Jan 01 00:00:00 CST 1995"}
+{
+  "company_id": 1,
+  "company_name": "XX科技公司"
+}
 ```
-
-#### **4.1.2. xml**
 
 ```xml
-<template-package namespace="kite-student">
-  <template id="student-detail" data="student" xml-root="student">
-    <xml-attribute data="id"/>
-    <property data="name"/>
-    <property data="classId"/>
-    <property data="birthday"/>
-  </template>
-</template-package>
+
+<xml>
+  <company-id>1</company-id>
+  <company-name>XX科技公司</company-name>
+</xml>
 ```
-
-+ `xml-root` 申明了xml的根节点名称
-+ `<xml-attribute>` 设定了节点的属性
-
-执行结果：
-
-```xml
-<student id="1">
-  <name>Peter</name>
-  <class-id>1</class-id>
-  <birthday>Sun Jan 01 00:00:00 CST 1995</birthday>
-</student>
-```
-
-
 
 ### 4.2. 使用alias修改显示名称
 
 ```xml
-<!-- /kite/kite-student.xml --> 
-<!-- 忽略kite-configuration -->
-<template-package namespace="kite-student">
-  <template id="student-detail" data="student">
-    <property data="id" alias="student_id"/>
-    <property data="name" alias="student_name"/>
-    <property data="classId" alias="student_classId"/>
-    <property data="birthday" alias="student_birthday"/>
-  </template>
-</template-package>
+
+<template id="company-info" data="company">
+  <property data="companyId" alias="id"/>
+  <property data="companyName" alias="name"/>
+</template>
 ```
 
 ```json
-{"student_id":1,"student_name":"Peter","student_classId":1,"student_birthday":"Sun Jan 01 00:00:00 CST 1995"}
+{
+  "id": 1,
+  "name": "XX科技公司"
+}
 ```
 
-### **4.3. property扩展**
+```xml
 
-#### <a name="chapter431">**4.3.1 使用property-date格式化日期时间**</a>
+<xml>
+  <id>1</id>
+  <name>XX科技公司</name>
+</xml>
+```
 
-该标签可以格式化时间。
-把4.1.节代码
+### 4.3. naming-strategy命名策略
+
+> com.github.developframework.kite.core.strategy.KitePropertyNamingStrategy
+
+json节点和xml节点名称的命名策略扩展，继承接口
+
+```java
+public interface KitePropertyNamingStrategy {
+
+  /**
+   属性最终显示名称
+   */
+  String propertyDisplayName(Framework<?> framework, String name);
+}
+```
+
+传入的name是data的变量名称，通过接口方法改写得出最终要显示的名称。
+
+Kite内置接口实现：
+
++ **FRAMEWORK** JacksonKitePropertyNamingStrategy 用实现框架配置的策略命名，比如Jackson ObjectMapper设置的PropertyNamingStrategy
++ **MIDDLE_LINE** MiddleLineKitePropertyNamingStrategy 中划线命名策略，AbCd => ab-cd
++ **UNDERLINE** UnderlineXmlKitePropertyNamingStrategy 下划线xml命名策略，AbCd => ab_cd
++ **LOWDER_CASE** LowerCaseKitePropertyNamingStrategy 全小写命名策略， AbCd => abcd
++ **ORIGINAL** OriginalKitePropertyNamingStrategy 什么都不做，使用原名
+
+可在`KiteOptions`里分别给json和xml的序列化设置全局命名策略
+
+```java
+final KiteOptions options=new KiteOptions();
+        options.getJson().setNamingStrategy(NamingStrategy.UNDERLINE);
+        options.getXml().setNamingStrategy(NamingStrategy.MIDDLE_LINE);
+```
+
+也可以在实际的模板里某个内容节点上配置`naming-strategy` 属性强制使用某个策略
 
 ```xml
+
+<template id="test-naming-strategy">
+  <object data="myCompany" naming-strategy="ORIGINAL">
+    <property data="companyId" naming-strategy="MIDDLE_LINE"/>
+    <property data="companyName" naming-strategy="UNDERLINE"/>
+  </object>
+</template>
+```
+
+```json
+{
+  "myCompany": {
+    "company-id": 1,
+    "company_name": "XX科技公司"
+  }
+}
+```
+
+```xml
+
+<xml>
+  <myCompany>
+    <company-id>1</company-id>
+    <company_name>XX科技公司</company_name>
+  </myCompany>
+</xml>
+```
+
+### 4.4. property扩展
+
+#### 4.4.1 使用property-date格式化日期时间
+
+该标签可以格式化时间
+
+```xml
+
 <property data="birthday"/>
 ```
 
 替换为
 
 ```xml
-<property-date data="birthday" pattern="yyyy-MM-dd"/>
+
+<property-date data="birthday" pattern="yyyy年MM月dd日"/>
 ```
 
 运行结果：
 
 ```json
-{"id":1,"name":"Peter","classId":1,"birthday":"1995-01-01"}
+{
+  "birthday": "1995年01月01日"
+}
 ```
 
-#### <a name="chapter432">**4.3.2 使用property-unixtimestamp输出时间戳**</a>
+#### 4.4.2 使用property-unixtimestamp输出时间戳
 
 该标签可以使日期时间类型转化成时间戳形式输出。
 
@@ -663,7 +802,7 @@ dataModel.putData("datetime", LocalDateTime.of(2016, 1, 1, 0, 0, 0));
 {"datetime" : 1451577600}
 ```
 
-#### <a name="chapter433">**4.3.3 使用property-boolean转换**</a>
+#### 4.4.3 使用property-boolean转换
 
 该标签可以把非0数字转换成true，0转换成false
 
@@ -677,724 +816,279 @@ dataModel.putData("number2", 0);
 {"number1" : true, "number2" : false}
 ```
 
-#### <a name="chapter434">**4.3.4 使用property-enum映射**</a>
+#### 4.4.4 使用property-enum映射
 
 该标签可以把值映射成另一个固定值，该标签不仅可以处理枚举类型，字符串或者基本类型都可以处理
 
 ```xml
-<property-enum data="sex">
-    <enum value="MALE" text="男"/>
+
+<property-enum data="gender">
+  <enum value="MALE" text="男"/>
     <enum value="FEMALE" text="女"/>
 </property-enum>
 ```
 
 ```java
-DataModel dataModel = new DataModel();
-dataModel.putData("sex", Sex.MALE);
+DataModel dataModel=DataModel.singleton("gender",Staff.Gender.MALE);
 ```
 
 ```json
-{"sex": "男"}
+{
+  "gender": "男"
+}
 ```
 
-### **4.4. 使用null-hidden隐藏值为null的属性**
+### 4.5. null-hidden和null-empty
 
-把4.1.节代码
+所有的内容节点可以用`null-hidden`来隐藏data指代对象值为null的节点
+
+`<array>`标签可以用`null-empty`属性把data指代对象值为null的节点设为空数组
 
 ```xml
-<property data="birthday"/>
-```
 
-替换为
-
-```xml
-<property data="birthday" null-hidden="true"/>
-```
-
-student实例传入null的birthday值
-
-```java
-Student student = new Student(1, "Peter", 1, null);
-```
-
-运行结果：
-
-```json
-{"id":1,"name":"Peter","classId":1}
-```
-
-### <a name="chapter45">**4.5. 使用for-class输出模型对象Json**</a>
-
-```xml
-<template id="student-detail" data="student" for-class="test.Student" />
-```
-
-运行结果和4.1.节相同。
-使用`property-ignore`忽略不需要的属性：
-
-```xml
-<template id="student-detail" data="student" for-class="test.Student">
-  <property-ignore name="birthday" />
+<template id="test-array-null">
+  <array data="array" alias="null-array"/>
+  <array data="array" alias="empty-array" null-empty="true"/>
+  <array data="array" alias="null-hidden-array" null-hidden="true"/>
 </template>
 ```
 
-运行结果：
-
-```json
-{"id":1,"name":"Peter","classId":1}
+```java
+DataModel dataModel=DataModel.singleton("array",null);
 ```
 
-### <a name="chapter46">**4.6. 简单输出数组模型**</a>
+```json
+{
+  "null-array": null,
+  "empty-array": []
+}
+```
 
-#### **4.6.1. json**
+```xml
+
+<xml>
+  <null-array/>
+  <empty-array/>
+</xml>
+```
+
+### 4.6. object array template
+
+```xml
+
+<template id="company-info">
+  <object data="company">
+    <property data="companyId"/>
+    <property data="companyName"/>
+  </object>
+</template>
+```
+
+利用`<object>`标签构造一个对象结构
+
+```java
+DataModel dataModel=DataModel.singleton("company",DemoDataMock.mockCompanies()[0]);
+```
+
+```json
+{
+  "company": {
+    "company_id": 1,
+    "company_name": "XX科技公司"
+  }
+}
+```
+
+```xml
+
+<xml>
+  <company>
+    <company-id>1</company-id>
+    <company-name>XX科技公司</company-name>
+  </company>
+</xml>
+```
 
 利用`array` 标签构造一个数组结构：
 
 ```xml
-<template id="student-list">
-  <array data="students">
-    <property data="name"/>
-    <property data="classId"/>
-    <property-date data="birthday" pattern="yyyy-MM-dd"/>
+
+<template id="company-info">
+  <array data="companies" xml-item="company">
+    <property data="companyId"/>
+    <property data="companyName"/>
   </array>
 </template>
 ```
 
 ```java
-Student peter = new Student(1, "Peter", 1, "1995-01-01");
-Student john = new Student(2, "John", 1, "1996-5-20");
-Student[] students = {peter, john};
-dataModel.putData("students", students);
-// isPretty参数设为true，开启json美化
-String json = jsonProducer.produce(dataModel, "kite-student", "student-list", true);
+DataModel dataModel=DataModel.singleton("company",DemoDataMock.mockCompanies());
 ```
 
 ```json
 {
-  "students" : [ {
-    "id" : 1,
-    "name" : "Peter",
-    "classId" : 1,
-    "birthday" : "1995-01-01"
-  }, {
-    "id" : 2,
-    "name" : "John",
-    "classId" : 1,
-    "birthday" : "1996-05-20"
-  } ]
+  "companies": [
+    {
+      "company_id": 1,
+      "company_name": "XX科技公司"
+    },
+    {
+      "company_id": 2,
+      "company_name": "YY网络公司"
+    }
+  ]
 }
+```
+
+```xml
+
+<xml>
+  <companies>
+    <company>
+      <company-id>1</company-id>
+      <company-name>XX科技公司</company-name>
+    </company>
+    <company>
+      <company-id>2</company-id>
+      <company-name>YY网络公司</company-name>
+    </company>
+  </companies>
+</xml>
 ```
 
 或者直接把data设定在`<template>` 标签上，Kite框架会自动识别data对应的数据是否是数组或List。
 
 ```xml
-<template id="student-list" data="students">
-  <property data="id"/>
-  <property data="name"/>
-  <property data="classId"/>
-  <property-date data="birthday" pattern="yyyy-MM-dd"/>
+
+<template id="company-info" data="company" xml-item="company" xml-root="companies">
+  <property data="companyId"/>
+  <property data="companyName"/>
 </template>
 ```
+
+当data指代的对象是Array或Collection时生成数组结构
 
 ```json
-[ {
-  "id" : 1,
-  "name" : "Peter",
-  "classId" : 1,
-  "birthday" : "1995-01-01"
-}, {
-  "id" : 2,
-  "name" : "John",
-  "classId" : 1,
-  "birthday" : "1996-05-20"
-} ]
+[
+  {
+    "company_id": 1,
+    "company_name": "XX科技公司"
+  },
+  {
+    "company_id": 2,
+    "company_name": "YY网络公司"
+  }
+]
 ```
 
-#### **4.6.2. xml**
+```xml
+
+<companies>
+  <company>
+    <company-id>1</company-id>
+    <company-name>XX科技公司</company-name>
+  </company>
+  <company>
+    <company-id>2</company-id>
+    <company-name>YY网络公司</company-name>
+  </company>
+</companies>
+```
+
+当data指代的对象是单个对象时生成对象结构
+
+```json
+{
+  "company_id": 1,
+  "company_name": "XX科技公司"
+}
+```
 
 ```xml
-<template id="student-list" data="students" xml-root="xml" xml-item="student">
-    <xml-attribute data="id"/>
-    <property data="name"/>
-    <property data="classId"/>
-    <property-date data="birthday" pattern="yyyy-MM-dd"/>
+
+<companies>
+  <company-id>1</company-id>
+  <company-name>XX科技公司</company-name>
+</companies>
+```
+
+### **4.7. prototype使用原型实体**
+
+使用`<prototype>` 标签可以使用原生的框架转换成json，以下展示使用Jackson作为实现框架
+
+```xml
+
+<template id="staff-info">
+  <prototype data="staff"/>
 </template>
 ```
 
-+ `xml-item` 设定数组每项元素的节点名称
-
-```xml
-<xml>
-  <students>
-    <student id="1">
-      <name>Peter</name>
-      <class-id>1</class-id>
-      <birthday>1995-01-01</birthday>
-    </student>
-    <student id="2">
-      <name>John</name>
-      <class-id>1</class-id>
-      <birthday>1996-05-20</birthday>
-    </student>
-  </students>
-</xml>
-```
-
-### <a name="chapter47">**4.7. 使用Jackson原型实体**</a>
-
-使用`<prototype>` 标签可以使用原生的Jackson方式转化实体成json。
-
-```xml
-<template id="student-detail">
-  <prototype data="student" />
-</template>
-```
+以下加入Jackson的注解达到序列化效果
 
 ```java
+
 @Data
-public class Student {
-    // 编号
-    private int id;
-    // 学生名称
-    @JsonProperty("student_name")	// 通过注解@JsonProperty对属性重命名
-    private String name;
-    // 班级ID
-    @JsonIgnore		// 通过注解@JsonIgnore忽略该属性
-    private int classId;
-    // 出生日期
-    @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd")//通过@JsonFormat格式化日期
-    private Date birthday;
-    //构造方法略
+@RequiredArgsConstructor
+public class Staff {
+
+  // 员工ID
+  private final Integer staffId;
+  // 部门ID  忽略该属性
+  @JsonIgnore
+  private final Integer departmentId;
+  // 员工姓名  改写属性名
+  @JsonProperty("name")
+  private final String staffName;
+  // 性别
+  private final Gender gender;
+  // 生日
+  private final LocalDate birthday;
+
+  public enum Gender {
+    MALE, FEMALE, UNKNOWN
+  }
 }
 ```
 
 ```json
 {
-  "student" : {
-    "id" : 1,
-    "birthday" : "1995-01-01",
-    "student_name" : "Peter"
+  "staff": {
+    "staff_id": 111,
+    "gender": "MALE",
+    "birthday": "1988-02-03",
+    "name": "小张"
   }
 }
 ```
 
 更多注解使用请参考jackson-annotations文档。
 
-## <a name="chapter5">**5. 高级功能**</a>
+### 4.8. raw原文本
 
-### **5.1.处理器**
-
-#### <a name="chapter511">**5.1.1. 转换器 `converter`**</a>
-
-`com.github.developframework.kite.core.dynamic.KiteConverter`
-接口可以对表达式选取的属性值进行自定义转换。具体地，是去处理了`data` 属性找到的值。所以`converter`和`data` 一般同时可用。
-
-```java
-@FunctionalInterface
-public interface KiteConverter<SOURCE, TARGET> {
-
-    /**
-     * 转化方法
-     * @param source 源对象
-     * @return 目标对象
-     */
-    TARGET convert(SOURCE source);
-}
-```
-
-- 泛型SOURCE为原数据的类型。
-- 泛型TARGET为转化后的类型。
-
-例如将peter的name处理后输出：
+使用`<raw>`来添加原文本对象，内部使用具体实现框架来反序列化的。
 
 ```xml
-<template id="student-detail" data="student">
-  <property data="id" />
-  <property data="name" converter="nameConverter"/>
-  <property data="classId"/>
-  <property-date data="birthday" pattern="yyyy-MM-dd"/>
+
+<template id="test-raw">
+  <raw data="companyJson" alias="company"/>
 </template>
 ```
 
-```java
-dataModel.putData("student", peter);
-// 这里采用JDK8 lambda写法
-dataModel.putData("nameConverter", (KiteConverter<String, String>) source -> "My name is " + source);
+```json
+String rawJson = "{\"company_id\":1,\"company_name\":\"XX科技公司\"}";
+DataModel dataModel = DataModel.singleton("companyJson", rawJson);
 ```
 
 ```json
 {
-  "id" : 1,
-  "name" : "My name is Peter",
-  "classId" : 1,
-  "birthday" : "1995-01-01"
-}
-```
-
-`converter` 属性可以填写Expression表达式，还可以填写`KiteConverter` 的接口实现类全类名。
-
-当转换器用于获取当前data值对象内部属性值时有一种快捷用法：
-
-```xml
-<template id="student-name">
-  <property data="student" alias="name" converter="this.name"/>
-</template>
-```
-
-`<property>` 的取值为student，经过converter的转换选取了student对象的name属性作为该节点的值。
-
-#### <a name="chapter512">**5.1.2. `<array>` 的元素映射器 `map`**</a>
-
-在`<array>`节点属性`map`用于指定对每个元素的映射函数。`map`的值可以为`Expression`表达式或一个实现`com.github.developframework.kite.core.dynamic.MapFunction`接口的完全类名。其中使用表达式方式，其获取的实例必须是`com.github.developframework.kite.core.dynamic.MapFunction`的实现类。具体示例：实现功能：对数组的每个元素进行映射处理，处理结果作为生成Json的数据。以下示例在字符串数组的每项元素以`value_{item}_{i}` 形式输出。
-
-```java
-String[] strArray = new String[]{"aaa", "bbb", "ccc"};
-dataModel.putData("strArray", strArray);
-dataModel.putData("func", ((MapFunction<String, String>) (item, i) -> "value_" + item + "_" + i));
-```
-
-```xml
-<template id="array-map-demo" >
-  <array data="strArray" map="func"></array>
-</template>
-```
-
-```json
-{"str_array":["value_aaa_0","value_bbb_1","value_ccc_2"]}
-```
-**注意**
-
-使用`map`会导致`<array>`标签的所有子节点失效，因为映射结果将会直接作为json数据。
-
-如果你设置了子节点将会出现以下警告：
-
-```
-The child element invalid, because you use "map" attribute.
-```
-### <a name="chapter52">**5.2. 虚拟结构**</a>
-
-使用`<object-virtual>`可以虚拟一个对象结构。
-利用仅有的属性值，构造一个对象结构：
-
-```xml
-<template id="student-detail">
-  <object-virtual alias="student">
-    <property data="id"/>
-    <property data="name"/>
-    <property data="classId"/>
-    <property-date data="birthday" pattern="yyyy-MM-dd"/>
-  </object-virtual>
-</template>
-```
-
-```java
-dataModel.putData("id", 1);
-dataModel.putData("name", "Peter");
-dataModel.putData("classId", 1);
-dataModel.putData("birthday", "1995-01-01");
-```
-
-```json
-{
-  "student" : {
-    "id" : 1,
-    "name" : "Peter",
-    "classId" : 1,
-    "birthday" : "1995-01-01"
+  "company": {
+    "company_id": 1,
+    "company_name": "XX科技公司"
   }
 }
 ```
 
-### **5.3. 模块化**
-
-#### <a name="chapter531">**5.3.1 引用**</a>
-
-使用`<include>`标签引用其它`<template>`模板，从而可实现模块化设计，避免重复定义视图模板。
-
-```xml
-<template-package namespace="kite-student">
-  <template id="student-list" data="students">
-    <include id="student-detail" />
-  </template>
-
-  <template id="student-detail">
-    <property data="id"/>
-    <property data="name"/>
-    <property data="classId"/>
-    <property-date data="birthday" pattern="yyyy-MM-dd"/>
-  </template>
-</template-package>
-```
-
-#### <a name="chapter532">**5.3.2 继承**</a>
-
-Kite框架的继承的概念，在`<template>`标签可以添加属性`extend`指定继承的template和继承的端口。继承的概念可以理解为反向include，调用子template视图，会优先从父template开始构造结构，当遇到匹配端口名的`<extend-port>`标签时才会构造子template视图。
-
-**注意：**
-
-假如单独调用了有`<extend-port>`标签的父template视图或者端口没有与之对应的子template实现，则`<extend-port>`标签被忽略。
-
-```xml
-<template-package namespace="kite-student">
-  <!-- 一个父视图模板  -->
-  <template id="student-parent">
-    <object-virtual alias="other">
-      <property data="otherData" />
-    </object-virtual>
-    <!-- 子视图模板的内容将会插入到这个端口位置上 -->
-    <extend-port port-name="my-port" />
-  </template>
-
-  <!-- 子视图模板  -->
-  <template id="student-detail" extend="student-parent:my-port">
-    <!-- 本模板内容将会插入到父视图模板的my-port端口位置上 -->
-    <object data="student">
-      <property data="id"/>
-      <property data="name"/>
-      <property data="classId"/>
-      <property-date data="birthday" pattern="yyyy-MM-dd"/>
-    </object>
-  </template>
-</template-package>
-```
-
-```java
-Student peter = new Student(1, "Peter", 1, "1995-01-01");
-dataModel.putData("student", peter);
-dataModel.putData("otherData", "I'm other data.");
-// 这里调用的子视图模板
-String json = jsonProducer.produce(dataModel, "kite-student", "student-detail", true);
-```
-
-```json
-{
-  "other" : {
-    "otherData" : "I'm other data."
-  },
-  "student" : {
-    "id" : 1,
-    "name" : "Peter",
-    "classId" : 1,
-    "birthday" : "1995-01-01"
-  }
-}
-```
-
-`extend` 属性的写法为  namespace.templateId:portName  其中namespace可以省略，默认为当前命名空间下。
-
-### **5.4. 链接与关联**
-
-#### <a name="chapter541">**5.4.1. 一对一数组链接**</a>
-
-使用`<link>` 标签可以在数组间一对一链接对象。 **该标签仅能在`<array>`下使用。** 当`<link>` 的data属性所指的数组和父`<array>`数组个数不相同时将会抛出`LinkSizeNotEqualException`。
-例子：
-假如每个学生实例都有一个账户实例，并且又都一对一对应了一个成绩值。
-
-```xml
-<template-package namespace="kite-student">
-
-  <template id="student-list" data="students">
-    <property data="id"/>
-    <property data="name"/>
-    <property data="classId"/>
-    <property-date data="birthday" pattern="yyyy-MM-dd"/>
-    <!-- 一对一对应accounts数组每项 -->
-    <link data="#accounts" alias="account">
-      <!-- 引用另一个命名空间的模板 -->
-      <include id="account-detail" namespace="kite-account"/>
-    </link>
-    <!-- 一对一对应scores数组每项 -->
-    <link data="#scores" alias="score"/>
-  </template>
-</template-package>
-
-<template-package namespace="kite-account">
-
-  <template id="account-detail">
-    <property data="username"/>
-    <property data="password"/>
-  </template>
-</template-package>
-```
-
-```java
-Account peterAccount = new Account("peter's username", "peter's password");
-Account johnAccount = new Account("john's username", "john's password");
-
-Student[] students = {peter, john};
-Account[] accounts = {peterAccount, johnAccount};
-Integer[] scores = {95, 98};
-
-dataModel.putData("students", students);
-dataModel.putData("accounts", accounts);
-dataModel.putData("scores", scores);
-```
-
-```json
-[ {
-  "id" : 1,
-  "name" : "Peter",
-  "classId" : 1,
-  "birthday" : "1995-01-01",
-  "account" : {
-    "username" : "peter's username",
-    "password" : "peter's password"
-  },
-  "score" : 95
-}, {
-  "id" : 2,
-  "name" : "John",
-  "classId" : 1,
-  "birthday" : "1996-05-20",
-  "account" : {
-    "username" : "john's username",
-    "password" : "john's password"
-  },
-  "score" : 98
-} ]
-```
-
-#### <a name="chapter542">**5.4.2. 根据条件关联**</a>
-
-假如A数组有2个元素，B数组有3个元素。其中A[0] 需要关联B[0]和B[1]， A[1] 需要关联B[2]。这种需求下就可以使用`<relevance>`标签，实现在数组间一对多关联。属性`rel` 指定判定条件，需要实现一个接口：
-
-```java
-public interface RelFunction<S, T> {
-
-    boolean relevant(S sourceItem, int sourceIndex, T target, int targetIndex);
-}
-```
-
-其中泛型S指代A数组类型，T指代B数组类型。
-
-sourceItem是迭代了A数组的每一项，sourceIndex是它的索引。每一项的A元素都会去迭代B数组的每一项target，targetIndex是索引，`relevant` 方法返回true表示需要关联。
-
-具体看示例，有如下数据结构关系：
-
-```java
-// 1班
-SchoolClass schoolClass1 = new SchoolClass(1, "1班");
-// 2班
-SchoolClass schoolClass2 = new SchoolClass(2, "2班");
-// 1班的学生
-Student peter = new Student(1, "Peter", 1, "1995-01-01");
-Student john = new Student(2, "John", 1, "1996-5-20");
-// 2班的学生
-Student bill = new Student(3, "Bill", 2, "1993-4-16");
-
-Student[] students = {peter, john, bill};
-SchoolClass[] schoolClasses = {schoolClass1, schoolClass2};
-dataModel.putData("students", students);
-dataModel.putData("schoolClasses", schoolClasses);
-```
-
-
-
-```xml
-<template-package namespace="kite-student">
-  <template id="student-detail">
-    <property data="name"/>
-    <property-date data="birthday" pattern="yyyy-MM-dd"/>
-  </template>
-</template-package>
-
-<template-package namespace="kite-class">
-  <template id="class-list" data="schoolClasses">
-    <property data="id" />
-    <property data="className" />
-    <!-- 关联学生列表 -->
-    <relevance data="#students" rel="rel">
-      <include id="student-detail" namespace="kite-student" />
-    </relevance>
-  </template>
-</template-package>
-```
-
-实现`RelFunction`
-
-```java
-dataModel.putData("rel", (RelFunction<SchoolClass, Student>) (sourceItem, sourceIndex, target, targetIndex) -> sourceItem.getId() == target.getClassId());
-```
-
-判定条件为当SchoolClass（sourceItem）的id与Student（target）的classId相等时，允许关联。
-
-```json
-[ {
-  "id" : 1,
-  "className" : "1班",
-  "students" : [ {
-    "name" : "Peter",
-    "birthday" : "1995-01-01"
-  }, {
-    "name" : "John",
-    "birthday" : "1996-05-20"
-  } ]
-}, {
-  "id" : 2,
-  "className" : "2班",
-  "students" : [ {
-    "name" : "Bill",
-    "birthday" : "1993-04-16"
-  } ]
-} ]
-```
-
-### 5.5. 分支结构
-
-#### <a name="chapter551">**5.5.1. `<if>` `<else>`**</a>
-
-可以使用`<if>` `<else>` 标签进行模块内容的取舍。`<else>` 标签可以不写，但必须紧跟`<if>` 后出现。
-
-`<if>` 标签的`condition` 属性内容为接口`com.github.developframework.kite.core.dynamic.KiteCondition` 的实现类。
-
-```java
-@FunctionalInterface
-public interface Condition<T> {
-
-    /**
-     * 判断条件
-     * @param dataModel 数据模型
-     * @param currentValue 当前值
-     * @return 判断结果
-     */
-    boolean verify(DataModel dataModel, T currentValue);
-}
-```
-
-最简范例：
-
-```xml
-<template id="first-view">
-  <if condition="myCondition">
-    <property data="sayHello"/>
-  </if>
-  <else>
-    <property data="sayBye"/>
-  </else>
-</template>
-```
-
-```java
-dataModel.putData("sayHello", "Hello");
-dataModel.putData("sayBye", "Bye");
-dataModel.putData("myCondition", (Condition) (dm, expression) -> true);
-// 或直接使用boolean
-// dataModel.putData("myCondition", true);
-```
-
-```json
-{"sayHello" : "Hello"}
-```
-
-当myCondition 接口返回false时
-
-```json
-{"sayBye" : "Bye"}
-```
-
-#### <a name="chapter552">**5.5.2. `<switch>` `<case>` `<default>`**</a>
-
-可以使用`<switch>` `<case>` `<default>`标签进行模块内容的选择。`<case>` 标签可以出现多个，`<default>`只能出现一次，并且只能是`<switch>` 标签的最后一个子节点。
-
-`<case>` 标签的`test` 属性内容为接口`com.github.developframework.kite.core.dynamic.CaseTestFunction` 的实现类。
-
-```java
-@FunctionalInterface
-public interface CaseTestFunction<T> {
-
-    /**
-     * 测试选择
-     * 
-     * @param data switch传入的值
-     * @return 是否选中该分支
-     */
-    boolean test(T data);
-}
-```
-
-最简范例：
-
-```xml
-<template id="first-view">
-  <switch check-data="switchData">
-    <case test="testCase1">
-        <property data="sayHello"/>
-    </case>
-    <case test="testCase2">
-        <property data="sayThanks"/>
-    </case>
-    <default>
-        <property data="sayBye"/>
-    </default>
-  </switch>
-</template>
-```
-
-```java
-dataModel.putData("switchData", 1);
-dataModel.putData("sayHello", "Hello");
-dataModel.putData("sayThanks", "Thanks");
-dataModel.putData("sayBye", "Bye");
-dataModel.putData("testCase1", (CaseTestFunction<Integer>) value -> value == 1);
-dataModel.putData("testCase2", (CaseTestFunction<Integer>) value -> value == 2);
-```
-
-当`switchData`等于1时输出
-
-```json
-{"sayHello" : "Hello"}
-```
-
-当`switchData`等于2时输出
-
-```json
-{"sayThanks" : "Thanks"}
-```
-
-当`switchData`等于3时输出
-
-```json
-{"sayBye" : "Bye"}
-```
-
-### 5.6 命名策略 
-
-json节点和xml节点名称的命名策略扩展，继承接口`com.github.developframework.kite.core.strategy.KitePropertyNamingStrategy`
-
-```java
-public interface KitePropertyNamingStrategy {
-
-    /**
-    	属性展示名称
-    */
-    String propertyShowName(KiteConfiguration configuration, String expressionString);
-}
-```
-
-通过接口方法得到生成的名称。
-
-Kite内置接口实现：
-
-+ **JACKSON** JacksonKitePropertyNamingStrategy  用Jackson配置的策略命名
-+ **MIDDLE_LINE** MiddleLineKitePropertyNamingStrategy  中划线命名策略，AbCd => ab-cd
-+ **UNDERLINE** UnderlineXmlKitePropertyNamingStrategy  下划线xml命名策略，AbCd => ab_cd
-+ **LOWDER_CASE** LowerCaseKitePropertyNamingStrategy  全小写命名策略， AbCd => abcd
-+ **ORIGINAL** OriginalKitePropertyNamingStrategy  什么都不做，使用原名
-+ **DEFAULT** json默认使用**JACKSON**策略，xml默认使用**MIDDLE_LINE**策略
-
-可以在容器节点上配置`children-naming-strategy` 属性强制使用某个策略
-
-```xml
-<template id="" data="" children-naming-strategy="MIDDLE_LINE">
-    <property data=""/>
-    <object data="" children-naming-strategy="UNDERLINE">
-    	<property data=""/>
-    </object>
-</template>
-```
-
-
-## <a name="chapter6">**6. 日志**</a>
+## 5. 日志
 
 Kite框架使用slf4j-api日志接口，提供内部日志打印功能。可以使用log4j或者logback打印日志。
 以下示例使用logback
@@ -1416,6 +1110,6 @@ Kite框架使用slf4j-api日志接口，提供内部日志打印功能。可以�
 项目启动日志：
 
 ```
-09:29:07.753 DEBUG  - Kite framework loaded the configuration source "/kite/kite-demo.xml".
+09:29:07.753 【Kite】loaded the configuration source "/kite/kite-demo.xml".
 ```
 
