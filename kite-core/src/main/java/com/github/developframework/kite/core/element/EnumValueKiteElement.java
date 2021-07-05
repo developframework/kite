@@ -2,7 +2,7 @@ package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.structs.ElementDefinition;
-import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.structs.FragmentLocation;
 import lombok.Getter;
 
 /**
@@ -15,8 +15,8 @@ public class EnumValueKiteElement extends AbstractKiteElement {
 
     private String enumText;
 
-    public EnumValueKiteElement(TemplateLocation templateLocation) {
-        super(templateLocation);
+    public EnumValueKiteElement(FragmentLocation fragmentLocation) {
+        super(fragmentLocation);
     }
 
     @Override

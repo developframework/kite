@@ -2,7 +2,7 @@ package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.structs.ElementDefinition;
-import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.structs.FragmentLocation;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,8 +17,8 @@ public abstract class ContainerKiteElement extends ContentKiteElement implements
     /* 子节点列表 */
     protected List<KiteElement> elements;
 
-    public ContainerKiteElement(TemplateLocation templateLocation) {
-        super(templateLocation);
+    public ContainerKiteElement(FragmentLocation fragmentLocation) {
+        super(fragmentLocation);
     }
 
     @Override
@@ -38,12 +38,12 @@ public abstract class ContainerKiteElement extends ContentKiteElement implements
     public final void forEachAssemble(AssembleContext context) {
         for (KiteElement element : elements) {
             if (element instanceof SlotKiteElement) {
-                // 特殊处理插槽节点 调用对应的插槽模板
+                // 特殊处理插槽节点 调用对应的插槽片段
                 if (!context.slotStack.isEmpty()) {
                     // 先出栈处理子节点后再入栈
-                    final Template template = context.slotStack.pop();
-                    template.forEachAssemble(context);
-                    context.slotStack.push(template);
+                    final Fragment fragment = context.slotStack.pop();
+                    fragment.forEachAssemble(context);
+                    context.slotStack.push(fragment);
                 }
             } else {
                 element.assemble(context);

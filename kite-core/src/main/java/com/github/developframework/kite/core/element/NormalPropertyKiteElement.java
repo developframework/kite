@@ -1,7 +1,7 @@
 package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.node.ObjectNodeProxy;
-import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.structs.FragmentLocation;
 
 /**
  * 普通属性节点
@@ -10,8 +10,8 @@ import com.github.developframework.kite.core.structs.TemplateLocation;
  */
 public final class NormalPropertyKiteElement extends PropertyKiteElement {
 
-    public NormalPropertyKiteElement(TemplateLocation templateLocation) {
-        super(templateLocation);
+    public NormalPropertyKiteElement(FragmentLocation fragmentLocation) {
+        super(fragmentLocation);
     }
 
     @Override

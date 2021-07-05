@@ -2,7 +2,7 @@ package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.structs.ElementDefinition;
-import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.structs.FragmentLocation;
 
 /**
  * 插槽节点
@@ -11,8 +11,8 @@ import com.github.developframework.kite.core.structs.TemplateLocation;
  */
 public class SlotKiteElement extends AbstractKiteElement {
 
-    public SlotKiteElement(TemplateLocation templateLocation) {
-        super(templateLocation);
+    public SlotKiteElement(FragmentLocation fragmentLocation) {
+        super(fragmentLocation);
     }
 
     @Override

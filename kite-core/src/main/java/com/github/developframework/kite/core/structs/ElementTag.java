@@ -23,6 +23,7 @@ public enum ElementTag {
     SLOT("slot", SlotKiteElement.class),
     THIS("this", ThisKiteElement.class),
     TEMPLATE("template", Template.class),
+    FRAGMENT("fragment", Fragment.class),
     ARRAY("array", ArrayKiteElement.class),
     OBJECT("object", ObjectKiteElement.class),
     SWITCH("switch", SwitchKiteElement.class),

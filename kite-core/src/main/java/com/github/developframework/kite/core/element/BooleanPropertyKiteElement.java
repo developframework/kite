@@ -1,7 +1,7 @@
 package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.node.ObjectNodeProxy;
-import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.structs.FragmentLocation;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -27,8 +27,8 @@ public class BooleanPropertyKiteElement extends PropertyKiteElement {
         ACCEPT_CLASS_SET.add(Short.class);
     }
 
-    public BooleanPropertyKiteElement(TemplateLocation templateLocation) {
-        super(templateLocation);
+    public BooleanPropertyKiteElement(FragmentLocation fragmentLocation) {
+        super(fragmentLocation);
     }
 
     @Override

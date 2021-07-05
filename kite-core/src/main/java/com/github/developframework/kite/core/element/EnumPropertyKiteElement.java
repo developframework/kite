@@ -2,7 +2,7 @@ package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.exception.KiteException;
-import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.structs.FragmentLocation;
 import com.github.developframework.kite.core.utils.KiteUtils;
 
 import java.util.Optional;
@@ -12,8 +12,8 @@ import java.util.Optional;
  */
 public class EnumPropertyKiteElement extends ContainerKiteElement {
 
-    public EnumPropertyKiteElement(TemplateLocation templateLocation) {
-        super(templateLocation);
+    public EnumPropertyKiteElement(FragmentLocation fragmentLocation) {
+        super(fragmentLocation);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class EnumPropertyKiteElement extends ContainerKiteElement {
                     return;
                 }
             }
-            throw new KiteException("No enum value for \"%s\" in template \"%s\".", v, templateLocation);
+            throw new KiteException("No enum value for \"%s\" in template \"%s\".", v, fragmentLocation);
         } else if (!contentAttributes.nullHidden) {
             context.peekNodeProxy().putNull(displayName(context));
         }

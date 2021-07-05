@@ -2,7 +2,7 @@ package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.structs.ElementDefinition;
-import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.structs.FragmentLocation;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -12,18 +12,18 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class IncludeKiteElement extends AbstractKiteElement {
 
-    private TemplateLocation targetTemplateLocation;
+    private FragmentLocation targetFragmentLocation;
 
-    public IncludeKiteElement(TemplateLocation templateLocation) {
-        super(templateLocation);
+    public IncludeKiteElement(FragmentLocation fragmentLocation) {
+        super(fragmentLocation);
     }
 
     @Override
     public void configure(ElementDefinition elementDefinition) {
         super.configure(elementDefinition);
         final String namespace = elementDefinition.getString(ElementDefinition.Attribute.NAMESPACE);
-        this.targetTemplateLocation = new TemplateLocation(
-                StringUtils.isEmpty(namespace) ? templateLocation.getNamespace() : namespace,
+        this.targetFragmentLocation = new FragmentLocation(
+                StringUtils.isEmpty(namespace) ? fragmentLocation.getNamespace() : namespace,
                 elementDefinition.getString(ElementDefinition.Attribute.ID)
         );
     }
@@ -33,7 +33,7 @@ public class IncludeKiteElement extends AbstractKiteElement {
         context
                 .getConfiguration()
                 .getTemplatePackageRegistry()
-                .extractTemplate(targetTemplateLocation)
+                .extractFragment(targetFragmentLocation)
                 .forEachAssemble(context);
     }
 }

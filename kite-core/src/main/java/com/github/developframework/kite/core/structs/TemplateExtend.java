@@ -12,12 +12,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TemplateExtend {
 
-    private final TemplateLocation templateLocation;
+    private final FragmentLocation fragmentLocation;
 
     private final String slot;
 
     @Override
     public String toString() {
-        return templateLocation + ":" + slot;
+        return fragmentLocation + ":" + slot;
     }
 }

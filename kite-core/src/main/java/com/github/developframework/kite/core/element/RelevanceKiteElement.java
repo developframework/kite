@@ -4,7 +4,7 @@ import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.dynamic.RelFunction;
 import com.github.developframework.kite.core.exception.KiteException;
 import com.github.developframework.kite.core.structs.ElementDefinition;
-import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.structs.FragmentLocation;
 import com.github.developframework.kite.core.utils.KiteUtils;
 
 import java.util.ArrayList;
@@ -31,8 +31,8 @@ public final class RelevanceKiteElement extends ArrayKiteElement {
     // 内部转换器
     private String innerConverterValue;
 
-    public RelevanceKiteElement(TemplateLocation templateLocation) {
-        super(templateLocation);
+    public RelevanceKiteElement(FragmentLocation fragmentLocation) {
+        super(fragmentLocation);
     }
 
     @Override

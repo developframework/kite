@@ -2,7 +2,7 @@ package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.structs.ElementDefinition;
-import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.structs.FragmentLocation;
 
 /**
  * 虚拟对象节点
@@ -13,8 +13,8 @@ public class VirtualObjectKiteElement extends ContainerKiteElement {
 
     private String alias;
 
-    public VirtualObjectKiteElement(TemplateLocation templateLocation) {
-        super(templateLocation);
+    public VirtualObjectKiteElement(FragmentLocation fragmentLocation) {
+        super(fragmentLocation);
     }
 
     @Override

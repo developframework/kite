@@ -6,7 +6,7 @@ import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.data.DataModel;
 import com.github.developframework.kite.core.data.FunctionSign;
 import com.github.developframework.kite.core.structs.ElementDefinition;
-import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.structs.FragmentLocation;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,8 +23,8 @@ public final class SwitchKiteElement extends AbstractKiteElement {
 
     private DefaultKiteElement defaultElement;
 
-    public SwitchKiteElement(TemplateLocation templateLocation) {
-        super(templateLocation);
+    public SwitchKiteElement(FragmentLocation fragmentLocation) {
+        super(fragmentLocation);
     }
 
     @Override

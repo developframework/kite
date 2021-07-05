@@ -8,17 +8,24 @@
                 <xs:element name="template-package" minOccurs="0" maxOccurs="unbounded">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="template" minOccurs="0" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:group ref="childElementGroup"/>
-                                    <xs:attribute name="id" type="xs:string" use="required"/>
-                                    <xs:attribute name="data" type="xs:string"/>
-                                    <xs:attribute name="extend" type="xs:string"/>
-                                    <xs:attribute name="xml-root" type="xs:string"/>
-                                    <xs:attributeGroup ref="contentElementAttributeGroup"/>
-                                    <xs:attributeGroup ref="arrayElementAttributeGroup"/>
-                                </xs:complexType>
-                            </xs:element>
+                            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                <xs:element name="template">
+                                    <xs:complexType>
+                                        <xs:group ref="childElementGroup"/>
+                                        <xs:attribute name="data" type="xs:string"/>
+                                        <xs:attribute name="xml-root" type="xs:string"/>
+                                        <xs:attributeGroup ref="fragmentElementAttributeGroup"/>
+                                        <xs:attributeGroup ref="contentElementAttributeGroup"/>
+                                        <xs:attributeGroup ref="arrayElementAttributeGroup"/>
+                                    </xs:complexType>
+                                </xs:element>
+                                <xs:element name="fragment">
+                                    <xs:complexType>
+                                        <xs:group ref="childElementGroup"/>
+                                        <xs:attributeGroup ref="fragmentElementAttributeGroup"/>
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:choice>
                         </xs:sequence>
                         <xs:attribute name="namespace" type="xs:string" use="required"/>
                     </xs:complexType>
@@ -26,6 +33,12 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+
+    <!-- 片段节点属性组 -->
+    <xs:attributeGroup name="fragmentElementAttributeGroup">
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="extend" type="xs:string"/>
+    </xs:attributeGroup>
 
     <!-- 内容节点属性组 -->
     <xs:attributeGroup name="contentElementAttributeGroup">

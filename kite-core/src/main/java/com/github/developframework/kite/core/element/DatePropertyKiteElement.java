@@ -2,7 +2,7 @@ package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.node.ObjectNodeProxy;
 import com.github.developframework.kite.core.structs.ElementDefinition;
-import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.structs.FragmentLocation;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 import java.time.*;
@@ -31,8 +31,8 @@ public class DatePropertyKiteElement extends PropertyKiteElement {
         ACCEPT_CLASS_SET.add(Instant.class);
     }
 
-    public DatePropertyKiteElement(TemplateLocation templateLocation) {
-        super(templateLocation);
+    public DatePropertyKiteElement(FragmentLocation fragmentLocation) {
+        super(fragmentLocation);
     }
 
     @Override

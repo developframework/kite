@@ -4,19 +4,20 @@
 
     <template-package namespace="template">
 
-        <template id="" data="">
-            <object data="">
-                <array data="">
-                    <property data="" naming-strategy="LOWER_CASE"/>
-                    <xml-attribute data=""/>
-                    <raw data=""/>
-                    <prototype data="" converter=""/>
-                    <property-enum data="">
-                        <enum value="" text=""/>
-                    </property-enum>
-                </array>
-            </object>
+        <template id="user-list" data="users">
+            <include id="user"/>
         </template>
+
+        <template id="user-detail" data="users[0]">
+            <include id="user"/>
+        </template>
+
+        <fragment id="user">
+            <property data="id"/>
+            <property data="name" converter="nameConverter"/>
+            <property data="age"/>
+            <property-date data="createTime"/>
+        </fragment>
 
     </template-package>
 

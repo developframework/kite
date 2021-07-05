@@ -1,7 +1,7 @@
 package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.AssembleContext;
-import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.structs.FragmentLocation;
 import com.github.developframework.kite.core.utils.KiteUtils;
 
 import java.util.Optional;
@@ -13,8 +13,8 @@ import java.util.Optional;
  */
 public class RawKiteElement extends ContentKiteElement {
 
-    public RawKiteElement(TemplateLocation templateLocation) {
-        super(templateLocation);
+    public RawKiteElement(FragmentLocation fragmentLocation) {
+        super(fragmentLocation);
     }
 
     @Override

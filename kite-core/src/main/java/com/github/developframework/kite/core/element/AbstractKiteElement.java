@@ -2,7 +2,7 @@ package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.strategy.NamingStrategy;
 import com.github.developframework.kite.core.structs.ElementDefinition;
-import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.structs.FragmentLocation;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 public abstract class AbstractKiteElement implements KiteElement {
 
     @Getter
-    protected final TemplateLocation templateLocation;
+    protected final FragmentLocation fragmentLocation;
 
     @Getter
     protected NamingStrategy childrenNamingStrategy;

@@ -3,7 +3,7 @@ package com.github.developframework.kite.core.element;
 import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.exception.LinkSizeNotEqualException;
 import com.github.developframework.kite.core.structs.ElementDefinition;
-import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.structs.FragmentLocation;
 import com.github.developframework.kite.core.utils.KiteUtils;
 
 import java.util.Optional;
@@ -18,8 +18,8 @@ public final class LinkKiteElement extends ArrayKiteElement {
     // 是否合并到父节点
     private boolean mergeParent;
 
-    public LinkKiteElement(TemplateLocation templateLocation) {
-        super(templateLocation);
+    public LinkKiteElement(FragmentLocation fragmentLocation) {
+        super(fragmentLocation);
     }
 
     @Override
@@ -38,7 +38,7 @@ public final class LinkKiteElement extends ArrayKiteElement {
             // 处理limit功能
             final int length = arrayAttributes.limit != null && arrayAttributes.limit < array.length ? arrayAttributes.limit : array.length;
             if (length != context.arrayLength) {
-                throw new LinkSizeNotEqualException(templateLocation);
+                throw new LinkSizeNotEqualException(fragmentLocation);
             }
             // 处理map功能
             final Object v = KiteUtils.handleKiteConverter(context.dataModel, arrayAttributes.mapValue, array[context.arrayIndex]);

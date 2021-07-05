@@ -1,7 +1,7 @@
 package com.github.developframework.kite.core;
 
 import com.github.developframework.kite.core.data.DataModel;
-import com.github.developframework.kite.core.element.Template;
+import com.github.developframework.kite.core.element.Fragment;
 import com.github.developframework.kite.core.node.ObjectNodeProxy;
 import com.github.developframework.kite.core.strategy.NamingStrategy;
 import lombok.Getter;
@@ -31,8 +31,8 @@ public final class AssembleContext {
 
     public int arrayLength;
 
-    // 插槽模板 用于extend遍历后跳回原模板
-    public Stack<Template> slotStack = new Stack<>();
+    // 插槽片段 用于extend遍历后跳回原模板
+    public Stack<Fragment> slotStack = new Stack<>();
 
     public AssembleContext(KiteConfiguration configuration, boolean assembleJson) {
         this.configuration = configuration;

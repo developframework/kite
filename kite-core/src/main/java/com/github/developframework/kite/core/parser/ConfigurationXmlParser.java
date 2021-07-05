@@ -1,13 +1,14 @@
 package com.github.developframework.kite.core.parser;
 
 import com.github.developframework.kite.core.element.AbstractKiteElement;
+import com.github.developframework.kite.core.element.Fragment;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.element.Template;
 import com.github.developframework.kite.core.exception.KiteException;
 import com.github.developframework.kite.core.source.ConfigurationSource;
 import com.github.developframework.kite.core.structs.ElementDefinition;
 import com.github.developframework.kite.core.structs.ElementTag;
-import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.structs.FragmentLocation;
 import com.github.developframework.kite.core.structs.TemplatePackage;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
@@ -42,24 +43,26 @@ public final class ConfigurationXmlParser {
             final TemplatePackage templatePackage = new TemplatePackage(namespace);
             for (Element templateElement : element.elements(ElementTag.TEMPLATE.getTag())) {
                 final String id = templateElement.attributeValue(ElementDefinition.Attribute.ID);
-                final TemplateLocation templateLocation = new TemplateLocation(namespace, id);
-                final Template template = (Template) readKiteElement(templateElement, templateLocation);
-                templatePackage.push(template);
+                templatePackage.push((Template) readKiteElement(templateElement, new FragmentLocation(namespace, id)));
+            }
+            for (Element fragmentElement : element.elements(ElementTag.FRAGMENT.getTag())) {
+                final String id = fragmentElement.attributeValue(ElementDefinition.Attribute.ID);
+                templatePackage.push((Fragment) readKiteElement(fragmentElement, new FragmentLocation(namespace, id)));
             }
             templatePackages.add(templatePackage);
         }
         return templatePackages;
     }
 
-    private KiteElement readKiteElement(Element element, TemplateLocation templateLocation) {
-        final List<KiteElement> children = childrenElements(element, templateLocation);
+    private KiteElement readKiteElement(Element element, FragmentLocation fragmentLocation) {
+        final List<KiteElement> children = childrenElements(element, fragmentLocation);
         final Class<? extends AbstractKiteElement> clazz = kiteElementClasses.get(element.getName());
         final AbstractKiteElement kiteElement;
         try {
-            kiteElement = clazz.getConstructor(TemplateLocation.class).newInstance(templateLocation);
+            kiteElement = clazz.getConstructor(FragmentLocation.class).newInstance(fragmentLocation);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new KiteException("xml read failed in \"%s\"", templateLocation);
+            throw new KiteException("xml read failed in \"%s\"", fragmentLocation);
         }
         final Map<String, String> attributesMap = attributesMap(element);
         kiteElement.configure(new ElementDefinition(attributesMap, children));
@@ -76,10 +79,10 @@ public final class ConfigurationXmlParser {
         return map;
     }
 
-    private List<KiteElement> childrenElements(Element element, TemplateLocation templateLocation) {
+    private List<KiteElement> childrenElements(Element element, FragmentLocation fragmentLocation) {
         return element.elements()
                 .stream()
-                .map(e -> readKiteElement(e, templateLocation))
+                .map(e -> readKiteElement(e, fragmentLocation))
                 .collect(Collectors.toList());
     }
 }

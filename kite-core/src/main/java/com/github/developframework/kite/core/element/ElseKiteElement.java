@@ -1,7 +1,7 @@
 package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.AssembleContext;
-import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.structs.FragmentLocation;
 
 /**
  * else 节点
@@ -10,8 +10,8 @@ import com.github.developframework.kite.core.structs.TemplateLocation;
  */
 public final class ElseKiteElement extends ContainerKiteElement {
 
-    public ElseKiteElement(TemplateLocation templateLocation) {
-        super(templateLocation);
+    public ElseKiteElement(FragmentLocation fragmentLocation) {
+        super(fragmentLocation);
     }
 
     @Override

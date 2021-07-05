@@ -4,7 +4,7 @@ import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.node.ArrayNodeProxy;
 import com.github.developframework.kite.core.structs.ArrayAttributes;
 import com.github.developframework.kite.core.structs.ElementDefinition;
-import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.structs.FragmentLocation;
 import com.github.developframework.kite.core.utils.KiteUtils;
 
 import java.util.Optional;
@@ -19,8 +19,8 @@ public class ArrayKiteElement extends ContainerKiteElement {
     // 数组属性
     protected ArrayAttributes arrayAttributes;
 
-    public ArrayKiteElement(TemplateLocation templateLocation) {
-        super(templateLocation);
+    public ArrayKiteElement(FragmentLocation fragmentLocation) {
+        super(fragmentLocation);
     }
 
     @Override

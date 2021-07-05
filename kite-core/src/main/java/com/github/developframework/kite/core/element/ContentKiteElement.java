@@ -10,7 +10,7 @@ import com.github.developframework.kite.core.strategy.KitePropertyNamingStrategy
 import com.github.developframework.kite.core.strategy.NamingStrategy;
 import com.github.developframework.kite.core.structs.ContentAttributes;
 import com.github.developframework.kite.core.structs.ElementDefinition;
-import com.github.developframework.kite.core.structs.TemplateLocation;
+import com.github.developframework.kite.core.structs.FragmentLocation;
 import lombok.Getter;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
@@ -23,8 +23,8 @@ public abstract class ContentKiteElement extends AbstractKiteElement {
     @Getter
     protected ContentAttributes contentAttributes;
 
-    public ContentKiteElement(TemplateLocation templateLocation) {
-        super(templateLocation);
+    public ContentKiteElement(FragmentLocation fragmentLocation) {
+        super(fragmentLocation);
     }
 
     @Override
