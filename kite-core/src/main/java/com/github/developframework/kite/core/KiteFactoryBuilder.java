@@ -1,7 +1,7 @@
 package com.github.developframework.kite.core;
 
-import com.github.developframework.kite.core.exception.KiteParseXmlException;
-import com.github.developframework.kite.core.parser.ConfigurationXmlParser;
+import com.github.developframework.kite.core.exception.KiteParseException;
+import com.github.developframework.kite.core.parser.XmlParser;
 import com.github.developframework.kite.core.source.ClasspathConfigurationSource;
 import com.github.developframework.kite.core.source.ConfigurationSource;
 import com.github.developframework.kite.core.structs.TemplatePackageRegistry;
@@ -39,7 +39,7 @@ public abstract class KiteFactoryBuilder {
      * @return KiteFactory
      */
     public static KiteFactory buildFromXml(KiteOptions options, Set<ConfigurationSource> sources) {
-        final ConfigurationXmlParser parser = new ConfigurationXmlParser();
+        final XmlParser parser = new XmlParser();
         final TemplatePackageRegistry registry = new TemplatePackageRegistry();
         sources
                 .stream()
@@ -47,7 +47,7 @@ public abstract class KiteFactoryBuilder {
                     try {
                         return parser.read(source).stream();
                     } catch (IOException | DocumentException e) {
-                        throw new KiteParseXmlException("【Kite】parse configuration source \"%s\" happened error: %s", source.getSourceName(), e.getMessage());
+                        throw new KiteParseException("【Kite】parse configuration source \"%s\" happened error: %s", source.getSourceName(), e.getMessage());
                     } finally {
                         log.debug("【Kite】loaded the configuration source \"{}\".", source.getSourceName());
                     }

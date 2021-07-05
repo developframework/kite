@@ -169,7 +169,7 @@ public final class KiteUtils {
     /**
      * 获取字面量
      */
-    private static String getLiteral(String content) {
+    public static String getLiteral(String content) {
         return isLiteral(content) ? content.substring(1, content.length() - 1) : null;
     }
 }

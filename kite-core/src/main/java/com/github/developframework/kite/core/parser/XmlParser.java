@@ -21,9 +21,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * Xml解析器
+ *
  * @author qiushui on 2021-06-24.
  */
-public final class ConfigurationXmlParser {
+public final class XmlParser extends Parser {
 
     private final Map<String, Class<? extends AbstractKiteElement>> kiteElementClasses = ElementTag.buildMap();
 
@@ -32,10 +34,15 @@ public final class ConfigurationXmlParser {
      *
      * @param configurationSource 配置源
      */
-    public List<TemplatePackage> read(ConfigurationSource configurationSource) throws IOException, DocumentException {
+    public List<TemplatePackage> read(ConfigurationSource configurationSource) throws IOException {
         final List<TemplatePackage> templatePackages = new LinkedList<>();
         final SAXReader reader = new SAXReader();
-        final Document document = reader.read(configurationSource.getInputStream());
+        final Document document;
+        try {
+            document = reader.read(configurationSource.getInputStream());
+        } catch (DocumentException e) {
+            throw new KiteException("xml parse fail: %s", e.getMessage());
+        }
         final Element rootElement = document.getRootElement();
         final List<Element> templatePackageElements = rootElement.elements(ElementTag.TEMPLATE_PACKAGE.getTag());
         for (Element element : templatePackageElements) {
