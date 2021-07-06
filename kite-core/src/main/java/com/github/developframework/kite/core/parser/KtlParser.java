@@ -17,10 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * ktl文件解析器
@@ -37,32 +34,50 @@ public final class KtlParser extends Parser {
     @Override
     public List<TemplatePackage> read(ConfigurationSource configurationSource) throws IOException {
         final List<TemplatePackage> templatePackages = new LinkedList<>();
-        final List<LineData> childrenLineData = new LinkedList<>();
+        final LineData[] lineDatas = readLineDatas(configurationSource);
+        Stack<LineData> stack = new Stack<>();
+        for (LineData lineData : lineDatas) {
+            if (stack.isEmpty()) {
+                stack.push(lineData);
+            } else {
+                final LineData prev = stack.peek();
+                if (prev.level <= lineData.level) {
+                    stack.push(lineData);
+                } else {
+                    final LineData ld = stack.peek();
+
+                }
+            }
+        }
+        return templatePackages;
+    }
+
+    private LineData[] readLineDatas(ConfigurationSource configurationSource) throws IOException {
         final BufferedReader reader = new BufferedReader(new InputStreamReader(configurationSource.getInputStream()));
+        List<LineData> list = new LinkedList<>();
         String line;
-        // 开始层级
-        Integer startLevel = null;
-        // 前一个层级
-        int prevLevel = 0;
         while ((line = reader.readLine()) != null) {
             // 跳过空行或注释行
             if (StringUtils.isBlank(line) || line.matches("^\\s*#")) continue;
             final LineData lineData = new LineData(line);
-            // 初始化开始层级
-            if (startLevel == null) {
-                startLevel = lineData.realLevel(0);
-            }
-            final int level = lineData.realLevel(startLevel);
-            if (level >= prevLevel) {
-                childrenLineData.add(lineData);
-            } else {
-
-            }
-            prevLevel = level;
+            list.add(lineData);
         }
+        return list.toArray(LineData[]::new);
+    }
 
-
-        return templatePackages;
+    private int recursive(LineData[] lineDatas, LineData parent, int i) {
+        if (i < lineDatas.length) {
+            final LineData next = lineDatas[i];
+            if (next.level > parent.level) {
+                parent.children.add(next);
+                i = recursive(lineDatas, next, i + 1);
+            } else if (next.level == parent.level) {
+                parent.children.add(next);
+            } else {
+                i = recursive(lineDatas, parent, i + 1);
+            }
+        }
+        return i;
     }
 
     /**
@@ -77,6 +92,8 @@ public final class KtlParser extends Parser {
         private Class<? extends AbstractKiteElement> elementClass;
         // 属性
         private Map<String, String> attributes = new HashMap<>();
+
+        private List<LineData> children = new LinkedList<>();
 
         protected LineData(String line) {
             level = computeLevel(line);
@@ -125,10 +142,6 @@ public final class KtlParser extends Parser {
             } catch (Exception e) {
                 throw new KiteException("ktl生成节点对象发生错误");
             }
-        }
-
-        public int realLevel(int startLevel) {
-            return level - startLevel;
         }
     }
 

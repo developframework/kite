@@ -15,6 +15,7 @@ module kite.core {
     exports com.github.developframework.kite.core.element;
     exports com.github.developframework.kite.core.exception;
     exports com.github.developframework.kite.core.node;
+    exports com.github.developframework.kite.core.parser;
     exports com.github.developframework.kite.core.strategy;
     exports com.github.developframework.kite.core.source;
     exports com.github.developframework.kite.core.structs;

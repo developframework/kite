@@ -7,24 +7,24 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 
 /**
- * xml内容配置源
+ * string配置源
  *
  * @author qiuzhenhao
  */
 @AllArgsConstructor
-public class XmlContentConfigurationSource implements ConfigurationSource {
+public class StringConfigurationSource implements ConfigurationSource {
 
-    private final String xml;
+    private final String string;
 
     private final Charset charset;
 
     @Override
     public InputStream getInputStream() {
-        return new ByteArrayInputStream(xml.getBytes(charset));
+        return new ByteArrayInputStream(string.getBytes(charset));
     }
 
     @Override
     public String getSourceName() {
-        return "xml content source";
+        return "string source";
     }
 }

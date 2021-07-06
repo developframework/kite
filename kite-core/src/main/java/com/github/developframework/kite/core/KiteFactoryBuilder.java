@@ -6,7 +6,6 @@ import com.github.developframework.kite.core.source.ClasspathConfigurationSource
 import com.github.developframework.kite.core.source.ConfigurationSource;
 import com.github.developframework.kite.core.structs.TemplatePackageRegistry;
 import lombok.extern.slf4j.Slf4j;
-import org.dom4j.DocumentException;
 
 import java.io.IOException;
 import java.util.Set;
@@ -46,7 +45,7 @@ public abstract class KiteFactoryBuilder {
                 .flatMap(source -> {
                     try {
                         return parser.read(source).stream();
-                    } catch (IOException | DocumentException e) {
+                    } catch (IOException e) {
                         throw new KiteParseException("【Kite】parse configuration source \"%s\" happened error: %s", source.getSourceName(), e.getMessage());
                     } finally {
                         log.debug("【Kite】loaded the configuration source \"{}\".", source.getSourceName());
