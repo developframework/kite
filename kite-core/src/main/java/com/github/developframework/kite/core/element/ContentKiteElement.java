@@ -9,6 +9,7 @@ import com.github.developframework.kite.core.Framework;
 import com.github.developframework.kite.core.strategy.KitePropertyNamingStrategy;
 import com.github.developframework.kite.core.strategy.NamingStrategy;
 import com.github.developframework.kite.core.structs.ContentAttributes;
+import com.github.developframework.kite.core.structs.ElementAttributes;
 import com.github.developframework.kite.core.structs.ElementDefinition;
 import com.github.developframework.kite.core.structs.FragmentLocation;
 import lombok.Getter;
@@ -18,6 +19,14 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 /**
  * @author qiushui on 2021-06-23.
  */
+@ElementAttributes({
+        ElementDefinition.Attribute.DATA,
+        ElementDefinition.Attribute.ALIAS,
+        ElementDefinition.Attribute.NULL_HIDDEN,
+        ElementDefinition.Attribute.CONVERTER,
+        ElementDefinition.Attribute.NAMING_STRATEGY,
+        ElementDefinition.Attribute.XML_CDATA
+})
 public abstract class ContentKiteElement extends AbstractKiteElement {
 
     @Getter

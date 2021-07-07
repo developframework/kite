@@ -5,6 +5,7 @@ import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.data.DataModel;
 import com.github.developframework.kite.core.data.FunctionSign;
+import com.github.developframework.kite.core.structs.ElementAttributes;
 import com.github.developframework.kite.core.structs.ElementDefinition;
 import com.github.developframework.kite.core.structs.FragmentLocation;
 
@@ -15,6 +16,7 @@ import java.util.Optional;
 /**
  * @author qiushui on 2021-06-28.
  */
+@ElementAttributes(ElementDefinition.Attribute.CHECK_DATA)
 public final class SwitchKiteElement extends AbstractKiteElement {
 
     private DataDefinition checkData;

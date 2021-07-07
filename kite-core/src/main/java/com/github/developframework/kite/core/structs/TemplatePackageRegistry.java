@@ -1,9 +1,6 @@
 package com.github.developframework.kite.core.structs;
 
-import com.github.developframework.kite.core.element.Fragment;
-import com.github.developframework.kite.core.element.Template;
 import com.github.developframework.kite.core.exception.ResourceNotUniqueException;
-import com.github.developframework.kite.core.exception.TemplatePackageUndefinedException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,31 +32,6 @@ public class TemplatePackageRegistry {
      * @return 模板包
      */
     public TemplatePackage getTemplatePackageByNamespace(String namespace) {
-        TemplatePackage templatePackage = templatePackages.get(namespace);
-        if (templatePackage == null) {
-            throw new TemplatePackageUndefinedException(namespace);
-        }
-        return templatePackage;
-    }
-
-    /**
-     * 提取模板
-     *
-     * @param namespace  命名空间
-     * @param templateId 模板ID
-     * @return 模板
-     */
-    public Template extractTemplate(String namespace, String templateId) {
-        return getTemplatePackageByNamespace(namespace).getTemplateById(templateId);
-    }
-
-    /**
-     * 提取片段
-     *
-     * @param fragmentLocation 模板位置
-     * @return 片段
-     */
-    public Fragment extractFragment(FragmentLocation fragmentLocation) {
-        return getTemplatePackageByNamespace(fragmentLocation.getNamespace()).getFragmentById(fragmentLocation.getFragmentId());
+        return templatePackages.get(namespace);
     }
 }

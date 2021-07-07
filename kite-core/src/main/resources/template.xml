@@ -17,6 +17,7 @@
             <property data="name" converter="nameConverter"/>
             <property data="age"/>
             <property-date data="createTime"/>
+            <link data=""
         </fragment>
 
     </template-package>

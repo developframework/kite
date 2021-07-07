@@ -10,6 +10,10 @@ import lombok.Setter;
 @Getter
 public class KiteOptions {
 
+    // ktl缩进空格数
+    @Setter
+    private int ktlIndent = 4;
+
     private final JsonOptions json = new JsonOptions();
 
     private final XmlOptions xml = new XmlOptions();

@@ -1,6 +1,7 @@
 package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.data.DataDefinition;
+import com.github.developframework.kite.core.structs.ElementAttributes;
 import com.github.developframework.kite.core.structs.ElementDefinition;
 import com.github.developframework.kite.core.structs.FragmentLocation;
 import lombok.Getter;
@@ -10,6 +11,10 @@ import lombok.Getter;
  *
  * @author qiushui on 2021-06-23.
  */
+@ElementAttributes(
+        value = ElementDefinition.Attribute.XML_ROOT,
+        baseClass = ArrayKiteElement.class
+)
 @Getter
 public final class Template extends Fragment {
 

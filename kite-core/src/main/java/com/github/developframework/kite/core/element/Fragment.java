@@ -3,9 +3,11 @@ package com.github.developframework.kite.core.element;
 import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.exception.InvalidAttributeException;
+import com.github.developframework.kite.core.structs.ElementAttributes;
 import com.github.developframework.kite.core.structs.ElementDefinition;
 import com.github.developframework.kite.core.structs.FragmentLocation;
 import com.github.developframework.kite.core.utils.KiteUtils;
+import lombok.Getter;
 
 import java.util.Optional;
 
@@ -14,9 +16,14 @@ import java.util.Optional;
  *
  * @author qiushui on 2021-07-05.
  */
+@ElementAttributes({
+        ElementDefinition.Attribute.ID,
+        ElementDefinition.Attribute.EXTEND
+})
 public class Fragment extends ContainerKiteElement {
 
     // 片段ID
+    @Getter
     protected String id;
 
     // extend指向的模板地址
@@ -53,9 +60,7 @@ public class Fragment extends ContainerKiteElement {
         } else {
             context.slotStack.push(this);
             context
-                    .getConfiguration()
-                    .getTemplatePackageRegistry()
-                    .extractFragment(fragmentLocationExtend)
+                    .extractFragment(fragmentLocationExtend.getNamespace(), fragmentLocationExtend.getFragmentId())
                     .assemble(context);
             context.slotStack.pop();
         }

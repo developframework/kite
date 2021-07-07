@@ -6,7 +6,10 @@ import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.Producer;
 import com.github.developframework.kite.core.data.DataModel;
 import com.github.developframework.kite.core.strategy.KitePropertyNamingStrategy;
+import com.github.developframework.kite.core.structs.TemplatePackage;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 /**
  * 由jackson框架实现
@@ -31,5 +34,10 @@ public class JacksonFramework implements Framework<ObjectMapper> {
     @Override
     public Producer buildProducer(KiteConfiguration configuration, DataModel dataModel, String namespace, String templateId) {
         return new JacksonProducer(configuration, dataModel, namespace, templateId);
+    }
+
+    @Override
+    public Producer buildProducer(KiteConfiguration configuration, DataModel dataModel, List<TemplatePackage> templatePackages) {
+        return new JacksonProducer(configuration, dataModel, templatePackages);
     }
 }

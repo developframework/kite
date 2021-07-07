@@ -2,8 +2,13 @@ package com.github.developframework.kite.core;
 
 import com.github.developframework.kite.core.data.DataModel;
 import com.github.developframework.kite.core.element.Fragment;
+import com.github.developframework.kite.core.element.Template;
+import com.github.developframework.kite.core.exception.TemplateException;
+import com.github.developframework.kite.core.exception.TemplatePackageUndefinedException;
 import com.github.developframework.kite.core.node.ObjectNodeProxy;
 import com.github.developframework.kite.core.strategy.NamingStrategy;
+import com.github.developframework.kite.core.structs.TemplatePackage;
+import com.github.developframework.kite.core.structs.TemplatePackageRegistry;
 import lombok.Getter;
 
 import java.util.Stack;
@@ -33,6 +38,8 @@ public final class AssembleContext {
 
     // 插槽片段 用于extend遍历后跳回原模板
     public Stack<Fragment> slotStack = new Stack<>();
+
+    public TemplatePackageRegistry extraTemplatePackages = new TemplatePackageRegistry();
 
     public AssembleContext(KiteConfiguration configuration, boolean assembleJson) {
         this.configuration = configuration;
@@ -99,5 +106,37 @@ public final class AssembleContext {
         this.valueStack.pop();
     }
 
+    /**
+     * 提取模板
+     */
+    public Template extractTemplate(String namespace, String id) {
+        Template template = findTemplatePackage(namespace).getTemplateById(id);
+        if (template == null) {
+            throw new TemplateException("未定义模板“%s.%s”", namespace, id);
+        }
+        return template;
+    }
 
+    /**
+     * 提取片段
+     */
+    public Fragment extractFragment(String namespace, String id) {
+        Fragment fragment = findTemplatePackage(namespace).get(id);
+        if (fragment == null) {
+            throw new TemplateException("未定义片段“%s.%s”", namespace, id);
+        }
+        return fragment;
+    }
+
+    private TemplatePackage findTemplatePackage(String namespace) {
+        final TemplatePackageRegistry registry = configuration.getTemplatePackageRegistry();
+        TemplatePackage templatePackage = registry.getTemplatePackageByNamespace(namespace);
+        if (templatePackage == null) {
+            templatePackage = extraTemplatePackages.getTemplatePackageByNamespace(namespace);
+            if (templatePackage == null) {
+                throw new TemplatePackageUndefinedException(namespace);
+            }
+        }
+        return templatePackage;
+    }
 }

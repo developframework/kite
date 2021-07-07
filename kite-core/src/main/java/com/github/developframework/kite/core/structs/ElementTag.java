@@ -1,18 +1,14 @@
 package com.github.developframework.kite.core.structs;
 
 import com.github.developframework.kite.core.element.*;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author qiushui on 2021-06-29.
  */
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ElementTag {
 
     IF("if", IfKiteElement.class),
@@ -45,6 +41,14 @@ public enum ElementTag {
 
     private final Class<? extends AbstractKiteElement> elementClass;
 
+    private final Set<String> requiredAttributes;
+
+    ElementTag(String tag, Class<? extends AbstractKiteElement> elementClass) {
+        this.tag = tag;
+        this.elementClass = elementClass;
+        requiredAttributes = getRequiredAttributes(elementClass);
+    }
+
     public static Map<String, Class<? extends AbstractKiteElement>> buildMap() {
         Map<String, Class<? extends AbstractKiteElement>> map = new HashMap<>();
         for (ElementTag tag : ElementTag.values()) {
@@ -53,5 +57,19 @@ public enum ElementTag {
             }
         }
         return map;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Set<String> getRequiredAttributes(Class<? extends AbstractKiteElement> clazz) {
+        Set<String> set = new HashSet<>();
+        while (clazz != AbstractKiteElement.class) {
+            final ElementAttributes annotation = clazz.getAnnotation(ElementAttributes.class);
+            if (annotation != null) {
+                set.addAll(Arrays.asList(annotation.value()));
+                set.addAll(getRequiredAttributes(annotation.baseClass()));
+            }
+            clazz = (Class<? extends AbstractKiteElement>) clazz.getSuperclass();
+        }
+        return set;
     }
 }

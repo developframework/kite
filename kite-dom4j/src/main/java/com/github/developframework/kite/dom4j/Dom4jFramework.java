@@ -6,6 +6,9 @@ import com.github.developframework.kite.core.Producer;
 import com.github.developframework.kite.core.data.DataModel;
 import com.github.developframework.kite.core.strategy.KitePropertyNamingStrategy;
 import com.github.developframework.kite.core.strategy.NamingStrategy;
+import com.github.developframework.kite.core.structs.TemplatePackage;
+
+import java.util.List;
 
 /**
  * Dom4j实现
@@ -26,5 +29,10 @@ public class Dom4jFramework implements Framework<Void> {
     @Override
     public Producer buildProducer(KiteConfiguration configuration, DataModel dataModel, String namespace, String templateId) {
         return new Dom4jProducer(configuration, dataModel, namespace, templateId);
+    }
+
+    @Override
+    public Producer buildProducer(KiteConfiguration configuration, DataModel dataModel, List<TemplatePackage> templatePackages) {
+        return new Dom4jProducer(configuration, dataModel, templatePackages);
     }
 }

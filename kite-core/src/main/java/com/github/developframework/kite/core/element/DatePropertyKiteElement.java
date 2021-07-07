@@ -1,6 +1,7 @@
 package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.node.ObjectNodeProxy;
+import com.github.developframework.kite.core.structs.ElementAttributes;
 import com.github.developframework.kite.core.structs.ElementDefinition;
 import com.github.developframework.kite.core.structs.FragmentLocation;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -12,6 +13,7 @@ import java.util.Set;
 /**
  * @author qiushui on 2021-06-24.
  */
+@ElementAttributes(ElementDefinition.Attribute.PATTERN)
 public class DatePropertyKiteElement extends PropertyKiteElement {
 
     // 支持的类型集合
@@ -38,7 +40,7 @@ public class DatePropertyKiteElement extends PropertyKiteElement {
     @Override
     public void configure(ElementDefinition elementDefinition) {
         super.configure(elementDefinition);
-        this.pattern = elementDefinition.getString("pattern", "yyyy-MM-dd HH:mm:ss");
+        this.pattern = elementDefinition.getString(ElementDefinition.Attribute.PATTERN, "yyyy-MM-dd HH:mm:ss");
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.AssembleContext;
+import com.github.developframework.kite.core.structs.ElementAttributes;
 import com.github.developframework.kite.core.structs.ElementDefinition;
 import com.github.developframework.kite.core.structs.FragmentLocation;
 import org.apache.commons.lang3.StringUtils;
@@ -10,6 +11,10 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author qiushui on 2021-06-24.
  */
+@ElementAttributes({
+        ElementDefinition.Attribute.NAMESPACE,
+        ElementDefinition.Attribute.ID,
+})
 public class IncludeKiteElement extends AbstractKiteElement {
 
     private FragmentLocation targetFragmentLocation;
@@ -31,9 +36,7 @@ public class IncludeKiteElement extends AbstractKiteElement {
     @Override
     public void assemble(AssembleContext context) {
         context
-                .getConfiguration()
-                .getTemplatePackageRegistry()
-                .extractFragment(targetFragmentLocation)
+                .extractFragment(targetFragmentLocation.getNamespace(), targetFragmentLocation.getFragmentId())
                 .forEachAssemble(context);
     }
 }

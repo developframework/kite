@@ -1,6 +1,7 @@
 package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.AssembleContext;
+import com.github.developframework.kite.core.structs.ElementAttributes;
 import com.github.developframework.kite.core.structs.ElementDefinition;
 import com.github.developframework.kite.core.structs.FragmentLocation;
 import com.github.developframework.kite.core.utils.KiteUtils;
@@ -11,6 +12,7 @@ import lombok.Setter;
  *
  * @author qiushui on 2021-06-27.
  */
+@ElementAttributes("condition")
 public final class IfKiteElement extends ContainerKiteElement {
 
     private String conditionValue;

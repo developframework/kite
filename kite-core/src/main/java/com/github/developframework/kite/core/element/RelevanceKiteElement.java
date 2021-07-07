@@ -3,6 +3,7 @@ package com.github.developframework.kite.core.element;
 import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.dynamic.RelFunction;
 import com.github.developframework.kite.core.exception.KiteException;
+import com.github.developframework.kite.core.structs.ElementAttributes;
 import com.github.developframework.kite.core.structs.ElementDefinition;
 import com.github.developframework.kite.core.structs.FragmentLocation;
 import com.github.developframework.kite.core.utils.KiteUtils;
@@ -16,6 +17,13 @@ import java.util.Optional;
  *
  * @author qiushui on 2021-06-25.
  */
+@ElementAttributes({
+        ElementDefinition.Attribute.REL,
+        ElementDefinition.Attribute.TYPE,
+        ElementDefinition.Attribute.MERGE_PARENT,
+        ElementDefinition.Attribute.UNIQUE,
+        ElementDefinition.Attribute.INNER_CONVERTER
+})
 public final class RelevanceKiteElement extends ArrayKiteElement {
 
     private String relValue;

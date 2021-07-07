@@ -40,6 +40,7 @@ public final class ElementDefinition {
         String CONDITION = "condition";
         String CHECK_DATA = "check-data";
         String CASE_TEST = "test";
+        String PATTERN = "pattern";
         String EXTEND = "extend";
         String CHILDREN_NAMING_STRATEGY = "children-naming-strategy";
         String NAMING_STRATEGY = "naming-strategy";

@@ -27,8 +27,6 @@ import java.util.stream.Collectors;
  */
 public final class XmlParser extends Parser {
 
-    private final Map<String, Class<? extends AbstractKiteElement>> kiteElementClasses = ElementTag.buildMap();
-
     /**
      * 读取一份xml文档解析模板包
      *
@@ -41,7 +39,7 @@ public final class XmlParser extends Parser {
         try {
             document = reader.read(configurationSource.getInputStream());
         } catch (DocumentException e) {
-            throw new KiteException("xml parse fail: %s", e.getMessage());
+            throw new KiteException("XML解析失败：%s", e.getMessage());
         }
         final Element rootElement = document.getRootElement();
         final List<Element> templatePackageElements = rootElement.elements(ElementTag.TEMPLATE_PACKAGE.getTag());
@@ -69,7 +67,7 @@ public final class XmlParser extends Parser {
             kiteElement = clazz.getConstructor(FragmentLocation.class).newInstance(fragmentLocation);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new KiteException("xml read failed in \"%s\"", fragmentLocation);
+            throw new KiteException("XML解析失败，错误位置在\"%s\"", fragmentLocation);
         }
         final Map<String, String> attributesMap = attributesMap(element);
         kiteElement.configure(new ElementDefinition(attributesMap, children));

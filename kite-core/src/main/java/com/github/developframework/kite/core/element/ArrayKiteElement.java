@@ -3,6 +3,7 @@ package com.github.developframework.kite.core.element;
 import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.node.ArrayNodeProxy;
 import com.github.developframework.kite.core.structs.ArrayAttributes;
+import com.github.developframework.kite.core.structs.ElementAttributes;
 import com.github.developframework.kite.core.structs.ElementDefinition;
 import com.github.developframework.kite.core.structs.FragmentLocation;
 import com.github.developframework.kite.core.utils.KiteUtils;
@@ -14,6 +15,13 @@ import java.util.Optional;
  *
  * @author qiushui on 2021-06-24.
  */
+@ElementAttributes({
+        ElementDefinition.Attribute.MAP,
+        ElementDefinition.Attribute.COMPARATOR,
+        ElementDefinition.Attribute.LIMIT,
+        ElementDefinition.Attribute.NULL_EMPTY,
+        ElementDefinition.Attribute.XML_ITEM
+})
 public class ArrayKiteElement extends ContainerKiteElement {
 
     // 数组属性

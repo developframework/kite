@@ -2,8 +2,8 @@ package com.github.developframework.kite.core.structs;
 
 import com.github.developframework.kite.core.element.Fragment;
 import com.github.developframework.kite.core.element.Template;
+import com.github.developframework.kite.core.exception.KiteException;
 import com.github.developframework.kite.core.exception.ResourceNotUniqueException;
-import com.github.developframework.kite.core.exception.TemplateException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -18,23 +18,14 @@ import java.util.HashMap;
 @RequiredArgsConstructor
 public class TemplatePackage extends HashMap<String, Fragment> {
 
+    public static final String DEFAULT_NAMESPACE = "_default";
 
     /* 命名空间 */
     @Getter
     private final String namespace;
 
-    /**
-     * 根据id获取片段
-     *
-     * @param fragmentId 模板ID
-     * @return 模板
-     */
-    public Fragment getFragmentById(String fragmentId) {
-        Fragment fragment = super.get(fragmentId);
-        if (fragment == null) {
-            throw new TemplateException("The template \"%s\" is undefined in template-package \"%s\".", fragmentId, namespace);
-        }
-        return fragment;
+    public TemplatePackage() {
+        this.namespace = DEFAULT_NAMESPACE;
     }
 
     /**
@@ -44,11 +35,11 @@ public class TemplatePackage extends HashMap<String, Fragment> {
      * @return 模板
      */
     public Template getTemplateById(String templateId) {
-        Fragment fragment = getFragmentById(templateId);
+        Fragment fragment = super.get(templateId);
         if (fragment instanceof Template) {
             return (Template) fragment;
         }
-        throw new TemplateException("The template \"%s\" is a fragment in template-package \"%s\".", templateId, namespace);
+        return null;
     }
 
     /**
@@ -64,4 +55,19 @@ public class TemplatePackage extends HashMap<String, Fragment> {
         super.put(templateId, fragment);
     }
 
+    /**
+     * 获取唯一的模板
+     */
+    public Template getUniqueTemplate() {
+        final Template[] templates = values()
+                .stream()
+                .filter(f -> f instanceof Template)
+                .map(f -> (Template) f)
+                .toArray(Template[]::new);
+        if (templates.length != 1) {
+            throw new KiteException("使用ktl模式下template-package有且只能有一个template");
+        } else {
+            return templates[0];
+        }
+    }
 }

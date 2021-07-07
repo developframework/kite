@@ -8,6 +8,8 @@ import com.github.developframework.kite.core.data.DataModel;
 import com.github.developframework.kite.core.element.Template;
 import com.github.developframework.kite.core.exception.KiteException;
 import com.github.developframework.kite.core.node.ObjectNodeProxy;
+import com.github.developframework.kite.core.structs.TemplatePackage;
+import com.github.developframework.kite.core.structs.TemplatePackageRegistry;
 import com.github.developframework.kite.core.utils.KiteUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -18,6 +20,7 @@ import org.dom4j.io.XMLWriter;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -37,10 +40,21 @@ public class Dom4jProducer implements Producer {
 
     public Dom4jProducer(KiteConfiguration configuration, DataModel dataModel, String namespace, String templateId) {
         this.configuration = configuration;
-        this.namespace = namespace;
-        this.templateId = templateId;
         this.context = new AssembleContext(configuration, false);
         this.context.dataModel = dataModel;
+        this.namespace = namespace;
+        this.templateId = templateId;
+    }
+
+    public Dom4jProducer(KiteConfiguration configuration, DataModel dataModel, List<TemplatePackage> templatePackages) {
+        this.configuration = configuration;
+        this.context = new AssembleContext(configuration, true);
+        this.context.dataModel = dataModel;
+        this.context.extraTemplatePackages = new TemplatePackageRegistry();
+        templatePackages.forEach(this.context.extraTemplatePackages::putTemplatePackage);
+        final TemplatePackage templatePackage = templatePackages.get(0);
+        this.namespace = templatePackage.getNamespace();
+        this.templateId = templatePackage.getUniqueTemplate().getId();
     }
 
 
@@ -86,7 +100,7 @@ public class Dom4jProducer implements Producer {
     }
 
     private Document buildXmlDocument() {
-        final Template template = configuration.getTemplatePackageRegistry().extractTemplate(namespace, templateId);
+        final Template template = context.extractTemplate(namespace, templateId);
         final DataDefinition dataDefinition = template.getContentAttributes().dataDefinition;
         Object rootValue = null;
         if (dataDefinition != DataDefinition.EMPTY) {

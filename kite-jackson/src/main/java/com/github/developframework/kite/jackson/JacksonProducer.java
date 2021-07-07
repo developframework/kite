@@ -16,11 +16,13 @@ import com.github.developframework.kite.core.exception.KiteException;
 import com.github.developframework.kite.core.node.ArrayNodeProxy;
 import com.github.developframework.kite.core.node.NodeProxy;
 import com.github.developframework.kite.core.node.ObjectNodeProxy;
+import com.github.developframework.kite.core.structs.TemplatePackage;
 import com.github.developframework.kite.core.utils.KiteUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -42,11 +44,22 @@ public class JacksonProducer implements Producer {
 
     public JacksonProducer(KiteConfiguration configuration, DataModel dataModel, String namespace, String templateId) {
         this.configuration = configuration;
-        this.namespace = namespace;
-        this.templateId = templateId;
+        this.objectMapper = (ObjectMapper) configuration.getJsonFramework().getCore();
         this.context = new AssembleContext(configuration, true);
         this.context.dataModel = dataModel;
+        this.namespace = namespace;
+        this.templateId = templateId;
+    }
+
+    public JacksonProducer(KiteConfiguration configuration, DataModel dataModel, List<TemplatePackage> templatePackages) {
+        this.configuration = configuration;
         this.objectMapper = (ObjectMapper) configuration.getJsonFramework().getCore();
+        this.context = new AssembleContext(configuration, true);
+        this.context.dataModel = dataModel;
+        templatePackages.forEach(this.context.extraTemplatePackages::putTemplatePackage);
+        final TemplatePackage templatePackage = templatePackages.get(0);
+        this.namespace = templatePackage.getNamespace();
+        this.templateId = templatePackage.getUniqueTemplate().getId();
     }
 
 
@@ -75,7 +88,7 @@ public class JacksonProducer implements Producer {
     }
 
     private JsonNode buildJsonNode() {
-        final Template template = configuration.getTemplatePackageRegistry().extractTemplate(namespace, templateId);
+        final Template template = context.extractTemplate(namespace, templateId);
         final DataDefinition dataDefinition = template.getContentAttributes().dataDefinition;
         Object rootValue = null;
         if (dataDefinition != DataDefinition.EMPTY) {

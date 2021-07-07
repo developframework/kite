@@ -1,6 +1,7 @@
 package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.AssembleContext;
+import com.github.developframework.kite.core.structs.ElementAttributes;
 import com.github.developframework.kite.core.structs.ElementDefinition;
 import com.github.developframework.kite.core.structs.FragmentLocation;
 import com.github.developframework.kite.core.utils.KiteUtils;
@@ -10,6 +11,9 @@ import com.github.developframework.kite.core.utils.KiteUtils;
  *
  * @author qiushui on 2021-06-28.
  */
+@ElementAttributes({
+        ElementDefinition.Attribute.CASE_TEST
+})
 public final class CaseKiteElement extends ContainerKiteElement {
 
     private String caseTestFunctionValue;
