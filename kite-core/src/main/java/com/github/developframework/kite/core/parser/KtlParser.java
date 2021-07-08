@@ -4,10 +4,10 @@ import com.github.developframework.kite.core.element.AbstractKiteElement;
 import com.github.developframework.kite.core.element.Fragment;
 import com.github.developframework.kite.core.element.KiteElement;
 import com.github.developframework.kite.core.element.Template;
+import com.github.developframework.kite.core.exception.InvalidAttributeException;
 import com.github.developframework.kite.core.exception.KiteException;
 import com.github.developframework.kite.core.exception.KiteParseException;
 import com.github.developframework.kite.core.source.ConfigurationSource;
-import com.github.developframework.kite.core.source.StringConfigurationSource;
 import com.github.developframework.kite.core.structs.ElementDefinition;
 import com.github.developframework.kite.core.structs.ElementTag;
 import com.github.developframework.kite.core.structs.FragmentLocation;
@@ -21,7 +21,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -57,24 +56,10 @@ public final class KtlParser extends Parser {
     }
 
     /**
-     * 只读取片段
-     *
-     * @param ktl
-     * @return
-     * @throws IOException
-     */
-    public List<Fragment> readFragment(String ktl) throws IOException {
-        final List<LineNode> lineNodes = readLineDatas(new StringConfigurationSource(ktl, StandardCharsets.UTF_8));
-        TemplatePackage templatePackage = new TemplatePackage();
-        processFragment(templatePackage, lineNodes);
-        return new ArrayList<>(templatePackage.values());
-    }
-
-    /**
      * 处理片段
      *
-     * @param templatePackage
-     * @param nodes
+     * @param templatePackage 模板包
+     * @param nodes           节点
      */
     private void processFragment(TemplatePackage templatePackage, List<LineNode> nodes) {
         for (LineNode node : nodes) {
@@ -89,8 +74,9 @@ public final class KtlParser extends Parser {
     }
 
     private KiteElement readKiteElement(LineNode node, FragmentLocation fragmentLocation) {
-        final List<KiteElement> children = childrenElements(node, fragmentLocation);
+        checkAttributes(node);
         final Class<? extends AbstractKiteElement> clazz = kiteElementClasses.get(node.getElement());
+        final List<KiteElement> children = childrenElements(node, fragmentLocation);
         final AbstractKiteElement kiteElement;
         try {
             kiteElement = clazz.getConstructor(FragmentLocation.class).newInstance(fragmentLocation);
@@ -103,7 +89,8 @@ public final class KtlParser extends Parser {
     }
 
     private List<KiteElement> childrenElements(LineNode node, FragmentLocation fragmentLocation) {
-        return node.getChildren()
+        return node
+                .getChildren()
                 .stream()
                 .map(n -> readKiteElement(n, fragmentLocation))
                 .collect(Collectors.toList());
@@ -136,6 +123,17 @@ public final class KtlParser extends Parser {
             lastMap.put(level, node);
         }
         return roots;
+    }
+
+    private void checkAttributes(LineNode node) {
+        // 参数检测
+        final Set<String> validAttributes = ElementTag.of(node.getElement()).getValidAttributes();
+        final Set<String> attributes = node.attributes.keySet();
+        for (String attribute : attributes) {
+            if (!validAttributes.contains(attribute)) {
+                throw new InvalidAttributeException(attribute, node.attributes.get(attribute), "不合法的属性");
+            }
+        }
     }
 
     /**

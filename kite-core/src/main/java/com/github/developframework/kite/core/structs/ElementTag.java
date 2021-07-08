@@ -41,12 +41,12 @@ public enum ElementTag {
 
     private final Class<? extends AbstractKiteElement> elementClass;
 
-    private final Set<String> requiredAttributes;
+    private final Set<String> validAttributes;
 
     ElementTag(String tag, Class<? extends AbstractKiteElement> elementClass) {
         this.tag = tag;
         this.elementClass = elementClass;
-        requiredAttributes = getRequiredAttributes(elementClass);
+        validAttributes = getValidAttributes(elementClass);
     }
 
     public static Map<String, Class<? extends AbstractKiteElement>> buildMap() {
@@ -60,16 +60,28 @@ public enum ElementTag {
     }
 
     @SuppressWarnings("unchecked")
-    private static Set<String> getRequiredAttributes(Class<? extends AbstractKiteElement> clazz) {
+    private static Set<String> getValidAttributes(Class<? extends AbstractKiteElement> clazz) {
+        if (clazz == null) {
+            return null;
+        }
         Set<String> set = new HashSet<>();
         while (clazz != AbstractKiteElement.class) {
             final ElementAttributes annotation = clazz.getAnnotation(ElementAttributes.class);
             if (annotation != null) {
                 set.addAll(Arrays.asList(annotation.value()));
-                set.addAll(getRequiredAttributes(annotation.baseClass()));
+                set.addAll(getValidAttributes(annotation.baseClass()));
             }
             clazz = (Class<? extends AbstractKiteElement>) clazz.getSuperclass();
         }
         return set;
+    }
+
+    public static ElementTag of(String tag) {
+        for (ElementTag elementTag : ElementTag.values()) {
+            if (elementTag.getTag().equals(tag)) {
+                return elementTag;
+            }
+        }
+        throw new AssertionError();
     }
 }
