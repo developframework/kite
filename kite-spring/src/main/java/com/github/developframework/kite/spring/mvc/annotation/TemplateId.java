@@ -14,7 +14,13 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TemplateId {
 
+    /**
+     * 模板id
+     */
     String value();
 
+    /**
+     * 生成类型
+     */
     TemplateType type() default TemplateType.JSON;
 }

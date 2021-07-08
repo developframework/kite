@@ -5,6 +5,7 @@ import com.github.developframework.kite.core.exception.KiteException;
 import com.github.developframework.kite.core.parser.KtlParser;
 import com.github.developframework.kite.core.source.StringConfigurationSource;
 import com.github.developframework.kite.core.structs.TemplatePackage;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -17,8 +18,9 @@ import java.util.List;
  */
 public class KiteFactory {
 
+    @Getter
     private final KiteConfiguration configuration;
-
+    @Getter
     private final KtlParser ktlParser;
 
     protected KiteFactory(KiteConfiguration configuration) {

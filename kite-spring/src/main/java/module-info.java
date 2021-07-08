@@ -10,6 +10,7 @@ module kite.spring {
     requires spring.context;
     requires spring.core;
     requires spring.web;
+    requires spring.webmvc;
 
     exports com.github.developframework.kite.spring;
     exports com.github.developframework.kite.spring.mvc;

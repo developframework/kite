@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.developframework.kite.core.Framework;
 import com.github.developframework.kite.core.KiteFactory;
 import com.github.developframework.kite.core.KiteOptions;
+import com.github.developframework.kite.core.structs.FragmentLocation;
 import com.github.developframework.kite.dom4j.Dom4jFramework;
 import com.github.developframework.kite.jackson.JacksonFramework;
+import com.github.developframework.kite.spring.ControllerTemplateScanner;
 import com.github.developframework.kite.spring.KiteScanLoader;
 import com.github.developframework.kite.spring.mvc.DataModelReturnValueHandler;
 import com.github.developframework.kite.spring.mvc.KiteResponseReturnValueHandler;
@@ -18,6 +20,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+
+import java.lang.reflect.Method;
+import java.util.Map;
 
 /**
  * 自动配置Kite
@@ -35,7 +41,6 @@ public class KiteComponentAutoConfiguration {
             @Qualifier("jsonFramework") Framework<?> jsonFramework,
             @Qualifier("xmlFramework") Framework<?> xmlFramework
     ) {
-        log.info("【Kite Boot】 create default Kite Factory");
         final KiteScanLoader loader = new KiteScanLoader(kiteProperties.getLocations());
         final KiteOptions options = new KiteOptions();
         configureOptions(options, kiteProperties);
@@ -46,7 +51,7 @@ public class KiteComponentAutoConfiguration {
     @ConditionalOnMissingBean(name = "jsonFramework")
     @Bean("jsonFramework")
     public JacksonFramework jacksonFramework(ObjectMapper objectMapper) {
-        log.info("【Kite Boot】 load jackson Framework");
+        log.info("【Kite Boot】加载 jackson Framework");
         return new JacksonFramework(objectMapper);
     }
 
@@ -54,7 +59,7 @@ public class KiteComponentAutoConfiguration {
     @ConditionalOnMissingBean(name = "xmlFramework")
     @Bean("xmlFramework")
     public Dom4jFramework dom4jFramework() {
-        log.info("【Kite Boot】 load dom4j Framework");
+        log.info("【Kite Boot】加载 dom4j Framework");
         return new Dom4jFramework();
     }
 
@@ -68,6 +73,11 @@ public class KiteComponentAutoConfiguration {
         return new KiteResponseReturnValueHandler(kiteFactory);
     }
 
+    @Bean
+    public Map<Method, FragmentLocation> fragmentLocationMap(KiteFactory kiteFactory, RequestMappingHandlerMapping handlerMapping) {
+        return new ControllerTemplateScanner(kiteFactory, handlerMapping).scan();
+    }
+
     /**
      * 配置options
      *
@@ -76,10 +86,10 @@ public class KiteComponentAutoConfiguration {
      */
     private void configureOptions(KiteOptions options, KiteProperties kiteProperties) {
         options.getJson().setNamingStrategy(kiteProperties.getJson().getNamingStrategy());
-        log.info("The naming strategy \"{}\" is activate on json producer.", kiteProperties.getJson().getNamingStrategy());
+        log.info("json producer 激活命名策略“{}”", kiteProperties.getJson().getNamingStrategy());
 
         options.getXml().setNamingStrategy(kiteProperties.getXml().getNamingStrategy());
-        log.info("The naming strategy \"{}\" is activate on xml producer.", kiteProperties.getXml().getNamingStrategy());
+        log.info("xml producer 激活命名策略“{}”", kiteProperties.getXml().getNamingStrategy());
 
         if (kiteProperties.getXml() != null) {
             options.getXml().setSuppressDeclaration(kiteProperties.getXml().isSuppressDeclaration());

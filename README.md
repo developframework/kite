@@ -55,13 +55,13 @@ KiteOptions options=new KiteOptions();
                     xsi:schemaLocation="
 	https://github.com/developframework/kite/schema kite-configuration.xsd">
 
-  <template-package namespace="kite-demo">
+  <templateKTL-package namespace="kite-demo">
 
-    <template id="first-view">
+    <templateKTL id="first-view">
       <property data="sayHello"/>
-    </template>
+    </templateKTL>
 
-  </template-package>
+  </templateKTL-package>
 
 </kite-configuration>
 ```
@@ -169,23 +169,26 @@ Kite框架的所有异常类。
 Kite configuration 文档的结构如下： 
 
 ```xml
+
 <kite-configuration>
-    <template-package namespace="">
-    	<template id="">
-    		<!-- 定义视图内容 -->
-    	</template>
-    	<template id="">
-    		<!-- 定义视图内容 -->
-    	</template>
-    	<!-- 其它template -->
-    </template-package>
-    <!-- 其它template-package -->
+  <templateKTL-package namespace="">
+    <templateKTL id="">
+      <!-- 定义视图内容 -->
+    </templateKTL>
+    <templateKTL id="">
+      <!-- 定义视图内容 -->
+    </templateKTL>
+    <!-- 其它template -->
+  </templateKTL-package>
+  <!-- 其它template-package -->
 </kite-configuration>
 ```
 
-在`<kite-configuration>`节点中你可以配置任意数量的`<template-package>`，代表不同的模板包，在`<template-package>`节点上你必须声明命名空间`namespace`属性，并且`namespace`是唯一的，不然会抛出`ResourceNotUniqueException`。
+在`<kite-configuration>`节点中你可以配置任意数量的`<templateKTL-package>`，代表不同的模板包，在`<templateKTL-package>`节点上你必须声明命名空间`namespace`
+属性，并且`namespace`是唯一的，不然会抛出`ResourceNotUniqueException`。
 
-在每个`<template-package>`节点中你可以配置任意数量的`<template>`。每个`<template>`即代表了某一种json格式的视图，在`<template>`节点你必须声明id属性，并且id必须是唯一的，不然会抛出`ResourceNotUniqueException`。
+在每个`<templateKTL-package>`节点中你可以配置任意数量的`<templateKTL>`。每个`<templateKTL>`即代表了某一种json格式的视图，在`<templateKTL>`
+节点你必须声明id属性，并且id必须是唯一的，不然会抛出`ResourceNotUniqueException`。
 
 Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite configuration配置文档，文档的加载顺序不分先后。
 
@@ -193,7 +196,7 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 
 基本型标签
 
-- `<template>`
+- `<templateKTL>`
 - `<object>`
 - `<array>`
 - `<property>`
@@ -223,14 +226,15 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 
 ##### **3.2.2.1. 基本型标签**
 
-###### a) template
+###### a) templateKTL
 
-当你需要声明一个模板时，你将会使用到`<template>`标签。
+当你需要声明一个模板时，你将会使用到`<templateKTL>`标签。
 
   ```xml
-<template id="">
 
-</template>
+<templateKTL id="">
+
+</templateKTL>
   ```
 
 | 属性         | 功能                                                         | 是否必须 |
@@ -377,7 +381,8 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 
 ###### a) include
 
-Kite框架提供模块化设计json结构视图的功能。在一个`<template>`标签中你可以采用`<include>`标签来导入其它的`<template>`的结构内容，从而实现模块化单元分解。详见[5.3.1.节](#chapter531)
+Kite框架提供模块化设计json结构视图的功能。在一个`<templateKTL>`标签中你可以采用`<include>`标签来导入其它的`<templateKTL>`
+的结构内容，从而实现模块化单元分解。详见[5.3.1.节](#chapter531)
 
 ```xml
 <include id="" namespace=""/>
@@ -443,13 +448,13 @@ Kite框架提供模块化设计json结构视图的功能。在一个`<template>`
 
 ###### f) slot
 
-此标签位置作为子`<template>`的插槽位置。和template的`extend`结合使用。详见[5.3.2节](#chapter532)
+此标签位置作为子`<templateKTL>`的插槽位置。和template的`extend`结合使用。详见[5.3.2节](#chapter532)
 
 ```xml
 
-<template id="" extend="">
+<templateKTL id="" extend="">
   <slot/>
-</template>
+</templateKTL>
 ```
 
 ###### g) if  else
@@ -574,28 +579,28 @@ public class Staff {
 
 ```xml
 <!-- 忽略kite-configuration -->
-<template-package namespace="kite-demo">
+<templateKTL-package namespace="kite-demo">
 
-  <template id="company-info" data="company">
+  <templateKTL id="company-info" data="company">
     <property data="companyId"/>
     <property data="companyName"/>
-  </template>
+  </templateKTL>
 
-  <template id="department-info" data="department">
+  <templateKTL id="department-info" data="department">
     <property data="departmentId"/>
     <property data="companyId"/>
     <property data="departmentName"/>
-  </template>
+  </templateKTL>
 
-  <template id="staff-info" data="staff">
+  <templateKTL id="staff-info" data="staff">
     <property data="staffId"/>
     <property data="departmentId"/>
     <property data="staffName"/>
     <property data="gender"/>
     <property-date data="birthday"/>
-  </template>
+  </templateKTL>
 
-</template-package>
+</templateKTL-package>
 ```
 
 伪造数据
@@ -678,10 +683,10 @@ final KiteFactory kiteFactory=KiteFactoryBuilder.buildFromClasspathXml(new KiteO
 
 ```xml
 
-<template id="company-info" data="company">
+<templateKTL id="company-info" data="company">
   <property data="companyId" alias="id"/>
   <property data="companyName" alias="name"/>
-</template>
+</templateKTL>
 ```
 
 ```json
@@ -737,12 +742,12 @@ final KiteOptions options=new KiteOptions();
 
 ```xml
 
-<template id="test-naming-strategy">
+<templateKTL id="test-naming-strategy">
   <object data="myCompany" naming-strategy="ORIGINAL">
     <property data="companyId" naming-strategy="MIDDLE_LINE"/>
     <property data="companyName" naming-strategy="UNDERLINE"/>
   </object>
-</template>
+</templateKTL>
 ```
 
 ```json
@@ -846,11 +851,11 @@ DataModel dataModel=DataModel.singleton("gender",Staff.Gender.MALE);
 
 ```xml
 
-<template id="test-array-null">
+<templateKTL id="test-array-null">
   <array data="array" alias="null-array"/>
   <array data="array" alias="empty-array" null-empty="true"/>
   <array data="array" alias="null-hidden-array" null-hidden="true"/>
-</template>
+</templateKTL>
 ```
 
 ```java
@@ -872,16 +877,16 @@ DataModel dataModel=DataModel.singleton("array",null);
 </xml>
 ```
 
-### 4.6. object array template
+### 4.6. object array templateKTL
 
 ```xml
 
-<template id="company-info">
+<templateKTL id="company-info">
   <object data="company">
     <property data="companyId"/>
     <property data="companyName"/>
   </object>
-</template>
+</templateKTL>
 ```
 
 利用`<object>`标签构造一个对象结构
@@ -913,12 +918,12 @@ DataModel dataModel=DataModel.singleton("company",DemoDataMock.mockCompanies()[0
 
 ```xml
 
-<template id="company-info">
+<templateKTL id="company-info">
   <array data="companies" xml-item="company">
     <property data="companyId"/>
     <property data="companyName"/>
   </array>
-</template>
+</templateKTL>
 ```
 
 ```java
@@ -956,14 +961,14 @@ DataModel dataModel=DataModel.singleton("company",DemoDataMock.mockCompanies());
 </xml>
 ```
 
-或者直接把data设定在`<template>` 标签上，Kite框架会自动识别data对应的数据是否是数组或List。
+或者直接把data设定在`<templateKTL>` 标签上，Kite框架会自动识别data对应的数据是否是数组或List。
 
 ```xml
 
-<template id="company-info" data="company" xml-item="company" xml-root="companies">
+<templateKTL id="company-info" data="company" xml-item="company" xml-root="companies">
   <property data="companyId"/>
   <property data="companyName"/>
-</template>
+</templateKTL>
 ```
 
 当data指代的对象是Array或Collection时生成数组结构
@@ -1018,9 +1023,9 @@ DataModel dataModel=DataModel.singleton("company",DemoDataMock.mockCompanies());
 
 ```xml
 
-<template id="staff-info">
+<templateKTL id="staff-info">
   <prototype data="staff"/>
-</template>
+</templateKTL>
 ```
 
 以下加入Jackson的注解达到序列化效果
@@ -1069,9 +1074,9 @@ public class Staff {
 
 ```xml
 
-<template id="test-raw">
+<templateKTL id="test-raw">
   <raw data="companyJson" alias="company"/>
-</template>
+</templateKTL>
 ```
 
 ```json

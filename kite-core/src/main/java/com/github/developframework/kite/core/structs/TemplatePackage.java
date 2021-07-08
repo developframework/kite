@@ -5,7 +5,7 @@ import com.github.developframework.kite.core.element.Template;
 import com.github.developframework.kite.core.exception.KiteException;
 import com.github.developframework.kite.core.exception.ResourceNotUniqueException;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.util.HashMap;
 
@@ -15,14 +15,18 @@ import java.util.HashMap;
  * @author qiushui on 2021-06-23.
  */
 @Getter
-@RequiredArgsConstructor
 public class TemplatePackage extends HashMap<String, Fragment> {
 
     public static final String DEFAULT_NAMESPACE = "_default";
 
     /* 命名空间 */
     @Getter
-    private final String namespace;
+    @Setter
+    private String namespace;
+
+    public TemplatePackage(String namespace) {
+        this.namespace = namespace;
+    }
 
     public TemplatePackage() {
         this.namespace = DEFAULT_NAMESPACE;

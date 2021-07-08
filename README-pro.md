@@ -27,10 +27,10 @@ public interface KiteConverter<SOURCE, TARGET> {
 例如将peter的name处理后输出：
 
 ```xml
-<template id="company-info" data="company">
+<templateKTL id="company-info" data="company">
     <property data="companyId"/>
     <property data="companyName" converter="nameConverter"/>
-</template>
+</templateKTL>
 ```
 
 ```java
@@ -51,9 +51,9 @@ DataModel dataModel = DataModel
 当转换器用于获取当前data值对象内部属性值时有一种快捷用法：
 
 ```xml
-<template id="company-info">
+<templateKTL id="company-info">
   <property data="company" alias="company_name" converter="this.companyName"/>
-</template>
+</templateKTL>
 ```
 
 `<property>` 的取值为company，经过converter的转换选取了company对象的companyName属性作为该节点的值。
@@ -72,9 +72,9 @@ DataModel dataModel = DataModel
 ```
 
 ```xml
-<template id="company-info" data="companies" map="nameConverter">
+<templateKTL id="company-info" data="companies" map="nameConverter">
 
-</template>
+</templateKTL>
 ```
 
 ```json
@@ -86,7 +86,7 @@ DataModel dataModel = DataModel
 使用`<object-virtual>`可以虚拟一个对象结构。 利用仅有的属性值，构造一个对象结构：
 
 ```xml
-<template id="staff-info" data="staff">
+<templateKTL id="staff-info" data="staff">
     <property data="staffId"/>
     <property data="departmentId"/>
     <property data="staffName"/>
@@ -95,7 +95,7 @@ DataModel dataModel = DataModel
         <property data="gender"/>
         <property data="birthday" />
     </object-virtual>
-</template>
+</templateKTL>
 ```
 
 ```java
@@ -118,21 +118,21 @@ DataModel dataModel = DataModel.singleton("companyName", "AA公司");
 
 #### 6.3.1. include引用
 
-使用`<include>`标签引用其它`<template>`模板，从而可实现模块化设计，避免重复定义视图模板。
+使用`<include>`标签引用其它`<templateKTL>`模板，从而可实现模块化设计，避免重复定义视图模板。
 
 ```xml
 <!-- 子模板 -->
-<template id="company-info" data="company">
+<templateKTL id="company-info" data="company">
     <property data="companyId"/>
     <property data="companyName"/>
-</template>
+</templateKTL>
 
-<template id="company-list">
+<templateKTL id="company-list">
     <array data="companies">
         <!-- 引用子模板 -->
         <include id="company-info"/>
     </array>
-</template>
+</templateKTL>
 ```
 
 ```json
@@ -149,7 +149,7 @@ DataModel dataModel = DataModel.singleton("companyName", "AA公司");
 
 #### 6.3.2. extend继承和slot插槽
 
-Kite框架的继承的概念，在`<template>`标签可以添加属性`extend`
+Kite框架的继承的概念，在`<templateKTL>`标签可以添加属性`extend`
 指定继承的template和继承的端口。继承的概念可以理解为反向include，调用子template视图，会优先从父template开始构造结构，当遇到`<slot`标签时才会构造子template视图。
 
 **注意：**
@@ -159,22 +159,22 @@ Kite框架的继承的概念，在`<template>`标签可以添加属性`extend`
 
 ```xml
 <!-- 父模板 -->
-<template id="parent">
+<templateKTL id="parent">
     <property data="success"/>
     <property data="message"/>
     <object-virtual alias="data">
         <!-- 插槽 所有继承此模板的子模板内容会插入在此 -->
         <slot/>
     </object-virtual>
-</template>
+</templateKTL>
 
 <!-- 子模板 -->
-<template id="company-info" extend="parent">
+<templateKTL id="company-info" extend="parent">
     <object data="company">
         <property data="companyId"/>
         <property data="companyName"/>
     </object>
-</template>
+</templateKTL>
 ```
 
 ```java
@@ -209,13 +209,13 @@ final String json = kiteFactory.getJsonProducer(dataModel, "kite-demo", "company
 数组个数不相同时将会抛出`LinkSizeNotEqualException`。 例子： 假如每个员工都有一个考核评分，数据源为员工数组和评分数组（这里使用`limit`限制输出前3条数据）
 
 ```xml
-<template id="staff-info" data="staffs" limit="3">
+<templateKTL id="staff-info" data="staffs" limit="3">
     <property data="staffId"/>
     <property data="departmentId"/>
     <property data="staffName"/>
     <!-- 因为scores属性不在Staff中所以要加#从dataModel取值 -->
     <link data="#scores" limit="3"/>
-</template>
+</templateKTL>
 ```
 
 ```java
@@ -261,7 +261,7 @@ sourceItem是迭代了A数组的每一项，sourceIndex是它的索引。每一�
 具体看示例：
 
 ```xml
-<template id="test-rel" data="companies">
+<templateKTL id="test-rel" data="companies">
     <include id="company-info"/>
     <relevance data="#departments" rel="companyDepartmentRel">
         <include id="department-info"/>
@@ -269,7 +269,7 @@ sourceItem是迭代了A数组的每一项，sourceIndex是它的索引。每一�
             <include id="staff-info"/>
         </relevance>
     </relevance>
-</template>
+</templateKTL>
 ```
 
 ```java
@@ -359,12 +359,12 @@ DataModel dataModel = DataModel
 例子：强制只取第一个员工并拼接到部门对象
 
 ```xml
-<template id="test-merge-parent" data="departments">
+<templateKTL id="test-merge-parent" data="departments">
     <include id="department-info"/>
     <relevance data="#staffs" rel="departmentStaffRel" unique="true" merge-parent="true">
         <include id="staff-info"/>
     </relevance>
-</template>
+</templateKTL>
 ```
 
 ```json
@@ -420,14 +420,14 @@ public interface Condition<T> {
 最简范例：
 
 ```xml
-<template id="first-view">
+<templateKTL id="first-view">
   <if condition="myCondition">
     <property data="sayHello"/>
   </if>
   <else>
     <property data="sayBye"/>
   </else>
-</template>
+</templateKTL>
 ```
 
 ```java
@@ -471,7 +471,7 @@ public interface CaseTestFunction<T> {
 最简范例：
 
 ```xml
-<template id="first-view">
+<templateKTL id="first-view">
   <switch check-data="switchData">
     <case test="testCase1">
         <property data="sayHello"/>
@@ -483,7 +483,7 @@ public interface CaseTestFunction<T> {
         <property data="sayBye"/>
     </default>
   </switch>
-</template>
+</templateKTL>
 ```
 
 ```java

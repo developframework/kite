@@ -2,11 +2,18 @@ package com.github.developframework.kite.spring.mvc;
 
 import com.github.developframework.kite.core.KiteFactory;
 import com.github.developframework.kite.core.exception.KiteException;
+import com.github.developframework.kite.core.structs.FragmentLocation;
 import com.github.developframework.kite.spring.mvc.annotation.KiteNamespace;
 import com.github.developframework.kite.spring.mvc.annotation.TemplateId;
+import com.github.developframework.kite.spring.mvc.annotation.TemplateKTL;
 import com.github.developframework.kite.spring.mvc.annotation.TemplateType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
+
+import java.lang.reflect.Method;
+import java.util.Map;
 
 /**
  * 基于注解的ReturnValueHandler
@@ -14,6 +21,10 @@ import org.springframework.core.annotation.AnnotationUtils;
  * @author qiuzhenhao
  */
 public abstract class AnnotationKiteReturnValueHandler<T> extends AbstractKiteReturnValueHandler<T> {
+
+    @Autowired
+    @Qualifier("fragmentLocationMap")
+    private Map<Method, FragmentLocation> fragmentLocationMap;
 
     public AnnotationKiteReturnValueHandler(KiteFactory kiteFactory) {
         super(kiteFactory);
@@ -25,7 +36,7 @@ public abstract class AnnotationKiteReturnValueHandler<T> extends AbstractKiteRe
         if (annotation == null) {
             annotation = AnnotationUtils.findAnnotation(methodParameter.getContainingClass(), KiteNamespace.class);
             if (annotation == null) {
-                throw new KiteException("@KiteNamespace is not found in Class \"%s\" with Method \"%s\".", methodParameter.getContainingClass(), methodParameter.getMethod().getName());
+                throw new KiteException("在“%s”方法“%s”上没标注@KiteNamespace，或者在Controller类上标注全局@KiteNamespace", methodParameter.getContainingClass(), methodParameter.getMethod().getName());
             }
         }
         return annotation.value();
@@ -33,19 +44,28 @@ public abstract class AnnotationKiteReturnValueHandler<T> extends AbstractKiteRe
 
     @Override
     protected String templateId(T returnValue, MethodParameter methodParameter) {
-        final TemplateId annotation = methodParameter.getMethodAnnotation(TemplateId.class);
-        if (annotation == null) {
-            throw new KiteException("@TemplateId is not found in Class \"%s\" with Method \"%s\".", methodParameter.getContainingClass(), methodParameter.getMethod().getName());
+        final TemplateId templateId = methodParameter.getMethodAnnotation(TemplateId.class);
+        if (templateId != null) {
+            return templateId.value();
         }
-        return annotation.value();
+        final TemplateKTL templateKTL = methodParameter.getMethodAnnotation(TemplateKTL.class);
+        if (templateKTL == null) {
+            throw new KiteException("在“%s”方法“%s”上没标注@TemplateId或@TemplateKTL", methodParameter.getContainingClass(), methodParameter.getMethod().getName());
+        }
+        final FragmentLocation fragmentLocation = fragmentLocationMap.get(methodParameter.getMethod());
+        return fragmentLocation.getFragmentId();
     }
 
     @Override
     protected TemplateType templateType(T returnValue, MethodParameter methodParameter) {
-        final TemplateId annotation = methodParameter.getMethodAnnotation(TemplateId.class);
-        if (annotation == null) {
-            throw new KiteException("@TemplateId is not found in Class \"%s\" with Method \"%s\".", methodParameter.getContainingClass(), methodParameter.getMethod().getName());
+        final TemplateId templateId = methodParameter.getMethodAnnotation(TemplateId.class);
+        if (templateId != null) {
+            return templateId.type();
         }
-        return annotation.type();
+        final TemplateKTL templateKTL = methodParameter.getMethodAnnotation(TemplateKTL.class);
+        if (templateKTL == null) {
+            throw new KiteException("在“%s”方法“%s”上没标注@TemplateId或@TemplateKTL", methodParameter.getContainingClass(), methodParameter.getMethod().getName());
+        }
+        return templateKTL.type();
     }
 }
