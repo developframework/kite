@@ -42,7 +42,7 @@ public final class LinkKiteElement extends ArrayKiteElement {
             // 处理limit功能
             final int length = arrayAttributes.limit != null && arrayAttributes.limit < array.length ? arrayAttributes.limit : array.length;
             if (length != context.arrayLength) {
-                throw new LinkSizeNotEqualException(fragmentLocation);
+                throw new LinkSizeNotEqualException(fragmentLocation, length, context.arrayLength);
             }
             // 处理map功能
             final Object v = KiteUtils.handleKiteConverter(context.dataModel, arrayAttributes.mapValue, array[context.arrayIndex]);

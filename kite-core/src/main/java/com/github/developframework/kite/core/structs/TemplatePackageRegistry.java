@@ -20,7 +20,7 @@ public class TemplatePackageRegistry {
     public void putTemplatePackage(TemplatePackage templatePackage) {
         String namespace = templatePackage.getNamespace();
         if (this.templatePackages.containsKey(namespace)) {
-            throw new ResourceNotUniqueException("Kite package", namespace);
+            throw new ResourceNotUniqueException("kite-package namespace", namespace);
         }
         this.templatePackages.put(namespace, templatePackage);
     }

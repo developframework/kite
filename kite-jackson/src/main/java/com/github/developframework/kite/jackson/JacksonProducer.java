@@ -70,7 +70,7 @@ public class JacksonProducer implements Producer {
         try {
             return pretty ? objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(node) : objectMapper.writeValueAsString(node);
         } catch (JsonProcessingException e) {
-            throw new KiteException("produce json string failed.");
+            throw new KiteException("构建json失败");
         }
     }
 
@@ -83,7 +83,7 @@ public class JacksonProducer implements Producer {
             final JsonGenerator generator = objectMapper.getFactory().createGenerator(outputStream, getJsonEncoding(charset));
             writer.writeValue(generator, node);
         } catch (IOException e) {
-            throw new KiteException("produce json string failed.");
+            throw new KiteException("构建json失败");
         }
     }
 

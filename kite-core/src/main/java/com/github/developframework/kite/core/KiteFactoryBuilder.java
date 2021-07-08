@@ -87,9 +87,9 @@ public abstract class KiteFactoryBuilder {
                     try {
                         return parser.read(source).stream();
                     } catch (IOException e) {
-                        throw new KiteParseException("【Kite】parse configuration source \"%s\" happened error: %s", source.getSourceName(), e.getMessage());
+                        throw new KiteParseException("解析配置源“%s”发生错误：%s", source.getSourceName(), e.getMessage());
                     } finally {
-                        log.debug("【Kite】loaded the configuration source \"{}\".", source.getSourceName());
+                        log.debug("【Kite】已加载配置源“{}”", source.getSourceName());
                     }
                 })
                 .forEach(registry::putTemplatePackage);

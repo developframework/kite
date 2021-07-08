@@ -56,14 +56,14 @@ public final class KiteUtils {
                 if (tClass.isAssignableFrom(obj.getClass())) {
                     return obj;
                 } else {
-                    throw new InvalidAttributeException(attributeName, value, "It's not a " + tClass.getSimpleName() + " instance.");
+                    throw new InvalidAttributeException(attributeName, value, "没有类“" + tClass.getSimpleName() + "”的实例");
                 }
             } catch (ClassNotFoundException e) {
-                throw new InvalidAttributeException(attributeName, value, "class not found, and it's also not a expression.");
+                throw new InvalidAttributeException(attributeName, value, "类不存在，并且也不是一个expression");
             } catch (IllegalAccessException | InstantiationException e) {
-                throw new KiteException("Can't new " + tClass.getSimpleName() + " instance.");
+                throw new KiteException("不能new“" + tClass.getSimpleName() + "”的实例");
             } catch (NoSuchMethodException | InvocationTargetException e) {
-                throw new KiteException(tClass.getSimpleName() + " No noArg Constructor.");
+                throw new KiteException(tClass.getSimpleName() + "没有无参构造方法");
             }
         });
     }
@@ -86,7 +86,7 @@ public final class KiteUtils {
         } else if (object instanceof Set<?>) {
             return ((Set<?>) object).toArray();
         } else {
-            throw new InvalidAttributeException(ElementDefinition.Attribute.DATA, dataDefinition.toString(), "Data must be array or List/Set type, the value class is " + object.getClass().getName());
+            throw new InvalidAttributeException(ElementDefinition.Attribute.DATA, dataDefinition.toString(), "data必须是array或List/Set类型，当前类为" + object.getClass().getName());
         }
     }
 

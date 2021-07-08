@@ -8,5 +8,10 @@ package com.github.developframework.kite.core.node;
 @FunctionalInterface
 public interface NodeProxy {
 
+    /**
+     * 获得真实节点
+     *
+     * @return 真实节点
+     */
     Object getNode();
 }

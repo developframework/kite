@@ -8,6 +8,6 @@ package com.github.developframework.kite.core.exception;
 public class TemplatePackageUndefinedException extends KiteException {
 
     public TemplatePackageUndefinedException(String namespace) {
-        super("The template package \"%s\" is undefined.", namespace);
+        super("未定义 template-package namespace “%s”", namespace);
     }
 }

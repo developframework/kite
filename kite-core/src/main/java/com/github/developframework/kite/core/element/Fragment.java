@@ -80,7 +80,7 @@ public class Fragment extends ContainerKiteElement {
                     return new FragmentLocation(parts[0], parts[1]);
                 }
             } else {
-                throw new InvalidAttributeException(ElementDefinition.Attribute.EXTEND, extend, "format error");
+                throw new InvalidAttributeException(ElementDefinition.Attribute.EXTEND, extend, "格式错误");
             }
         }
         return null;

@@ -59,7 +59,7 @@ public final class RelevanceKiteElement extends ArrayKiteElement {
         if (dataValue.isPresent()) {
             Object v = dataValue.get();
             if (!KiteUtils.objectIsArray(v)) {
-                throw new KiteException("relevance data must array.");
+                throw new KiteException("relevance的data必须是array或List/Set");
             }
             final List<Object> matches = KiteUtils.handleInnerKiteConverter(
                     context.dataModel,

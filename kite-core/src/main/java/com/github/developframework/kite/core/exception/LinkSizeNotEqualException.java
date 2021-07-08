@@ -9,7 +9,7 @@ import com.github.developframework.kite.core.structs.FragmentLocation;
  */
 public class LinkSizeNotEqualException extends KiteException {
 
-    public LinkSizeNotEqualException(FragmentLocation fragmentLocation) {
-        super("The element <link> size is not equals parent array size in \"%s\"", fragmentLocation.toString());
+    public LinkSizeNotEqualException(FragmentLocation fragmentLocation, int length, int parentLength) {
+        super("link的长度%d不等于父数组长度%d，位置在“%s”", length, parentLength, fragmentLocation.toString());
     }
 }

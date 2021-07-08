@@ -50,7 +50,7 @@ public class TemplatePackage extends HashMap<String, Fragment> {
     public void push(Fragment fragment) {
         String templateId = fragment.getFragmentLocation().getFragmentId();
         if (super.containsKey(templateId)) {
-            throw new ResourceNotUniqueException("Kite template", templateId);
+            throw new ResourceNotUniqueException("template id", templateId);
         }
         super.put(templateId, fragment);
     }

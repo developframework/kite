@@ -8,10 +8,10 @@ package com.github.developframework.kite.core.exception;
 public class KiteException extends RuntimeException {
 
     public KiteException(String message) {
-        super(message);
+        super("【Kite】" + message);
     }
 
     public KiteException(String format, Object... parameters) {
-        super(String.format(format, parameters));
+        super("【Kite】" + String.format(format, parameters));
     }
 }
