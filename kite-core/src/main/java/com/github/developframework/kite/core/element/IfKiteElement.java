@@ -42,7 +42,7 @@ public final class IfKiteElement extends ContainerKiteElement {
         if (flag) {
             // 执行条件真的逻辑
             super.forEachAssemble(context);
-        } else {
+        } else if(elseKiteElement != null){
             // 执行条件假的逻辑
             elseKiteElement.assemble(context);
         }
