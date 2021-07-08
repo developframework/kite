@@ -51,7 +51,6 @@ DataModel dataModel = DataModel
 当转换器用于获取当前data值对象内部属性值时有一种快捷用法：
 
 ```xml
-
 <template id="company-info">
     <property data="company" alias="company_name" converter="this.companyName"/>
 </template>
@@ -73,7 +72,6 @@ DataModel dataModel = DataModel
 ```
 
 ```xml
-
 <template id="company-info" data="companies" map="nameConverter">
 
 </template>
@@ -88,7 +86,6 @@ DataModel dataModel = DataModel
 使用`<object-virtual>`可以虚拟一个对象结构。 利用仅有的属性值，构造一个对象结构：
 
 ```xml
-
 <template id="staff-info" data="staff">
     <property data="staffId"/>
     <property data="departmentId"/>
@@ -212,7 +209,6 @@ final String json = kiteFactory.getJsonProducer(dataModel, "kite-demo", "company
 数组个数不相同时将会抛出`LinkSizeNotEqualException`。 例子： 假如每个员工都有一个考核评分，数据源为员工数组和评分数组（这里使用`limit`限制输出前3条数据）
 
 ```xml
-
 <template id="staff-info" data="staffs" limit="3">
     <property data="staffId"/>
     <property data="departmentId"/>
@@ -364,7 +360,6 @@ DataModel dataModel = DataModel
 例子：强制只取第一个员工并拼接到部门对象
 
 ```xml
-
 <template id="test-merge-parent" data="departments">
     <include id="department-info"/>
     <relevance data="#staffs" rel="departmentStaffRel" unique="true" merge-parent="true">
@@ -426,7 +421,6 @@ public interface Condition<T> {
 最简范例：
 
 ```xml
-
 <template id="first-view">
     <if condition="myCondition">
     <property data="sayHello"/>
@@ -478,7 +472,6 @@ public interface CaseTestFunction<T> {
 最简范例：
 
 ```xml
-
 <template id="first-view">
     <switch check-data="switchData">
     <case test="testCase1">
