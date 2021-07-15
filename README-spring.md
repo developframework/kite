@@ -94,7 +94,7 @@ Controller方法以`DataModel`对象返回将会被交由` DataModelReturnValueH
 @Controller
 public class HelloController {
 
-    @JsonviewNamespace("kite-demo")
+    @KiteNamespace("kite-demo")
     @TemplateId("hello-view")
     @GetMapping("/hello")
     public DataModel hello() {

@@ -2,13 +2,13 @@
 
 ## 0. 文档传送
 
-- [kite-spring](https://github.com/developframework/kite/blob/master/README-spring.md)
+- [高级功能](https://github.com/developframework/kite/blob/master/README-pro.md)
 - 
   [kite-spring-boot-starter](https://github.com/developframework/kite/blob/master/README-boot.md)
 
-## <a name="chapter1">**1. 简介**</a>
+## 1. 简介
 
-Kite框架构建于jackson和dom4j框架之上，实现通过XML文件配置来自定义json和xml格式，大大提升了java生成json和xml字符串的自由性，让开发模块化更加便捷快速。
+Kite框架实现通过XML文件配置来自定义json和xml格式，大大提升了java生成json和xml字符串的自由性，让开发模块化更加便捷快速。
 
 ### **1.1. 运行环境**
 
