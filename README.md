@@ -186,9 +186,9 @@ Kite configuration 文档的结构如下：
     <template id="">
       <!-- 定义视图内容 -->
     </template>
-    <template id="">
-      <!-- 定义视图内容 -->
-    </template>
+    <fragment id="">
+      <!-- 定义片段内容 -->
+    </fragment>
     <!-- 其它template -->
   </template-package>
   <!-- 其它template-package -->
@@ -207,7 +207,7 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 
 基本型标签
 
-- `<template>`
+- `<template>`和`<fragment>`
 - `<object>`
 - `<array>`
 - `<property>`
@@ -835,7 +835,7 @@ dataModel.putData("number2", 0);
 ```xml
 <property-enum data="gender">
   <enum value="MALE" text="男"/>
-    <enum value="FEMALE" text="女"/>
+  <enum value="FEMALE" text="女"/>
 </property-enum>
 ```
 
