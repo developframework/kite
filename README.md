@@ -3,18 +3,18 @@
 ## 0. 文档传送
 
 - [高级功能](https://github.com/developframework/kite/blob/master/README-pro.md)
-- 
-  [kite-spring-boot-starter](https://github.com/developframework/kite/blob/master/README-boot.md)
+- [kite-spring-boot-starter](https://github.com/developframework/kite/blob/master/README-boot.md)
+- [支持JDK15 text block特性——KTL语法](https://github.com/developframework/kite/blob/master/README-ktl.md)
 
 ## 1. 简介
 
-Kite框架实现通过XML文件配置来自定义json和xml格式，大大提升了java生成json和xml字符串的自由性，让开发模块化更加便捷快速。
+Kite框架实现通过XML文件配置来自定义json和xml格式，大大提升了java生成json和xml字符串的自由性，让开发模块化更加便捷快速
 
-### **1.1. 运行环境**
+### 1.1. 运行环境
 
 JDK11及以上
 
-### **1.2. 使用方式**
+### 1.2. 使用方式
 
 maven
 
@@ -82,11 +82,11 @@ System.out.println(xml);
 </xml>
 ```
 
-## <a name="chapter3">**3. 概览**</a>
+## 3. 概览
 
-### **3.1. java概览**
+### 3.1. java概览
 
-#### **3.1.1. DataModel**
+#### 3.1.1. DataModel
 
 > com.github.developframework.kite.data.DataModel
 
@@ -96,7 +96,7 @@ Kite框架的数据模型。用于装载需要在视图中渲染的数据或函�
 DataModel dataModel = DataModel.singleton("sayHello","Hello Kite!");
 ```
 
-#### **3.1.2. Expression**
+#### 3.1.2. Expression
 
 > com.github.developframework.expression.Expression
 
