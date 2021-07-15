@@ -31,7 +31,7 @@ public interface ObjectNodeProxy extends NodeProxy {
      * @param name 属性名称
      * @param raw  原文
      */
-    void putRaw(String name, String raw);
+    void putRaw(AssembleContext context, String name, String raw);
 
     /**
      * 拼接原生对象

@@ -26,6 +26,11 @@ maven
 </dependency>
 <dependency>
   <groupId>com.github.developframework</groupId>
+  <artifactId>kite-fastjson</artifactId>
+  <version>${version.kite}</version>
+</dependency>
+<dependency>
+  <groupId>com.github.developframework</groupId>
   <artifactId>kite-dom4j</artifactId>
   <version>${version.kite}</version>
 </dependency>
@@ -138,10 +143,12 @@ KiteFactory kiteFactory = KiteFactoryBuilder.buildFromClasspathXml(options,xmlFi
 
 + `kite-jackson` 使用jackson来序列化json
 + `kite-dom4j`使用dom4j来序列化xml
++ `kite-fastjson`使用fastjson来序列化json
 
 ```java
 kiteFactory.useJsonFramework(new JacksonFramework(objectMapper));
 kiteFactory.useXmlFramework(new Dom4jFramework());
+kiteFactory.useXmlFramework(new FastjsonFramework());
 ```
 
 #### 3.1.6. Producer

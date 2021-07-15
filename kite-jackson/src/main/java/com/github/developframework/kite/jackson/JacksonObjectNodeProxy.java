@@ -34,7 +34,7 @@ public final class JacksonObjectNodeProxy implements ObjectNodeProxy {
     }
 
     @Override
-    public void putRaw(String name, String raw) {
+    public void putRaw(AssembleContext context, String name, String raw) {
         node.putRawValue(name, new RawValue(raw));
     }
 

@@ -35,13 +35,13 @@ public final class FastjsonObjectNodeProxy implements ObjectNodeProxy {
     }
 
     @Override
-    public void putRaw(String name, String raw) {
+    public void putRaw(AssembleContext context, String name, String raw) {
         node.put(name, JSON.parse(raw, ParserConfig.getGlobalInstance(), Feature.OrderedField));
     }
 
     @Override
     public void putPrototype(AssembleContext context, String name, Object prototype) {
-        putRaw(name, JSON.toJSONString(prototype));
+        putRaw(context, name, JSON.toJSONString(prototype));
     }
 
     @Override

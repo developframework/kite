@@ -33,7 +33,7 @@ public final class Dom4jObjectNodeProxy implements ObjectNodeProxy {
     }
 
     @Override
-    public void putRaw(String name, String raw) {
+    public void putRaw(AssembleContext context, String name, String raw) {
         try {
             element.addElement(name).add(DocumentHelper.parseText(raw).getRootElement());
         } catch (DocumentException e) {
