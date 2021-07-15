@@ -9,9 +9,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>kite-jackson</artifactId>
-    <name>Kite Jackson</name>
-    <description>Jackson实现</description>
+    <artifactId>kite-fastjson</artifactId>
+    <name>Kite Fastjson</name>
+    <description>Fastjson实现</description>
 
     <dependencies>
         <dependency>
@@ -19,12 +19,8 @@
             <artifactId>kite-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
         </dependency>
     </dependencies>
 </project>

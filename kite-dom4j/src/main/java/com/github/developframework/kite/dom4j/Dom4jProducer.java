@@ -1,15 +1,13 @@
 package com.github.developframework.kite.dom4j;
 
-import com.github.developframework.kite.core.AssembleContext;
+import com.github.developframework.kite.core.AbstractProducer;
 import com.github.developframework.kite.core.KiteConfiguration;
-import com.github.developframework.kite.core.Producer;
 import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.data.DataModel;
 import com.github.developframework.kite.core.element.Template;
 import com.github.developframework.kite.core.exception.KiteException;
 import com.github.developframework.kite.core.node.ObjectNodeProxy;
 import com.github.developframework.kite.core.structs.TemplatePackage;
-import com.github.developframework.kite.core.structs.TemplatePackageRegistry;
 import com.github.developframework.kite.core.utils.KiteUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -28,35 +26,15 @@ import java.util.Optional;
  *
  * @author qiushui on 2021-06-23.
  */
-public class Dom4jProducer implements Producer {
-
-    private final KiteConfiguration configuration;
-
-    private final String namespace;
-
-    private final String templateId;
-
-    private final AssembleContext context;
+public final class Dom4jProducer extends AbstractProducer {
 
     public Dom4jProducer(KiteConfiguration configuration, DataModel dataModel, String namespace, String templateId) {
-        this.configuration = configuration;
-        this.context = new AssembleContext(configuration, false);
-        this.context.dataModel = dataModel;
-        this.namespace = namespace;
-        this.templateId = templateId;
+        super(configuration, dataModel, namespace, templateId, false);
     }
 
     public Dom4jProducer(KiteConfiguration configuration, DataModel dataModel, List<TemplatePackage> templatePackages) {
-        this.configuration = configuration;
-        this.context = new AssembleContext(configuration, true);
-        this.context.dataModel = dataModel;
-        this.context.extraTemplatePackages = new TemplatePackageRegistry();
-        templatePackages.forEach(this.context.extraTemplatePackages::putTemplatePackage);
-        final TemplatePackage templatePackage = templatePackages.get(0);
-        this.namespace = templatePackage.getNamespace();
-        this.templateId = templatePackage.getUniqueTemplate().getId();
+        super(configuration, dataModel, templatePackages, false);
     }
-
 
     @Override
     public String produce(boolean pretty) {
@@ -75,7 +53,7 @@ public class Dom4jProducer implements Producer {
             xmlWriter.close();
             return writer.toString();
         } catch (IOException e) {
-            throw new KiteException("produce xml string failed: %s", e.getMessage());
+            throw new KiteException("构建xml失败", e.getMessage());
         }
     }
 
@@ -95,7 +73,7 @@ public class Dom4jProducer implements Producer {
             xmlWriter.write(document);
             xmlWriter.close();
         } catch (IOException e) {
-            throw new KiteException("produce xml string failed: %s", e.getMessage());
+            throw new KiteException("构建xml失败", e.getMessage());
         }
     }
 

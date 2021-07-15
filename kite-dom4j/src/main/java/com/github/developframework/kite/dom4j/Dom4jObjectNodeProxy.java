@@ -13,7 +13,7 @@ import org.dom4j.Element;
  * @author qiushui on 2021-06-28.
  */
 @RequiredArgsConstructor
-public class Dom4jObjectNodeProxy implements ObjectNodeProxy {
+public final class Dom4jObjectNodeProxy implements ObjectNodeProxy {
 
     private final Element element;
 

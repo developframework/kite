@@ -1,35 +1,32 @@
-package com.github.developframework.kite.dom4j;
+package com.github.developframework.kite.fastjson;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.node.ArrayNodeProxy;
 import com.github.developframework.kite.core.node.ObjectNodeProxy;
 import com.github.developframework.kite.core.structs.ArrayAttributes;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.dom4j.Element;
 
 /**
- * @author qiushui on 2021-06-28.
+ * @author qiushui on 2021-07-15.
  */
 @RequiredArgsConstructor
-public final class Dom4jArrayNodeProxy implements ArrayNodeProxy {
+public final class FastjsonArrayNodeProxy implements ArrayNodeProxy {
 
-    private final Element element;
+    @Getter
+    private final JSONArray node;
 
     @Override
     public void addValue(ArrayAttributes arrayAttributes, Object value) {
-        final Element item = element.addElement(arrayAttributes.xmlItem);
-        if (value != null) {
-            item.addText(value.toString());
-        }
+        node.add(value);
     }
 
     @Override
     public ObjectNodeProxy addObject(ArrayAttributes arrayAttributes, AssembleContext context) {
-        return new Dom4jObjectNodeProxy(element.addElement(arrayAttributes.xmlItem));
-    }
-
-    @Override
-    public Object getNode() {
-        return element;
+        final JSONObject object = new JSONObject(true);
+        node.add(object);
+        return new FastjsonObjectNodeProxy(object);
     }
 }

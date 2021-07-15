@@ -1,11 +1,9 @@
-package com.github.developframework.kite.jackson;
+package com.github.developframework.kite.fastjson;
 
-import com.fasterxml.jackson.core.JsonEncoding;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.github.developframework.kite.core.AbstractProducer;
 import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.data.DataDefinition;
@@ -25,50 +23,39 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Jackson的json生成器
+ * fastjson实现
  *
- * @author qiushui on 2021-06-23.
+ * @author qiushui on 2021-07-15.
  */
-public final class JacksonProducer extends AbstractProducer {
+public final class FastjsonProducer extends AbstractProducer {
 
-    private final ObjectMapper objectMapper;
-
-    public JacksonProducer(KiteConfiguration configuration, DataModel dataModel, String namespace, String templateId) {
+    public FastjsonProducer(KiteConfiguration configuration, DataModel dataModel, String namespace, String templateId) {
         super(configuration, dataModel, namespace, templateId, true);
-        this.objectMapper = (ObjectMapper) configuration.getJsonFramework().getCore();
     }
 
-    public JacksonProducer(KiteConfiguration configuration, DataModel dataModel, List<TemplatePackage> templatePackages) {
+    public FastjsonProducer(KiteConfiguration configuration, DataModel dataModel, List<TemplatePackage> templatePackages) {
         super(configuration, dataModel, templatePackages, true);
-        this.objectMapper = (ObjectMapper) configuration.getJsonFramework().getCore();
     }
-
 
     @Override
     public String produce(boolean pretty) {
-        final JsonNode node = buildJsonNode();
+        final JSON node = buildJSON();
         if (node == null) return "";
-        try {
-            return pretty ? objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(node) : objectMapper.writeValueAsString(node);
-        } catch (JsonProcessingException e) {
-            throw new KiteException("构建json失败");
-        }
+        return pretty ? node.toString(SerializerFeature.PrettyFormat, SerializerFeature.WriteMapNullValue) : node.toString(SerializerFeature.WriteMapNullValue);
     }
 
     @Override
     public void output(OutputStream outputStream, Charset charset, boolean pretty) {
-        final JsonNode node = buildJsonNode();
-        if (node == null) return;
-        final ObjectWriter writer = pretty ? objectMapper.writerWithDefaultPrettyPrinter() : objectMapper.writer();
+        final String json = produce(pretty);
         try {
-            final JsonGenerator generator = objectMapper.getFactory().createGenerator(outputStream, getJsonEncoding(charset));
-            writer.writeValue(generator, node);
+            outputStream.write(json.getBytes(charset));
+            outputStream.flush();
         } catch (IOException e) {
-            throw new KiteException("构建json失败");
+            throw new KiteException("构建json失败：", e.getMessage());
         }
     }
 
-    private JsonNode buildJsonNode() {
+    private JSON buildJSON() {
         final Template template = context.extractTemplate(namespace, templateId);
         final DataDefinition dataDefinition = template.getContentAttributes().dataDefinition;
         Object rootValue = null;
@@ -84,26 +71,15 @@ public final class JacksonProducer extends AbstractProducer {
         context.pushValue(context.dataModel);
         if (KiteUtils.objectIsArray(rootValue)) {
             // 以数组为根
-            rootNodeProxy = new JacksonArrayNodeProxy(objectMapper.createArrayNode());
+            rootNodeProxy = new FastjsonArrayNodeProxy(new JSONArray());
             context.pushValue(rootValue);
             template.getInnerArrayKiteElement().assembleArrayItems(context, rootValue, (ArrayNodeProxy) rootNodeProxy);
         } else {
             // 以对象为根
-            rootNodeProxy = new JacksonObjectNodeProxy(objectMapper.createObjectNode());
+            rootNodeProxy = new FastjsonObjectNodeProxy(new JSONObject(true));
             context.pushNodeProxy((ObjectNodeProxy) rootNodeProxy);
             template.assemble(context);
         }
-        return (JsonNode) rootNodeProxy.getNode();
-    }
-
-    private JsonEncoding getJsonEncoding(Charset charset) {
-        if (charset != null) {
-            for (JsonEncoding encoding : JsonEncoding.values()) {
-                if (charset.name().equals(encoding.getJavaName())) {
-                    return encoding;
-                }
-            }
-        }
-        return JsonEncoding.UTF8;
+        return (JSON) rootNodeProxy.getNode();
     }
 }
