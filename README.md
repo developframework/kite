@@ -51,7 +51,7 @@ json或xml选用一种底层实现技术就行
 ## 1. 为什么使用Kite?
 
 
->  场景1：最原始的场景，从依靠持久层框架（这里是spring-data-jpa为例）从数据库中查询一条记录并使用Jackson序列化成json响应
+>  场景1：最原始的场景，依靠持久层框架（这里是spring-data-jpa为例）从数据库中查询一条记录并使用springmvc默认的`MappingJackson2HttpMessageConverter`序列化成json响应
 
 ```java
 @RestController
@@ -122,7 +122,7 @@ public class MobileEncryptSerializer extends JsonSerializer<String> {
 + `@JsonInclude(Include.NON_NULL)`只能设置在类上，代表全部字段的null策略，不能精细控制到某个字段
 + `@JsonSerialize`、` @JsonProperty`和` @JsonIgnore`之类的注解一旦加上了就适用在任何场景的序列化上。做不到有时候需要显示，有时候不需要显示
 
-> 场景3：针对场景2，你会说那么把UserPO的数据导入到多个DTO类，或者使用`@JsonView`注解适用于不同的场景下的响应需求，那么看场景3：
+> 场景3：针对场景2，你会说那么把UserPO的数据导入到多个DTO类，把注解加在DTO类上层次更加清晰点，或者使用`@JsonView`注解适用于不同的场景下的响应需求，那么看场景3：
 
 ```java
 @Data
@@ -132,6 +132,9 @@ public class UserDTO {
     public interface ForManage {}
     
     private int id;
+    
+    @JsonSerialize(using = MobileEncryptSerializer.class)
+    private String mobile;
     
     @JsonProperty("username")
     private String name;
