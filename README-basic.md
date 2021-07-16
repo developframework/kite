@@ -1,393 +1,3 @@
-# Kite
-
-## 0. 文档传送
-
-- [高级功能](https://github.com/developframework/kite/blob/master/README-pro.md)
-- [kite-spring-boot-starter](https://github.com/developframework/kite/blob/master/README-boot.md)
-- [支持JDK15 text block特性——KTL语法](https://github.com/developframework/kite/blob/master/README-ktl.md)
-
-## 1. 简介
-
-Kite框架实现通过XML文件配置来自定义json和xml格式，大大提升了java生成json和xml字符串的自由性，让开发模块化更加便捷快速。
-
-Kite是一款面向接口编程的框架，目前支持如下主流序列化框架作为核心技术：
-
-+ 以**Jackson**作为核心序列化json
-+ 以**Fastjson**作为核心序列化json
-+ 以**Gson**作为核心序列化json
-+ 以**Dom4j**作为核心序列化xml
-
-### 1.1. 为什么使用Kite?
-
-**场景1：**
-
->  最原始的场景，从依靠持久层框架（这里是spring-data-jpa为例）从数据库中查询一条记录并使用Jackson序列化成json响应
-
-```java
-@RestController
-@RequestMapping("users")
-public class UserController {
-    
-    @Autowired
-    private UserRepository userRepository;
-    
-    @GetMapping("{id}")
-    public UserPO findUserDetail(@PathVariable int id) {
-        return userRepository.findById(id);
-    }
-}
-```
-
-这里的痛点：
-
-+ Jackson序列化了UserPO这个和数据库交互的实体类**PO**（Persist Object），把表的所有字段都做了输出，类似password这种敏感字段都出去了
-+ 不能重命名字段的名称
-+ 不能可选的设置null值不参与序列化
-
->  这时候你会说那么Jackson、Fastjson框架可以在UserPO里加注解来定义序列化的结果。那么看场景2，UserPO是如下定义的：
-
-```java
-@Getter
-@Setter
-@Entity
-@Table(name="user")
-@JsonInclude(Include.NON_NULL)   // 此处加了Jackson的注解用于不序列化null值的字段
-public class UserPO {
-    
-    @Id
-    private Integer id;
-    
-    @JsonProperty("username")	// 此处加了Jackson的注解用于重命名字段名称
-    @Column(nullable=false, length=20)
-    private String name;
-    
-    @JsonIgnore  // 此处加了Jackson的注解用于忽略该字段的序列化
-    @Column(nullable=false, length=32)
-    private String password;
-    
-    @CreateDate
-    private String createTime;
-}
-```
-
-这里的痛点：
-
-+ 很明显，持久层框架JPA的注解和Jackson的注解混在一起，代码非常混乱
-+ `@JsonInclude(Include.NON_NULL)`只能设置在类上，代表全部字段的null策略，不能精细控制到某个字段
-+ ` @JsonProperty`和` @JsonIgnore`之类的注解一旦加上了就适用在任何场景的序列化上。做不到有时候需要显示，有时候不需要显示
-
-> 针对场景2，你会说那么把UserPO的数据导入到多个DTO类，或者使用`@JsonView`注解适用于不同的场景下的响应需求，那么看场景3：
-
-```java
-@Data
-public class UserDTO {
-    
-    // 平台管理查询
-    public interface ForManage {}
-    
-    private int id;
-    
-    @JsonProperty("username")
-    private String name;
-    
-    @JsonView(ForManage.class) 	// 平台管理查询的时候需要显示password字段
-    private String password;
-    
-    private String createTime;
-}
-```
-
-```java
-@RestController
-@RequestMapping("users")
-public class UserController {
-    
-    @Autowired
-    private UserRepository userRepository;
-    
-    @Autowired
-    private UserRepository userRepository;
-    
-    @GetMapping("{id}")
-    @JsonView(UserDTO.ForManage.class)  // 这里选择了使用什么视图
-    public UserDTO findUserDetail(@PathVariable int id) {
-        UserPO userPO = userRepository.findById(id);
-        // 这里采用mapstruct这种搬数据的框架，如果自己写set语句那么又是一长串的样板代码
-        return userMapper.toDTO(userPO)
-    }
-}
-```
-
-这里的痛点：
-
-+ 需要新建一个传输对象做数据迁移操作
-+ 新建了两个不必要的类UserDTO和UserDTO.ForManage，如果不同的场景更多，那么需要建更多的类
-
-> 场景4，多个数组数据无法插接到一起：
-
-```java
-@RestController
-@RequestMapping("users")
-public class UserController {
-    
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private AddressRepository addressRepository;
-    
-    @GetMapping("list")
-    public List<UserDTO> findUserAndAddressList() {
-        List<UserPO> users = userRepository.findAll();
-        List<AddresPO> addresses = addressRepository.findAll();
-        // 下面想把每个user的多个address收货地址插接到一起，那么得自己来干这件事，并输出到List<UserDTO>
-        return null;
-    }
-}
-```
-
-最终想得到类似下面结构的json
-
-```json
-[
-    {
-        "id": 1,
-        "name": "小张",
-        "addresses": [
-            {
-                "userId": 1,
-            	"county": "北京-北京市-朝阳区",
-                "location": "xxxxxx"
-        	},
-            {
-                "userId": 1,
-            	"county": "北京-北京市-海淀区",
-                "location": "yyyyyy"
-        	}
-        ]
-    },
-    {
-        "id": 2,
-        "name": "小李",
-        "addresses": [
-            {
-                "userId": 2,
-            	"county": "上海-上海市-黄浦区",
-                "location": "zzzzzz"
-        	}
-        ]
-    }
-]
-```
-
-> 场景5，如果固定的json格式则需要一个通用的实体类来封装，比如最常见的类似下面的实体类：
-
-```java
-@Getter
-@Setter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class Result<T> {
-    
-    private final boolean success;
-    
-    private final String message;
-    
-    private final T data;
-    
-    public static <T> Result<T> ok(T data) {
-        return new Result(true, null, data);
-    }
-    
-    public static <T> Result<T> fail(String message) {
-        return new Result(false, message, null);
-    }
-}
-```
-
-```java
-@RestController
-@RequestMapping("users")
-public class UserController {
-    
-    @GetMapping
-    public Result<UserPO> find() {
-        try {
-           UserPO user = // 干点查询
-           return Result.ok(dto);
-        } catch(Exception e) {
-            return Result.fail(e.getMessage);
-        }
-    }
-}
-```
-
-输出下面的格式：
-
-```json
-{
-    "success": true,
-    "message": null,
-    "data": {
-        "user": {
-            ...
-        }
-    }
-}
-```
-
-------
-
-使用Kite都能解决以上痛点
-
-> 场景1、场景2和场景3的解决
-
-```java
-@Controller
-@KiteNamespace("kite-user")
-@RequestMapping("users")
-public class UserController {
-    
-    @Autowired
-    private UserRepository userRepository;
-    
-    @TemplateId("user-detail")
-    @GetMapping("{id}")
-    public DataModel findUserDetail(@PathVariable int id) {
-        return DataModel
-            .singleton("user", userRepository.findById(id))
-            .putData("needPassword", true);
-    }
-}
-```
-
-```xml
-<template id="user-detail" data="user">
-	<property data="id"/>
-    <!-- 可以重命名字段 -->
-    <property data="name" alias="username"/>
-    <!-- 可以有条件选择是否需要哪些字段 -->
-    <if condition="needPassword">
-    	<property data="password"/>
-    </if>
-    <!-- 可以精细控制某个字段null是不是显示 -->
-    <property-date data="createTime" null-hidden="true"/>
-</template>
-```
-
-完全没有新建任何类，也没有给UserPO加入任何注解
-
-> 场景4的解决
-
-```java
-@Controller
-@KiteNamespace("kite-user")
-@RequestMapping("users")
-public class UserController {
-    
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private AddressRepository addressRepository;
-    
-    @TemplateId("user-list")
-    @GetMapping("list")
-    public DataModel findUserAndAddressList() {
-        List<UserPO> users = userRepository.findAll();
-        List<AddresPO> addresses = addressRepository.findAll();
-        // 这里啥都不用干，直接把数据放入即可
-        return DataModel
-            .singleton("users", users)
-            .putData("addresses", addresses)
-            // 声明如何关联
-            .putRelFunction("rel", (RelFunction<UserPO, AddressPO>)(u, ui, a, ai) -> u.getId().equals(a.getUserId()))
-    }
-}
-```
-
-```xml
-<template id="user-list" data="users">
-    <!-- 可以直接引用之前声明过的片段，无需重复定义 -->
-	<include id="user-detail"/>
-    <!-- 一对多的关联，自动匹配插接数据 -->
-    <relevance data="#addresses" rel="rel">
-		<property data="userId"/>
-        <property data="county"/>
-        <property data="location"/>
-	</relevance>
-</template>
-```
-
-> 场景5的解决，不需要建类
-
-```java
-@RestController
-@KiteNamespace("kite-user")
-@RequestMapping("users")
-public class UserController {
-    
-    @TemplateId("user-extend")
-    @GetMapping
-    public DataModel find() {
-        try {
-           UserPO user = // 干点查询
-           return DataModel.singleton("success", true).putData("user", user);
-        } catch(Exception e) {
-            return DataModel.singleton("success", false).putData("message", e.getMessage());
-        }
-    }
-}
-```
-
-```xml
-<!-- 公共的父级格式 -->
-<fragment id="common-parent">
-    <property data="success"/>
-    <property data="message" null-hidden="true"/>
-    <!-- 虚拟层结构，并没有data这个数据 -->
-    <object-virtual alias="data">
-        <!-- 锚点，所有的子片段插接于此 -->
-        <slot/>
-    </object-virtual>
-</fragment>
-
-<!-- 子片段声明继承自哪个父片段 -->
-<template id="user-extend" data="user" extend="common-parent">
-	<include id="user-detail"/>
-</template>
-```
-
-### 1.2. 运行环境
-
-JDK11及以上
-
-### 1.3. 使用方式
-
-maven
-
-```xml
-<dependency>
-  <groupId>com.github.developframework</groupId>
-  <artifactId>kite-jackson</artifactId>
-  <version>${version.kite}</version>
-</dependency>
-<dependency>
-  <groupId>com.github.developframework</groupId>
-  <artifactId>kite-fastjson</artifactId>
-  <version>${version.kite}</version>
-</dependency>
-<dependency>
-  <groupId>com.github.developframework</groupId>
-  <artifactId>kite-gson</artifactId>
-  <version>${version.kite}</version>
-</dependency>
-<dependency>
-  <groupId>com.github.developframework</groupId>
-  <artifactId>kite-dom4j</artifactId>
-  <version>${version.kite}</version>
-</dependency>
-```
-
-json或xml选用一种底层实现技术就行
-
 ## 2. HelloWorld
 
 一个最简单的kite使用示例：
@@ -614,12 +224,12 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 </template>
   ```
 
-| 属性         | 功能                                                         | 是否必须 |
-| ------------ | ------------------------------------------------------------ | -------- |
-| id           | 声明模板编号，在命名空间中唯一                               | 是       |
-| data         | 取值表达式                                                   | 否       |
-| extend       | 声明继承的kite和端口，格式为**namespace.id**（namespace不填时默认为当前template所在的namespace） | 否       |
-| xml-root     | 生成xml时的根节点名称                                        | 否       |
+| 属性     | 功能                                                         | 是否必须 |
+| -------- | ------------------------------------------------------------ | -------- |
+| id       | 声明模板编号，在命名空间中唯一                               | 是       |
+| data     | 取值表达式                                                   | 否       |
+| extend   | 声明继承的kite和端口，格式为**namespace.id**（namespace不填时默认为当前template所在的namespace） | 否       |
+| xml-root | 生成xml时的根节点名称                                        | 否       |
 
 template包含`<array>`节点的所有属性
 
@@ -656,18 +266,18 @@ template和fragment的区别：
 </array>
 ```
 
-| 属性         | 功能                                                         | 是否必须 |
-| ------------ | ------------------------------------------------------------ | -------- |
-| data         | 取值表达式                                                   | 是       |
-| alias        | 别名，你可以重新定义显示名                                   | 否       |
-| naming-strategy | 命名策略，默认FRAMEWORK | 否 |
-| null-hidden  | true时表示表达式取的值为null时隐藏该节点，默认为false        | 否       |
-| converter | 类型转换器全限定类名或expression表达式 | 否 |
-| map | MapFunction的实现类全名或Expression表达式 | 否       |
-| xml-item     | 生成xml时，子节点数组项的节点名称                            | 否       |
-| limit | 取前若干个元素 | 否 |
-| comparator | Comparator比较器接口实现类表达式 | 否 |
-| null-empty | true时表示表达式取的值为null时设为空数组，默认为false | 否 |
+| 属性            | 功能                                                  | 是否必须 |
+| --------------- | ----------------------------------------------------- | -------- |
+| data            | 取值表达式                                            | 是       |
+| alias           | 别名，你可以重新定义显示名                            | 否       |
+| naming-strategy | 命名策略，默认FRAMEWORK                               | 否       |
+| null-hidden     | true时表示表达式取的值为null时隐藏该节点，默认为false | 否       |
+| converter       | 类型转换器全限定类名或expression表达式                | 否       |
+| map             | MapFunction的实现类全名或Expression表达式             | 否       |
+| xml-item        | 生成xml时，子节点数组项的节点名称                     | 否       |
+| limit           | 取前若干个元素                                        | 否       |
+| comparator      | Comparator比较器接口实现类表达式                      | 否       |
+| null-empty      | true时表示表达式取的值为null时设为空数组，默认为false | 否       |
 
 `<array>`标签可以没有子标签，这时表示数组为基本类型数组，如果是对象将会调用它的`toString()`方法。
 
@@ -787,6 +397,7 @@ Kite框架提供模块化设计json结构视图的功能。在一个`<template>`
 | null-hidden     | true时表示表达式取的值为null时隐藏该节点，默认为false | 否       |
 
 ###### c) relevance
+
 该标签用于实现一对多关联功能。
 
 ```xml
@@ -795,16 +406,16 @@ Kite框架提供模块化设计json结构视图的功能。在一个`<template>`
 </relevance>
 ```
 
-| 属性           | 功能                                       | 是否必须 |
-| ------------ | ---------------------------------------- | ---- |
-| data         | 取值表达式，**data必须指代一个List或array类型的对象**      | 是    |
-| alias        | 别名，你可以重新定义显示名                            | 否    |
-| naming-strategy | 命名策略，默认FRAMEWORK | 否 |
-| rel | 关联判定器全限定类名或expression表达式                 | 是    |
-| null-hidden  | true时表示表达式取的值为null时隐藏该节点，默认为false        | 否    |
-| map | KiteConverter的实现类全名或Expression表达式。 | 否    |
-| null-empty | true时表示表达式取的值为null时设为空数组，默认为false | 否 |
-| merge-parent | 单个值时可以拼接到父级 | 否 |
+| 属性            | 功能                                                  | 是否必须 |
+| --------------- | ----------------------------------------------------- | -------- |
+| data            | 取值表达式，**data必须指代一个List或array类型的对象** | 是       |
+| alias           | 别名，你可以重新定义显示名                            | 否       |
+| naming-strategy | 命名策略，默认FRAMEWORK                               | 否       |
+| rel             | 关联判定器全限定类名或expression表达式                | 是       |
+| null-hidden     | true时表示表达式取的值为null时隐藏该节点，默认为false | 否       |
+| map             | KiteConverter的实现类全名或Expression表达式。         | 否       |
+| null-empty      | true时表示表达式取的值为null时设为空数组，默认为false | 否       |
+| merge-parent    | 单个值时可以拼接到父级                                | 否       |
 
 ###### d) object-virtual
 
@@ -816,9 +427,9 @@ Kite框架提供模块化设计json结构视图的功能。在一个`<template>`
 </object-virtual>
 ```
 
-| 属性    | 功能   | 是否必须 |
-| ----- | ---- | ---- |
-| alias | 别名   | 是    |
+| 属性  | 功能 | 是否必须 |
+| ----- | ---- | -------- |
+| alias | 别名 | 是       |
 
 ###### f) slot
 
@@ -843,9 +454,9 @@ Kite框架提供模块化设计json结构视图的功能。在一个`<template>`
 </else>
 ```
 
-| 属性        | 功能                      | 是否必须 |
-| --------- | ----------------------- | ---- |
-| condition | 条件接口实现类全名或Expression表达式 | 是    |
+| 属性      | 功能                                 | 是否必须 |
+| --------- | ------------------------------------ | -------- |
+| condition | 条件接口实现类全名或Expression表达式 | 是       |
 
 ###### h) switch  case  default
 
@@ -871,9 +482,9 @@ Kite框架提供模块化设计json结构视图的功能。在一个`<template>`
 
 该标签拓展于`<property>`，针对时间日期类型，使用`pattern`属性来格式化日期时间
 
-| 拓展属性    | 功能                                  | 是否必须 |
-| ------- | ----------------------------------- | ---- |
-| pattern | 格式化模板字符串，不填默认为"yyyy-MM-dd HH:mm:ss" | 否    |
+| 拓展属性 | 功能                                              | 是否必须 |
+| -------- | ------------------------------------------------- | -------- |
+| pattern  | 格式化模板字符串，不填默认为"yyyy-MM-dd HH:mm:ss" | 否       |
 
 支持的时间日期类型：
 
@@ -1068,7 +679,6 @@ System.out.println(xml);
 ```
 
 ```xml
-
 <xml>
   <id>1</id>
   <name>XX科技公司</name>
@@ -1112,7 +722,6 @@ final KiteOptions options=new KiteOptions();
 也可以在实际的模板里某个内容节点上配置`naming-strategy` 属性强制使用某个策略
 
 ```xml
-
 <template id="test-naming-strategy">
   <object data="myCompany" naming-strategy="ORIGINAL">
     <property data="companyId" naming-strategy="MIDDLE_LINE"/>
@@ -1388,7 +997,6 @@ DataModel dataModel=DataModel.singleton("company",DemoDataMock.mockCompanies());
 以下加入Jackson的注解达到序列化效果
 
 ```java
-
 @Data
 @RequiredArgsConstructor
 public class Staff {
