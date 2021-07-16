@@ -202,14 +202,14 @@ public class UserController {
         "addresses": [
             {
                 "userId": 1,
-            	"county": "北京-北京市-朝阳区",
+                "county": "北京-北京市-朝阳区",
                 "location": "xxxxxx"
-        	},
+            },
             {
                 "userId": 1,
-            	"county": "北京-北京市-海淀区",
+                "county": "北京-北京市-海淀区",
                 "location": "yyyyyy"
-        	}
+            }
         ]
     },
     {
@@ -219,9 +219,9 @@ public class UserController {
         "addresses": [
             {
                 "userId": 2,
-            	"county": "上海-上海市-黄浦区",
+                "county": "上海-上海市-黄浦区",
                 "location": "zzzzzz"
-        	}
+            }
         ]
     }
 ]
