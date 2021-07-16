@@ -218,6 +218,15 @@
                     </xs:complexType>
                 </xs:element>
 
+                <!-- flat -->
+                <xs:element name="flat">
+                    <xs:complexType>
+                        <xs:group ref="childElementGroup"/>
+                        <xs:attribute name="data" type="xs:string" use="required"/>
+                        <xs:attribute name="converter" type="xs:string"/>
+                    </xs:complexType>
+                </xs:element>
+
                 <!-- array -->
                 <xs:element name="array">
                     <xs:complexType>

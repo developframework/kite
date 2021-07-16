@@ -18,6 +18,7 @@ public enum ElementTag {
     CASE("case", CaseKiteElement.class),
     SLOT("slot", SlotKiteElement.class),
     THIS("this", ThisKiteElement.class),
+    FLAT("flat", FlatKiteElement.class),
     TEMPLATE("template", Template.class),
     FRAGMENT("fragment", Fragment.class),
     ARRAY("array", ArrayKiteElement.class),

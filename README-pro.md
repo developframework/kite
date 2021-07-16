@@ -93,13 +93,13 @@ DataModel dataModel = DataModel
     <!-- 这里可以虚构出一层把员工的其他个人信息包装起来 -->
     <object-virtual alias="other">
         <property data="gender"/>
-        <property data="birthday" />
+        <property data="birthday"/>
     </object-virtual>
 </template>
 ```
 
 ```java
-DataModel dataModel = DataModel.singleton("companyName", "AA公司");
+DataModel dataModel = DataModel.singleton("staff", DemoDataMock.mockStaffs()[0]);
 ```
 
 ```json
@@ -113,6 +113,8 @@ DataModel dataModel = DataModel.singleton("companyName", "AA公司");
   }
 }
 ```
+
+反过来也可以使用`<flat>`扁平化对象结构，把子节点拼接到父节点上
 
 ### 6.3. 模块化
 

@@ -195,6 +195,7 @@ Kite configuration文档不是唯一的，Kite框架允许你拥有多份的Kite
 - `<link>`
 - `<relevance>`
 - `<object-virtual>`
+- `<flat>`
 - `<slot>`
 - `<if>`、 `<else>`
 - `<switch>`、`<case>`、`<default>`
@@ -432,6 +433,21 @@ Kite框架提供模块化设计json结构视图的功能。在一个`<template>`
 | 属性  | 功能 | 是否必须 |
 | ----- | ---- | -------- |
 | alias | 别名 | 是       |
+
+###### d) flat
+
+该标签用于扁平化对象结构，把子层节点拼接到父层
+
+```xml
+<flat data="">
+
+</flat>
+```
+
+| 属性      | 功能                                   | 是否必须 |
+| --------- | -------------------------------------- | -------- |
+| data      | 取值表达式                             | 是       |
+| converter | 类型转换器全限定类名或expression表达式 | 否       |
 
 ###### f) slot
 
