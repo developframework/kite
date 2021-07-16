@@ -276,7 +276,7 @@ public class UserController {
     "message": null,
     "data": {
         "user": {
-            ...
+            // 数据内容
         }
     }
 }

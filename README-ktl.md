@@ -1,6 +1,12 @@
-## KTL语法
+## 支持JDK15 text block特性——KTL语法
 
 KTL(Kite Template Language) 也能替代xml来声明片段模板，支持所有xml配置的所有功能
+
+基本语法：
+
+```
+标签名: key1=value1 或key1='value1', key2=value2
+```
 
 比如以下复杂配置：
 
