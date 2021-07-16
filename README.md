@@ -312,14 +312,14 @@ public class UserController {
 
 ```xml
 <template id="user-detail" data="user">
-	<property data="id"/>
+    <property data="id"/>
     <!-- 可以对字段处理 -->
     <property data="mobile" converter="mobileEncryptConverter"/>
     <!-- 可以重命名字段 -->
     <property data="name" alias="username"/>
     <!-- 可以有条件选择是否需要哪些字段 -->
     <if condition="needPassword">
-    	<property data="password"/>
+        <property data="password"/>
     </if>
     <!-- 可以精细控制某个字段null是不是显示 -->
     <property-date data="createTime" null-hidden="true"/>
@@ -359,13 +359,13 @@ public class UserController {
 ```xml
 <template id="user-list" data="users">
     <!-- 可以直接引用之前声明过的片段，无需重复定义 -->
-	<include id="user-detail"/>
+    <include id="user-detail"/>
     <!-- 一对多的关联，自动匹配插接数据 -->
     <relevance data="#addresses" rel="rel">
-		<property data="userId"/>
+        <property data="userId"/>
         <property data="county"/>
         <property data="location"/>
-	</relevance>
+    </relevance>
 </template>
 ```
 
@@ -404,7 +404,7 @@ public class UserController {
 
 <!-- 子片段声明继承自哪个父片段 -->
 <template id="user-extend" data="user" extend="common-parent">
-	<include id="user-detail"/>
+    <include id="user-detail"/>
 </template>
 ```
 
