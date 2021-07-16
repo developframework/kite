@@ -293,19 +293,19 @@ public class UserController {
 @KiteNamespace("kite-user")
 @RequestMapping("users")
 public class UserController {
-    
+
     @Autowired
     private UserRepository userRepository;
-    
+
     @TemplateId("user-detail")
     @GetMapping("{id}")
     public DataModel findUserDetail(@PathVariable int id) {
         return DataModel
-            .singleton("user", userRepository.findById(id))
-            // 可以有条件控制分支
-            .putData("needPassword", true);
-        	// 声明手机号的加密逻辑
-			.putConverter("mobileEncryptConverter", (KiteConverter<String, String>) mobile -> mobile.substring(0, 3) + "****" + mobile.substring(7));
+                .singleton("user", userRepository.findById(id))
+                // 可以有条件控制分支
+                .putData("needPassword", true);
+                // 声明手机号的加密逻辑
+			    .putConverter("mobileEncryptConverter", (KiteConverter<String, String>) mobile -> mobile.substring(0, 3) + "****" + mobile.substring(7));
     }
 }
 ```
