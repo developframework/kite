@@ -305,7 +305,7 @@ public class UserController {
             // 可以有条件控制分支
             .putData("needPassword", true);
         	// 声明手机号的加密逻辑
-        	.putData("mobileEncryptConverter", (KiteConverter<String, String>) mobile -> mobile.substring(0, 3) + "****" + mobile.substring(7));
+			.putConverter("mobileEncryptConverter", (KiteConverter<String, String>) mobile -> mobile.substring(0, 3) + "****" + mobile.substring(7));
     }
 }
 ```
