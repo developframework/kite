@@ -9,8 +9,7 @@ import com.github.developframework.kite.dom4j.Dom4jFramework;
 import com.github.developframework.kite.jackson.JacksonFramework;
 import com.github.developframework.kite.spring.ControllerTemplateScanner;
 import com.github.developframework.kite.spring.KiteScanLoader;
-import com.github.developframework.kite.spring.mvc.DataModelReturnValueHandler;
-import com.github.developframework.kite.spring.mvc.KiteResponseReturnValueHandler;
+import com.github.developframework.kite.spring.mvc.KiteWebMvcConfigurer;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Document;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -61,16 +60,6 @@ public class KiteComponentAutoConfiguration {
     public Dom4jFramework dom4jFramework() {
         log.info("【Kite Boot】加载 dom4j Framework");
         return new Dom4jFramework();
-    }
-
-    @Bean
-    public DataModelReturnValueHandler dataModelReturnValueHandler(@Qualifier("defaultKiteFactory") KiteFactory kiteFactory) {
-        return new DataModelReturnValueHandler(kiteFactory);
-    }
-
-    @Bean
-    public KiteResponseReturnValueHandler kiteResponseReturnValueHandler(@Qualifier("defaultKiteFactory") KiteFactory kiteFactory) {
-        return new KiteResponseReturnValueHandler(kiteFactory);
     }
 
     @Bean
