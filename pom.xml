@@ -168,7 +168,6 @@
                             <version>${version.lombok}</version>
                         </path>
                     </annotationProcessorPaths>
-                    <!--                    <compilerArgs>&#45;&#45;enable-preview</compilerArgs>-->
                 </configuration>
             </plugin>
             <plugin>
