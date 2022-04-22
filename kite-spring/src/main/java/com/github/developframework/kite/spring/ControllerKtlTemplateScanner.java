@@ -27,7 +27,7 @@ import java.util.Map;
  * @author qiushui on 2021-07-08.
  */
 @RequiredArgsConstructor
-public final class ControllerTemplateScanner {
+public final class ControllerKtlTemplateScanner {
 
     private final KiteFactory kiteFactory;
 
@@ -41,8 +41,8 @@ public final class ControllerTemplateScanner {
             if (templateKTL == null) {
                 return;
             }
-            final String ktl = templateKTL.value();
-            if (ktl.isEmpty()) {
+            final String ktl = String.join("\n", templateKTL.value());
+            if (ktl.isBlank()) {
                 return;
             }
             final List<TemplatePackage> ktlTemplatePackages;

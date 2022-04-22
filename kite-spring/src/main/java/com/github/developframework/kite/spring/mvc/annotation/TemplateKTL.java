@@ -17,7 +17,7 @@ public @interface TemplateKTL {
     /**
      * ktl 字符串
      */
-    String value();
+    String[] value();
 
     /**
      * 生成类型

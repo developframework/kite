@@ -4,10 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.developframework.kite.core.Framework;
 import com.github.developframework.kite.core.KiteFactory;
 import com.github.developframework.kite.core.KiteOptions;
-import com.github.developframework.kite.core.structs.FragmentLocation;
 import com.github.developframework.kite.dom4j.Dom4jFramework;
 import com.github.developframework.kite.jackson.JacksonFramework;
-import com.github.developframework.kite.spring.ControllerTemplateScanner;
 import com.github.developframework.kite.spring.KiteScanLoader;
 import com.github.developframework.kite.spring.mvc.KiteWebMvcConfigurer;
 import lombok.extern.slf4j.Slf4j;
@@ -19,10 +17,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-
-import java.lang.reflect.Method;
-import java.util.Map;
 
 /**
  * 自动配置Kite
@@ -60,11 +54,6 @@ public class KiteComponentAutoConfiguration {
     public Dom4jFramework dom4jFramework() {
         log.info("【Kite Boot】加载 dom4j Framework");
         return new Dom4jFramework();
-    }
-
-    @Bean
-    public Map<Method, FragmentLocation> fragmentLocationMap(KiteFactory kiteFactory, RequestMappingHandlerMapping handlerMapping) {
-        return new ControllerTemplateScanner(kiteFactory, handlerMapping).scan();
     }
 
     /**

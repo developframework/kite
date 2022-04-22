@@ -2,10 +2,15 @@ package com.github.developframework.kite.spring.mvc;
 
 import com.github.developframework.kite.core.KiteFactory;
 import com.github.developframework.kite.core.data.DataModel;
+import com.github.developframework.kite.core.structs.FragmentLocation;
+import com.github.developframework.kite.spring.KiteResponseBodyProcessor;
 import com.github.developframework.kite.spring.mvc.annotation.TemplateType;
 import com.github.developframework.kite.spring.mvc.response.KiteResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.MethodParameter;
+
+import java.lang.reflect.Method;
+import java.util.Map;
 
 /**
  * 处理KiteResponse的ReturnValueHandler
@@ -14,8 +19,8 @@ import org.springframework.core.MethodParameter;
  */
 public final class KiteResponseReturnValueHandler extends AnnotationKiteReturnValueHandler<KiteResponse> {
 
-    public KiteResponseReturnValueHandler(KiteFactory kiteFactory) {
-        super(kiteFactory);
+    public KiteResponseReturnValueHandler(KiteFactory kiteFactory, KiteResponseBodyProcessor kiteResponseBodyProcessor, Map<Method, FragmentLocation> fragmentLocationMap) {
+        super(kiteFactory, kiteResponseBodyProcessor, fragmentLocationMap);
     }
 
     @Override

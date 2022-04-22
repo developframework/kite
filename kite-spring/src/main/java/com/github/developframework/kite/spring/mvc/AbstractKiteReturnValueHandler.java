@@ -6,7 +6,6 @@ import com.github.developframework.kite.core.data.DataModel;
 import com.github.developframework.kite.spring.KiteResponseBodyProcessor;
 import com.github.developframework.kite.spring.mvc.annotation.TemplateType;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpOutputMessage;
@@ -18,10 +17,7 @@ import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 
 /**
  * 抽象的springmvc ReturnValueHandler
@@ -33,19 +29,7 @@ public abstract class AbstractKiteReturnValueHandler<T> implements HandlerMethod
 
     protected final KiteFactory kiteFactory;
 
-    @Autowired(required = false)
-    protected KiteResponseBodyProcessor kiteResponseBodyProcessor;
-
-    protected ServletServerHttpResponse createOutputMessage(NativeWebRequest webRequest) {
-        final HttpServletResponse response = webRequest.getNativeResponse(HttpServletResponse.class);
-        Assert.state(response != null, "No HttpServletResponse");
-        ServletServerHttpResponse res = new ServletServerHttpResponse(response);
-        final HttpHeaders headers = res.getHeaders();
-        if (headers.getContentType() == null) {
-            headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-        }
-        return res;
-    }
+    protected final KiteResponseBodyProcessor kiteResponseBodyProcessor;
 
     @Override
     public boolean supportsReturnType(MethodParameter returnType) {
@@ -58,42 +42,37 @@ public abstract class AbstractKiteReturnValueHandler<T> implements HandlerMethod
         Assert.isInstanceOf(returnType(), returnValue);
         mavContainer.setRequestHandled(true);
         final T t = (T) returnValue;
-        final HttpOutputMessage outputMessage = this.createOutputMessage(webRequest);
         final String namespace = namespace(t, methodParameter);
         final String templateId = templateId(t, methodParameter);
         final TemplateType templateType = templateType(t, methodParameter);
         final DataModel dataModel = dataModel(t, methodParameter);
-        switch (templateType) {
-            case JSON: {
-                final Producer jsonProducer = kiteFactory.getJsonProducer(dataModel, namespace, templateId);
-                if (kiteResponseBodyProcessor == null) {
-                    final Charset charset = Objects.requireNonNull(outputMessage.getHeaders().getContentType()).getCharset();
-                    jsonProducer.output(outputMessage.getBody(), charset, false);
-                } else {
-                    final OutputStreamWriter writer = new OutputStreamWriter(outputMessage.getBody(), StandardCharsets.UTF_8);
-                    final String json = jsonProducer.produce(false);
-                    kiteResponseBodyProcessor.beforeWrite(methodParameter, webRequest, json);
-                    writer.write(json);
-                    writer.flush();
-                }
-            }
-            break;
-            case XML: {
-                outputMessage.getHeaders().setContentType(MediaType.APPLICATION_XML);
-                final Producer xmlProducer = kiteFactory.getXmlProducer(dataModel, namespace, templateId);
-                if (kiteResponseBodyProcessor == null) {
-                    final Charset charset = Objects.requireNonNull(outputMessage.getHeaders().getContentType()).getCharset();
-                    xmlProducer.output(outputMessage.getBody(), charset, false);
-                } else {
-                    final OutputStreamWriter writer = new OutputStreamWriter(outputMessage.getBody(), StandardCharsets.UTF_8);
-                    final String xml = xmlProducer.produce(false);
-                    kiteResponseBodyProcessor.beforeWrite(methodParameter, webRequest, xml);
-                    writer.write(xml);
-                    writer.flush();
-                }
-            }
-            break;
+
+        final Producer producer;
+        if (templateType == TemplateType.JSON) {
+            producer = kiteFactory.getJsonProducer(dataModel, namespace, templateId);
+        } else {
+            producer = kiteFactory.getXmlProducer(dataModel, namespace, templateId);
         }
+        final String payload = producer.produce(false);
+        if (kiteResponseBodyProcessor != null) {
+            kiteResponseBodyProcessor.beforeWrite(methodParameter, webRequest, payload);
+        }
+        final HttpOutputMessage outputMessage = this.createOutputMessage(webRequest, templateType);
+        final Charset charset = outputMessage.getHeaders().getContentType().getCharset();
+        producer.output(outputMessage.getBody(), charset, false);
+    }
+
+    private ServletServerHttpResponse createOutputMessage(NativeWebRequest webRequest, TemplateType templateType) {
+        final HttpServletResponse response = webRequest.getNativeResponse(HttpServletResponse.class);
+        Assert.state(response != null, "No HttpServletResponse");
+        ServletServerHttpResponse res = new ServletServerHttpResponse(response);
+        final HttpHeaders headers = res.getHeaders();
+        if (headers.getContentType() == null) {
+            headers.setContentType(
+                    templateType == TemplateType.JSON ? MediaType.APPLICATION_JSON_UTF8 : MediaType.APPLICATION_XML
+            );
+        }
+        return res;
     }
 
     /**
