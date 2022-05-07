@@ -22,5 +22,6 @@ public final class FlatKiteElement extends ContainerKiteElement {
         final Optional<Object> dataValue = KiteUtils.getDataValue(context, this);
         context.pushValue(dataValue.orElse(null));
         super.forEachAssemble(context);
+        context.popValue();
     }
 }
