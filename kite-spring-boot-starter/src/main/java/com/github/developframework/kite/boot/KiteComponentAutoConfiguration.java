@@ -6,6 +6,7 @@ import com.github.developframework.kite.core.KiteFactory;
 import com.github.developframework.kite.core.KiteOptions;
 import com.github.developframework.kite.dom4j.Dom4jFramework;
 import com.github.developframework.kite.jackson.JacksonFramework;
+import com.github.developframework.kite.spring.KiteComponentConfiguration;
 import com.github.developframework.kite.spring.KiteScanLoader;
 import com.github.developframework.kite.spring.mvc.KiteWebMvcConfigurer;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,7 @@ import org.springframework.context.annotation.Import;
  */
 @Slf4j
 @Configuration
-@Import(KiteWebMvcConfigurer.class)
+@Import({KiteComponentConfiguration.class, KiteWebMvcConfigurer.class})
 @EnableConfigurationProperties(KiteProperties.class)
 public class KiteComponentAutoConfiguration {
 
