@@ -89,8 +89,8 @@ public class UserController {
     @TemplateKTL("""
             template: id = user-list-ktl, data = users
                 property: data = id
-                property: data = name
-    """)
+                        property: data = name
+            """)
     @GetMapping
     public DataModel userList() {
         return DataModel.singleton("users", DataMock.users());
@@ -99,3 +99,25 @@ public class UserController {
 ```
 
 在controller中声明的片段或模板，是注册入全局片段库的，也就是在xml里也能引用controller中声明的片段。反过来在controller中的ktl也能引用到xml声明的片段
+
+在未支持text block特性的低JDK版本环境中也可以使用字符串数组
+
+```java
+
+@Controller
+@KiteNamespace("kite-user")
+@RequestMapping("user")
+public class UserController {
+
+    @TemplateKTL({
+            "template: id = user-list-ktl, data = users",
+            "   property: data = id",
+            "   property: data = name"
+    })
+    @GetMapping
+    public DataModel userList() {
+        return DataModel.singleton("users", DataMock.users());
+    }
+}
+```
+
