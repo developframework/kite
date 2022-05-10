@@ -1,13 +1,12 @@
 package com.github.developframework.kite.spring.mvc;
 
-import com.github.developframework.kite.core.KiteFactory;
 import com.github.developframework.kite.core.exception.KiteException;
 import com.github.developframework.kite.core.structs.FragmentLocation;
-import com.github.developframework.kite.spring.KiteResponseBodyProcessor;
 import com.github.developframework.kite.spring.mvc.annotation.KiteNamespace;
 import com.github.developframework.kite.spring.mvc.annotation.TemplateId;
 import com.github.developframework.kite.spring.mvc.annotation.TemplateKTL;
 import com.github.developframework.kite.spring.mvc.annotation.TemplateType;
+import lombok.Setter;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
 
@@ -21,12 +20,8 @@ import java.util.Map;
  */
 public abstract class AnnotationKiteReturnValueHandler<T> extends AbstractKiteReturnValueHandler<T> {
 
-    private final Map<Method, FragmentLocation> fragmentLocationMap;
-
-    public AnnotationKiteReturnValueHandler(KiteFactory kiteFactory, KiteResponseBodyProcessor kiteResponseBodyProcessor, Map<Method, FragmentLocation> fragmentLocationMap) {
-        super(kiteFactory, kiteResponseBodyProcessor);
-        this.fragmentLocationMap = fragmentLocationMap;
-    }
+    @Setter
+    protected Map<Method, FragmentLocation> fragmentLocationMap;
 
     @Override
     protected String namespace(T returnValue, MethodParameter methodParameter) {

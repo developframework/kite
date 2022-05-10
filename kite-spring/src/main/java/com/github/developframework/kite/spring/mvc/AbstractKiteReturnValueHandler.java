@@ -5,7 +5,7 @@ import com.github.developframework.kite.core.Producer;
 import com.github.developframework.kite.core.data.DataModel;
 import com.github.developframework.kite.spring.KiteResponseBodyProcessor;
 import com.github.developframework.kite.spring.mvc.annotation.TemplateType;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpOutputMessage;
@@ -24,12 +24,13 @@ import java.nio.charset.Charset;
  *
  * @author qiuzhenhao
  */
-@RequiredArgsConstructor
 public abstract class AbstractKiteReturnValueHandler<T> implements HandlerMethodReturnValueHandler {
 
-    protected final KiteFactory kiteFactory;
+    @Autowired
+    protected KiteFactory kiteFactory;
 
-    protected final KiteResponseBodyProcessor kiteResponseBodyProcessor;
+    @Autowired(required = false)
+    protected KiteResponseBodyProcessor kiteResponseBodyProcessor;
 
     @Override
     public boolean supportsReturnType(MethodParameter returnType) {

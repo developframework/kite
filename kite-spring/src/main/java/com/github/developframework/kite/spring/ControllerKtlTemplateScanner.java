@@ -11,7 +11,6 @@ import com.github.developframework.kite.spring.mvc.annotation.KiteNamespace;
 import com.github.developframework.kite.spring.mvc.annotation.TemplateKTL;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.io.IOException;
@@ -34,9 +33,8 @@ public final class ControllerKtlTemplateScanner {
     private final RequestMappingHandlerMapping handlerMapping;
 
     public Map<Method, FragmentLocation> scan() {
-        Map<RequestMappingInfo, HandlerMethod> handlerMethods = handlerMapping.getHandlerMethods();
-        Map<Method, FragmentLocation> fragmentLocationMap = new HashMap<>();
-        handlerMethods.forEach((info, handlerMethod) -> {
+        final Map<Method, FragmentLocation> fragmentLocationMap = new HashMap<>();
+        handlerMapping.getHandlerMethods().forEach((info, handlerMethod) -> {
             final TemplateKTL templateKTL = handlerMethod.getMethodAnnotation(TemplateKTL.class);
             if (templateKTL == null) {
                 return;
