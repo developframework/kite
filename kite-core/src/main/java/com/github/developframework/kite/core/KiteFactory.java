@@ -54,13 +54,14 @@ public class KiteFactory {
      *
      * @return Json生成器
      */
-    public Producer getJsonProducer(DataModel dataModel, String ktl) {
+    public Producer getJsonProducer(DataModel dataModel, String... ktl) {
         final Framework<?> framework = configuration.getJsonFramework();
         if (framework == null) {
             throw new KiteException("没有初始化序列化Json的Framework");
         }
         try {
-            final List<TemplatePackage> templatePackages = ktlParser.read(new StringConfigurationSource(ktl, StandardCharsets.UTF_8));
+            final StringConfigurationSource configurationSource = new StringConfigurationSource(String.join("\n", ktl), StandardCharsets.UTF_8);
+            final List<TemplatePackage> templatePackages = ktlParser.read(configurationSource);
             return framework.buildProducer(configuration, dataModel, templatePackages);
         } catch (IOException e) {
             e.printStackTrace();
@@ -86,13 +87,14 @@ public class KiteFactory {
      *
      * @return Xml生成器
      */
-    public Producer getXmlProducer(DataModel dataModel, String ktl) {
+    public Producer getXmlProducer(DataModel dataModel, String... ktl) {
         final Framework<?> framework = configuration.getXmlFramework();
         if (framework == null) {
             throw new KiteException("没有初始化序列化Xml的Framework");
         }
         try {
-            final List<TemplatePackage> templatePackages = ktlParser.read(new StringConfigurationSource(ktl, StandardCharsets.UTF_8));
+            final StringConfigurationSource configurationSource = new StringConfigurationSource(String.join("\n", ktl), StandardCharsets.UTF_8);
+            final List<TemplatePackage> templatePackages = ktlParser.read(configurationSource);
             return framework.buildProducer(configuration, dataModel, templatePackages);
         } catch (IOException e) {
             e.printStackTrace();
