@@ -64,12 +64,12 @@ public final class RelevanceKiteElement extends ArrayKiteElement {
             final List<Object> matches = KiteUtils.handleInnerKiteConverter(
                     context.dataModel,
                     innerConverterValue,
-                    relevanceMatch((Object[]) v, context)
+                    relevanceMatch(v, context)
             );
             final int size = matches.size();
             switch (relevanceType) {
                 case MULTIPLE: {
-                    super.assembleWithArrayObject(context, matches);
+                    super.assembleWithArray(context, matches);
                 }
                 break;
                 case SINGLE: {
@@ -82,7 +82,7 @@ public final class RelevanceKiteElement extends ArrayKiteElement {
                     } else if (size == 1) {
                         assembleObject(context, matches.get(0));
                     } else {
-                        super.assembleWithArrayObject(context, matches);
+                        super.assembleWithArray(context, matches);
                     }
                 }
                 break;
@@ -104,6 +104,8 @@ public final class RelevanceKiteElement extends ArrayKiteElement {
                 forEachAssemble(context);
                 context.popValue();
             }
+        } else if (object == null) {
+            context.peekNodeProxy().putNull(displayName(context));
         } else {
             context.parentPutNodeProxyAndPush(displayName(context));
             context.pushValue(object);
@@ -116,7 +118,7 @@ public final class RelevanceKiteElement extends ArrayKiteElement {
      * 关联匹配
      */
     @SuppressWarnings("unchecked")
-    private List<Object> relevanceMatch(Object[] array, AssembleContext context) {
+    private List<Object> relevanceMatch(Object v, AssembleContext context) {
         final Object parentValue = context.peekValue();
         final RelFunction<Object, Object> relFunction = KiteUtils.getComponent(
                 context.dataModel,
@@ -124,11 +126,12 @@ public final class RelevanceKiteElement extends ArrayKiteElement {
                 RelFunction.class,
                 ElementDefinition.Attribute.REL
         );
+        final Object[] array = KiteUtils.objectToArray(v, contentAttributes.dataDefinition);
         final List<Object> matches = new ArrayList<>(array.length);
         for (int i = 0; i < array.length; i++) {
             if (relFunction.relevant(parentValue, context.arrayIndex, array[i], i)) {
                 matches.add(array[i]);
-                if (unique && !matches.isEmpty()) {
+                if (unique) {
                     // 唯一值时立即中断循环，提高性能
                     break;
                 }

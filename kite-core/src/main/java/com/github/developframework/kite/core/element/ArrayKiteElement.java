@@ -40,7 +40,7 @@ public class ArrayKiteElement extends ContainerKiteElement {
     @Override
     public void assemble(AssembleContext context) {
         final Optional<Object> dataValue = KiteUtils.getDataValue(context, this);
-        assembleWithArrayObject(context, dataValue.orElse(null));
+        assembleWithArray(context, dataValue.orElse(null));
     }
 
     /**
@@ -49,7 +49,7 @@ public class ArrayKiteElement extends ContainerKiteElement {
      * @param context  上下文
      * @param arrayObj 数组对象
      */
-    public final void assembleWithArrayObject(AssembleContext context, Object arrayObj) {
+    public final void assembleWithArray(AssembleContext context, Object arrayObj) {
         if (arrayObj != null) {
             final ArrayNodeProxy arrayNodeProxy = context.peekNodeProxy().putArrayNode(displayName(context));
             assembleArrayItems(context, arrayObj, arrayNodeProxy);
@@ -81,11 +81,15 @@ public class ArrayKiteElement extends ContainerKiteElement {
         context.arrayLength = arrayAttributes.limit != null && arrayAttributes.limit < array.length ? arrayAttributes.limit : array.length;
         for (context.arrayIndex = 0; context.arrayIndex < context.arrayLength; context.arrayIndex++) {
             // 处理map功能
-            final Object v = KiteUtils.handleKiteConverter(context.dataModel, arrayAttributes.mapValue, array[context.arrayIndex]);
+            final Object item = KiteUtils.handleKiteConverter(context.dataModel, arrayAttributes.mapValue, array[context.arrayIndex]);
             if (elements.isEmpty()) {
-                arrayNodeProxy.addValue(arrayAttributes, v);
+                arrayNodeProxy.addValue(arrayAttributes, item);
+            } else if (KiteUtils.objectIsArray(item)) {
+                // 元素任然是数组型
+                assembleWithArray(context, item);
             } else {
-                context.pushValue(v);
+                // 元素是普通对象
+                context.pushValue(item);
                 context.pushNodeProxy(arrayNodeProxy.addObject(arrayAttributes, context));
                 forEachAssemble(context);
                 context.pop();
