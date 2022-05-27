@@ -73,14 +73,14 @@ public final class RelevanceKiteElement extends ArrayKiteElement {
                 }
                 break;
                 case SINGLE: {
-                    assembleObject(context, size == 0 ? null : matches.get(0));
+                    assembleSingle(context, size == 0 ? null : matches.get(0));
                 }
                 break;
                 case AUTO: {
                     if (size == 0) {
-                        assembleObject(context, null);
+                        assembleSingle(context, null);
                     } else if (size == 1) {
-                        assembleObject(context, matches.get(0));
+                        assembleSingle(context, matches.get(0));
                     } else {
                         super.assembleWithArray(context, matches);
                     }
@@ -95,7 +95,7 @@ public final class RelevanceKiteElement extends ArrayKiteElement {
     /**
      * 组装单个对象
      */
-    private void assembleObject(AssembleContext context, Object object) {
+    private void assembleSingle(AssembleContext context, Object object) {
         if (mergeParent) {
             if (elements.isEmpty()) {
                 context.peekNodeProxy().putValue(displayName(context), object, contentAttributes.xmlCDATA);
@@ -106,6 +106,8 @@ public final class RelevanceKiteElement extends ArrayKiteElement {
             }
         } else if (object == null) {
             context.peekNodeProxy().putNull(displayName(context));
+        } else if (KiteUtils.objectIsArray(object)) {
+            super.assembleWithArray(context, object);
         } else {
             context.parentPutNodeProxyAndPush(displayName(context));
             context.pushValue(object);

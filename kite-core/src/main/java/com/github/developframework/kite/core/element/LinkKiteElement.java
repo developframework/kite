@@ -53,10 +53,14 @@ public final class LinkKiteElement extends ArrayKiteElement {
                 forEachAssemble(context);
                 context.popValue();
             } else {
-                context.parentPutNodeProxyAndPush(displayName(context));
-                context.pushValue(v);
-                forEachAssemble(context);
-                context.pop();
+                if (v == null) {
+                    context.peekNodeProxy().putNull(displayName(context));
+                } else {
+                    context.parentPutNodeProxyAndPush(displayName(context));
+                    context.pushValue(v);
+                    forEachAssemble(context);
+                    context.pop();
+                }
             }
         } else if (!contentAttributes.nullHidden) {
             context.peekNodeProxy().putNull(displayName(context));
