@@ -1,6 +1,7 @@
 package com.github.developframework.kite.dom4j;
 
 import com.github.developframework.kite.core.AbstractProducer;
+import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.data.DataModel;
@@ -29,11 +30,16 @@ import java.util.Optional;
 public final class Dom4jProducer extends AbstractProducer {
 
     public Dom4jProducer(KiteConfiguration configuration, DataModel dataModel, String namespace, String templateId) {
-        super(configuration, dataModel, namespace, templateId, false);
+        super(configuration, dataModel, namespace, templateId);
     }
 
     public Dom4jProducer(KiteConfiguration configuration, DataModel dataModel, List<TemplatePackage> templatePackages) {
-        super(configuration, dataModel, templatePackages, false);
+        super(configuration, dataModel, templatePackages);
+    }
+
+    @Override
+    protected AssembleContext buildAssembleContext() {
+        return new Dom4jAssembleContext(configuration);
     }
 
     @Override

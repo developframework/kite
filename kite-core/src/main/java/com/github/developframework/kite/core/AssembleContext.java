@@ -5,6 +5,7 @@ import com.github.developframework.kite.core.element.Fragment;
 import com.github.developframework.kite.core.element.Template;
 import com.github.developframework.kite.core.exception.TemplateException;
 import com.github.developframework.kite.core.exception.TemplatePackageUndefinedException;
+import com.github.developframework.kite.core.node.ArrayNodeProxy;
 import com.github.developframework.kite.core.node.ObjectNodeProxy;
 import com.github.developframework.kite.core.strategy.NamingStrategy;
 import com.github.developframework.kite.core.structs.TemplatePackage;
@@ -18,14 +19,14 @@ import java.util.Stack;
  *
  * @author qiushui on 2021-06-23.
  */
-public final class AssembleContext {
+public abstract class AssembleContext {
 
     private final Stack<Object> valueStack = new Stack<>();
 
     private final Stack<ObjectNodeProxy> nodeStack = new Stack<>();
 
     @Getter
-    private final KiteConfiguration configuration;
+    protected final KiteConfiguration configuration;
 
     // true 组装json | false 组装xml
     private final boolean assembleJson;
@@ -45,6 +46,16 @@ public final class AssembleContext {
         this.configuration = configuration;
         this.assembleJson = assembleJson;
     }
+
+    /**
+     * 创建对象节点
+     */
+    public abstract ObjectNodeProxy createObjectNodeProxy(Object node);
+
+    /**
+     * 创建数组节点
+     */
+    public abstract ArrayNodeProxy createArrayNodeProxy(Object node);
 
     /**
      * 选择实现框架

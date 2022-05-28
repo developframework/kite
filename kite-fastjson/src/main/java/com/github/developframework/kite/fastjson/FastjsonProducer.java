@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.github.developframework.kite.core.AbstractProducer;
+import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.data.DataModel;
@@ -30,11 +31,16 @@ import java.util.Optional;
 public final class FastjsonProducer extends AbstractProducer {
 
     public FastjsonProducer(KiteConfiguration configuration, DataModel dataModel, String namespace, String templateId) {
-        super(configuration, dataModel, namespace, templateId, true);
+        super(configuration, dataModel, namespace, templateId);
     }
 
     public FastjsonProducer(KiteConfiguration configuration, DataModel dataModel, List<TemplatePackage> templatePackages) {
-        super(configuration, dataModel, templatePackages, true);
+        super(configuration, dataModel, templatePackages);
+    }
+
+    @Override
+    protected AssembleContext buildAssembleContext() {
+        return new FastjsonAssembleContext(configuration);
     }
 
     @Override

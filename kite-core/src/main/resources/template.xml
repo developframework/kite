@@ -4,21 +4,6 @@
 
     <template-package namespace="template">
 
-        <template id="user-list" data="users">
-            <include id="user"/>
-        </template>
-
-        <template id="user-detail" data="users[0]">
-            <include id="user"/>
-        </template>
-
-        <fragment id="user">
-            <property data="id"/>
-            <property data="name" converter="nameConverter"/>
-            <property data="age"/>
-            <property-date data="createTime"/>
-            <link data=""
-        </fragment>
 
     </template-package>
 

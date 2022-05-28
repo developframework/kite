@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.github.developframework.kite.core.AbstractProducer;
+import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.data.DataModel;
@@ -34,13 +35,18 @@ public final class JacksonProducer extends AbstractProducer {
     private final ObjectMapper objectMapper;
 
     public JacksonProducer(KiteConfiguration configuration, DataModel dataModel, String namespace, String templateId) {
-        super(configuration, dataModel, namespace, templateId, true);
+        super(configuration, dataModel, namespace, templateId);
         this.objectMapper = (ObjectMapper) configuration.getJsonFramework().getCore();
     }
 
     public JacksonProducer(KiteConfiguration configuration, DataModel dataModel, List<TemplatePackage> templatePackages) {
-        super(configuration, dataModel, templatePackages, true);
+        super(configuration, dataModel, templatePackages);
         this.objectMapper = (ObjectMapper) configuration.getJsonFramework().getCore();
+    }
+
+    @Override
+    protected AssembleContext buildAssembleContext() {
+        return new JacksonAssembleContext(configuration);
     }
 
 
@@ -84,12 +90,12 @@ public final class JacksonProducer extends AbstractProducer {
         context.pushValue(context.dataModel);
         if (KiteUtils.objectIsArray(rootValue)) {
             // 以数组为根
-            rootNodeProxy = new JacksonArrayNodeProxy(objectMapper.createArrayNode());
+            rootNodeProxy = context.createArrayNodeProxy(objectMapper.createArrayNode());
             context.pushValue(rootValue);
             template.getInnerArrayKiteElement().assembleArrayItems(context, rootValue, (ArrayNodeProxy) rootNodeProxy);
         } else {
             // 以对象为根
-            rootNodeProxy = new JacksonObjectNodeProxy(objectMapper.createObjectNode());
+            rootNodeProxy = context.createObjectNodeProxy(objectMapper.createObjectNode());
             context.pushNodeProxy((ObjectNodeProxy) rootNodeProxy);
             template.assemble(context);
         }
@@ -106,4 +112,5 @@ public final class JacksonProducer extends AbstractProducer {
         }
         return JsonEncoding.UTF8;
     }
+
 }

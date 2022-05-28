@@ -1,6 +1,7 @@
 package com.github.developframework.kite.gson;
 
 import com.github.developframework.kite.core.AbstractProducer;
+import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.data.DataModel;
@@ -30,13 +31,18 @@ public final class GsonProducer extends AbstractProducer {
     private final Gson gson;
 
     public GsonProducer(KiteConfiguration configuration, DataModel dataModel, String namespace, String templateId) {
-        super(configuration, dataModel, namespace, templateId, true);
+        super(configuration, dataModel, namespace, templateId);
         gson = (Gson) configuration.getJsonFramework().getCore();
     }
 
     public GsonProducer(KiteConfiguration configuration, DataModel dataModel, List<TemplatePackage> templatePackages) {
-        super(configuration, dataModel, templatePackages, true);
+        super(configuration, dataModel, templatePackages);
         gson = (Gson) configuration.getJsonFramework().getCore();
+    }
+
+    @Override
+    protected AssembleContext buildAssembleContext() {
+        return new GsonAssembleContext(configuration);
     }
 
     @Override

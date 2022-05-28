@@ -18,21 +18,23 @@ public abstract class AbstractProducer implements Producer {
 
     protected final AssembleContext context;
     
-    public AbstractProducer(KiteConfiguration configuration, DataModel dataModel, String namespace, String templateId, boolean assembleJson) {
+    public AbstractProducer(KiteConfiguration configuration, DataModel dataModel, String namespace, String templateId) {
         this.configuration = configuration;
-        this.context = new AssembleContext(configuration, assembleJson);
+        this.context = buildAssembleContext();
         this.context.dataModel = dataModel;
         this.namespace = namespace;
         this.templateId = templateId;
     }
 
-    public AbstractProducer(KiteConfiguration configuration, DataModel dataModel, List<TemplatePackage> templatePackages, boolean assembleJson) {
+    public AbstractProducer(KiteConfiguration configuration, DataModel dataModel, List<TemplatePackage> templatePackages) {
         this.configuration = configuration;
-        this.context = new AssembleContext(configuration, assembleJson);
+        this.context = buildAssembleContext();
         this.context.dataModel = dataModel;
         templatePackages.forEach(this.context.extraTemplatePackages::putTemplatePackage);
         final TemplatePackage templatePackage = templatePackages.get(0);
         this.namespace = templatePackage.getNamespace();
         this.templateId = templatePackage.getUniqueTemplate().getId();
     }
+
+    protected abstract AssembleContext buildAssembleContext();
 }
