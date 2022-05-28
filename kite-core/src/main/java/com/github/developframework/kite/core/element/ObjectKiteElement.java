@@ -21,10 +21,11 @@ public class ObjectKiteElement extends ContainerKiteElement {
     public void assemble(AssembleContext context) {
         final Optional<Object> dataValue = KiteUtils.getDataValue(context, this);
         if (dataValue.isPresent()) {
-            context.parentPutNodeProxyAndPush(displayName(context));
             context.pushValue(dataValue.get());
+            context.pushNodeProxy(context.peekNodeProxy().putObjectNode(displayName(context)));
             forEachAssemble(context);
-            context.pop();
+            context.popNodeProxy();
+            context.popValue();
         } else if (!contentAttributes.nullHidden) {
             context.peekNodeProxy().putNull(displayName(context));
         }

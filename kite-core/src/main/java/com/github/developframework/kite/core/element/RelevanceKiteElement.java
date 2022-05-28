@@ -109,10 +109,11 @@ public final class RelevanceKiteElement extends ArrayKiteElement {
         } else if (KiteUtils.objectIsArray(object)) {
             super.assembleWithArray(context, object);
         } else {
-            context.parentPutNodeProxyAndPush(displayName(context));
             context.pushValue(object);
+            context.pushNodeProxy(context.peekNodeProxy().putObjectNode(displayName(context)));
             forEachAssemble(context);
-            context.pop();
+            context.popNodeProxy();
+            context.popValue();
         }
     }
 

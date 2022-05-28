@@ -52,7 +52,7 @@ public class Fragment extends ContainerKiteElement {
                 if (dataValue.isPresent()) {
                     context.pushValue(dataValue.get());
                     forEachAssemble(context);
-                    context.pop();
+                    context.popValue();
                 } else if (!contentAttributes.nullHidden) {
                     context.peekNodeProxy().putNull(displayName(context));
                 }

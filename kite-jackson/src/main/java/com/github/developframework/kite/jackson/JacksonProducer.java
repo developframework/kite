@@ -86,19 +86,22 @@ public final class JacksonProducer extends AbstractProducer {
                 rootValue = rootValueOptional.get();
             }
         }
-        final NodeProxy rootNodeProxy;
         context.pushValue(context.dataModel);
+        final NodeProxy rootNodeProxy;
         if (KiteUtils.objectIsArray(rootValue)) {
-            // 以数组为根
-            rootNodeProxy = context.createArrayNodeProxy();
-            context.pushValue(rootValue);
-            template.getInnerArrayKiteElement().assembleArrayItems(context, rootValue, (ArrayNodeProxy) rootNodeProxy);
+            // 以数组为根节点
+            ArrayNodeProxy arrayNodeProxy = context.createArrayNodeProxy();
+            template.getInnerArrayKiteElement().assembleArrayItems(context, rootValue, arrayNodeProxy);
+            rootNodeProxy = arrayNodeProxy;
         } else {
-            // 以对象为根
-            rootNodeProxy = context.createObjectNodeProxy();
-            context.pushNodeProxy((ObjectNodeProxy) rootNodeProxy);
+            // 以对象为根节点
+            ObjectNodeProxy objectNodeProxy = context.createObjectNodeProxy();
+            context.pushNodeProxy(objectNodeProxy);
             template.assemble(context);
+            context.popNodeProxy();
+            rootNodeProxy = objectNodeProxy;
         }
+        context.popValue();
         return (JsonNode) rootNodeProxy.getNode();
     }
 

@@ -92,7 +92,8 @@ public class ArrayKiteElement extends ContainerKiteElement {
                 context.pushValue(item);
                 context.pushNodeProxy(arrayNodeProxy.addObject(arrayAttributes, context));
                 forEachAssemble(context);
-                context.pop();
+                context.popNodeProxy();
+                context.popValue();
             }
         }
 

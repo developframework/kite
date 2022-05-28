@@ -21,7 +21,7 @@ public final class ThisKiteElement extends ContainerKiteElement {
             final Object v = KiteUtils.handleKiteConverter(context.dataModel, contentAttributes.converterValue, context.peekValue());
             context.peekNodeProxy().putValue(displayName(context), v, contentAttributes.xmlCDATA);
         } else {
-            context.parentPutNodeProxyAndPush(displayName(context));
+            context.pushNodeProxy(context.peekNodeProxy().putObjectNode(displayName(context)));
             forEachAssemble(context);
             context.popNodeProxy();
         }

@@ -73,45 +73,23 @@ public abstract class AssembleContext {
         this.nodeStack.push(nodeProxy);
     }
 
-    /**
-     * 父节点拼接一个对象节点并入栈
-     */
-    public void parentPutNodeProxyAndPush(String name) {
-        this.nodeStack.push(nodeStack.peek().putObjectNode(name));
-    }
-
-    /**
-     * 取栈顶节点代理
-     *
-     * @return 节点代理
-     */
     public ObjectNodeProxy peekNodeProxy() {
         return nodeStack.peek();
-    }
-
-    public void pushValue(Object value) {
-        this.valueStack.push(value);
     }
 
     public void popNodeProxy() {
         this.nodeStack.pop();
     }
 
-    public void popValue() {
-        this.valueStack.pop();
+    public void pushValue(Object value) {
+        this.valueStack.push(value);
     }
 
-    /**
-     * 取栈顶值
-     *
-     * @return 栈顶值
-     */
     public Object peekValue() {
         return valueStack.isEmpty() ? null : valueStack.peek();
     }
 
-    public void pop() {
-        this.nodeStack.pop();
+    public void popValue() {
         this.valueStack.pop();
     }
 
