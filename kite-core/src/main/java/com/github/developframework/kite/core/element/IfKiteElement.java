@@ -32,7 +32,7 @@ public final class IfKiteElement extends ContainerKiteElement {
 
     @Override
     public void assemble(AssembleContext context) {
-        final Object parentValue = context.peekValue();
+        final Object parentValue = context.valueStack.peek();
         final Boolean flag =
                 context.dataModel
                         .getData(conditionValue)

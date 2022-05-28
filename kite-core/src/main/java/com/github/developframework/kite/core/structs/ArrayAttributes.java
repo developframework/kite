@@ -31,4 +31,10 @@ public class ArrayAttributes {
         arrayAttributes.xmlItem = elementDefinition.getString(ElementDefinition.Attribute.XML_ITEM, "item");
         return arrayAttributes;
     }
+
+    public ArrayAttributes basic() {
+        ArrayAttributes arrayAttributes = new ArrayAttributes();
+        arrayAttributes.xmlItem = xmlItem;
+        return arrayAttributes;
+    }
 }

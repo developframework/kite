@@ -21,9 +21,9 @@ public class RawKiteElement extends ContentKiteElement {
     public void assemble(AssembleContext context) {
         final Optional<Object> dataValue = KiteUtils.getDataValue(context, this);
         if (dataValue.isPresent()) {
-            context.peekNodeProxy().putRaw(context, displayName(context), (String) dataValue.get());
+            context.nodeStack.peek().putRaw(context, displayName(context), (String) dataValue.get());
         } else if (!contentAttributes.nullHidden) {
-            context.peekNodeProxy().putNull(displayName(context));
+            context.nodeStack.peek().putNull(displayName(context));
         }
     }
 }

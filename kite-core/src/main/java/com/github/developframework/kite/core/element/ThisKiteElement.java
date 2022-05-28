@@ -18,12 +18,13 @@ public final class ThisKiteElement extends ContainerKiteElement {
     @Override
     public void assemble(AssembleContext context) {
         if (elements.isEmpty()) {
-            final Object v = KiteUtils.handleKiteConverter(context.dataModel, contentAttributes.converterValue, context.peekValue());
-            context.peekNodeProxy().putValue(displayName(context), v, contentAttributes.xmlCDATA);
+            final Object v = KiteUtils.handleKiteConverter(context.dataModel, contentAttributes.converterValue, context.valueStack.peek());
+            context.nodeStack.peek().putValue(displayName(context), v, contentAttributes.xmlCDATA);
         } else {
-            context.pushNodeProxy(context.peekNodeProxy().putObjectNode(displayName(context)));
-            forEachAssemble(context);
-            context.popNodeProxy();
+            context.prepareNextOnlyNode(
+                    context.nodeStack.peek().putObjectNode(displayName(context)),
+                    this::forEachAssemble
+            );
         }
     }
 }

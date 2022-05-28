@@ -24,13 +24,13 @@ public class EnumPropertyKiteElement extends ContainerKiteElement {
             for (KiteElement element : elements) {
                 EnumValueKiteElement e = (EnumValueKiteElement) element;
                 if (e.getEnumValue().equals(v)) {
-                    context.peekNodeProxy().putValue(displayName(context), e.getEnumText(), contentAttributes.xmlCDATA);
+                    context.nodeStack.peek().putValue(displayName(context), e.getEnumText(), contentAttributes.xmlCDATA);
                     return;
                 }
             }
             throw new KiteException("No enum value for \"%s\" in template \"%s\".", v, fragmentLocation);
         } else if (!contentAttributes.nullHidden) {
-            context.peekNodeProxy().putNull(displayName(context));
+            context.nodeStack.peek().putNull(displayName(context));
         }
     }
 }

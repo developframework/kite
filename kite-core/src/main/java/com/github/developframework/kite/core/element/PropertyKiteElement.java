@@ -23,10 +23,10 @@ public abstract class PropertyKiteElement extends ContainerKiteElement {
             Object value = dataValue.get();
             final Class<?> valueClass = value.getClass();
             if (support(valueClass)) {
-                handle(context.peekNodeProxy(), value, displayName(context));
+                handle(context.nodeStack.peek(), value, displayName(context));
             }
         } else if (!contentAttributes.nullHidden) {
-            context.peekNodeProxy().putNull(displayName(context));
+            context.nodeStack.peek().putNull(displayName(context));
         }
     }
 

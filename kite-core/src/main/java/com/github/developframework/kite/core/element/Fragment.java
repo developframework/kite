@@ -50,11 +50,9 @@ public class Fragment extends ContainerKiteElement {
             } else {
                 final Optional<Object> dataValue = KiteUtils.getDataValue(context, this);
                 if (dataValue.isPresent()) {
-                    context.pushValue(dataValue.get());
-                    forEachAssemble(context);
-                    context.popValue();
+                    context.prepareNextOnlyValue(dataValue.get(), this::forEachAssemble);
                 } else if (!contentAttributes.nullHidden) {
-                    context.peekNodeProxy().putNull(displayName(context));
+                    context.nodeStack.peek().putNull(displayName(context));
                 }
             }
         } else {

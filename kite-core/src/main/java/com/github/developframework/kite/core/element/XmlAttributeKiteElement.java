@@ -20,6 +20,6 @@ public final class XmlAttributeKiteElement extends ContentKiteElement {
     @Override
     public void assemble(AssembleContext context) {
         final Optional<Object> dataValue = KiteUtils.getDataValue(context, this);
-        dataValue.ifPresent(o -> context.peekNodeProxy().putAttribute(displayName(context), o));
+        dataValue.ifPresent(o -> context.nodeStack.peek().putAttribute(displayName(context), o));
     }
 }

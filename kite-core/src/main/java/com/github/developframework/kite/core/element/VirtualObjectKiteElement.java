@@ -27,8 +27,9 @@ public class VirtualObjectKiteElement extends ContainerKiteElement {
 
     @Override
     public void assemble(AssembleContext context) {
-        context.pushNodeProxy(context.peekNodeProxy().putObjectNode(alias));
-        this.forEachAssemble(context);
-        context.popNodeProxy();
+        context.prepareNextOnlyNode(
+                context.nodeStack.peek().putObjectNode(alias),
+                this::forEachAssemble
+        );
     }
 }

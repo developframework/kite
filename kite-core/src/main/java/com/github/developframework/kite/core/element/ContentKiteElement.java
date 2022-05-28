@@ -5,7 +5,6 @@ import com.github.developframework.expression.Expression;
 import com.github.developframework.expression.MethodExpression;
 import com.github.developframework.expression.ObjectExpression;
 import com.github.developframework.kite.core.AssembleContext;
-import com.github.developframework.kite.core.Framework;
 import com.github.developframework.kite.core.strategy.KitePropertyNamingStrategy;
 import com.github.developframework.kite.core.strategy.NamingStrategy;
 import com.github.developframework.kite.core.structs.ContentAttributes;
@@ -52,12 +51,10 @@ public abstract class ContentKiteElement extends AbstractKiteElement {
         if (isNotEmpty(contentAttributes.alias)) {
             return contentAttributes.alias;
         }
-        final Framework<?> framework = context.switchFramework();
-        final NamingStrategy namingStrategy = contentAttributes.namingStrategy != null ?
-                contentAttributes.namingStrategy : context.getOptionNamingStrategy();
+        final NamingStrategy namingStrategy = contentAttributes.namingStrategy != null ? contentAttributes.namingStrategy : context.optionNamingStrategy;
         final KitePropertyNamingStrategy propertyNamingStrategy = namingStrategy == NamingStrategy.FRAMEWORK ?
-                framework.namingStrategy() : namingStrategy.getNamingStrategy();
-        return propertyNamingStrategy.propertyDisplayName(framework, determineNameFromExpression());
+                context.framework.namingStrategy() : namingStrategy.getNamingStrategy();
+        return propertyNamingStrategy.propertyDisplayName(context.framework, determineNameFromExpression());
     }
 
     /**

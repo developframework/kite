@@ -4,13 +4,14 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.KiteConfiguration;
+import com.github.developframework.kite.core.data.DataModel;
 import com.github.developframework.kite.core.node.ArrayNodeProxy;
 import com.github.developframework.kite.core.node.ObjectNodeProxy;
 
 public class FastjsonAssembleContext extends AssembleContext {
 
-    public FastjsonAssembleContext(KiteConfiguration configuration) {
-        super(configuration, true);
+    public FastjsonAssembleContext(KiteConfiguration configuration, DataModel dataModel) {
+        super(configuration, dataModel, true);
     }
 
     @Override

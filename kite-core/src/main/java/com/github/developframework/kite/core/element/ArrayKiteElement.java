@@ -7,6 +7,7 @@ import com.github.developframework.kite.core.structs.ElementAttributes;
 import com.github.developframework.kite.core.structs.ElementDefinition;
 import com.github.developframework.kite.core.structs.FragmentLocation;
 import com.github.developframework.kite.core.utils.KiteUtils;
+import lombok.Getter;
 
 import java.util.Optional;
 
@@ -25,6 +26,7 @@ import java.util.Optional;
 public class ArrayKiteElement extends ContainerKiteElement {
 
     // 数组属性
+    @Getter
     protected ArrayAttributes arrayAttributes;
 
     public ArrayKiteElement(FragmentLocation fragmentLocation) {
@@ -51,14 +53,14 @@ public class ArrayKiteElement extends ContainerKiteElement {
      */
     public final void assembleWithArray(AssembleContext context, Object arrayObj) {
         if (arrayObj != null) {
-            final ArrayNodeProxy arrayNodeProxy = context.peekNodeProxy().putArrayNode(displayName(context));
-            assembleArrayItems(context, arrayObj, arrayNodeProxy);
+            final ArrayNodeProxy arrayNodeProxy = context.nodeStack.peek().putArrayNode(displayName(context));
+            assembleArrayItems(context, arrayAttributes, arrayObj, arrayNodeProxy);
         } else if (!contentAttributes.nullHidden) {
             // 处理null-empty功能
             if (arrayAttributes.nullEmpty) {
-                context.peekNodeProxy().putArrayNode(displayName(context));
+                context.nodeStack.peek().putArrayNode(displayName(context));
             } else {
-                context.peekNodeProxy().putNull(displayName(context));
+                context.nodeStack.peek().putNull(displayName(context));
             }
         }
     }
@@ -70,7 +72,7 @@ public class ArrayKiteElement extends ContainerKiteElement {
      * @param arrayObj       数组对象
      * @param arrayNodeProxy 数组节点代理
      */
-    public final void assembleArrayItems(AssembleContext context, Object arrayObj, ArrayNodeProxy arrayNodeProxy) {
+    public final void assembleArrayItems(AssembleContext context, ArrayAttributes arrayAttributes, Object arrayObj, ArrayNodeProxy arrayNodeProxy) {
         final Object[] array = KiteUtils.objectToArray(arrayObj, contentAttributes.dataDefinition);
         // 处理comparator功能
         KiteUtils.handleArrayComparator(context.dataModel, arrayAttributes.comparatorValue, array);
@@ -78,7 +80,7 @@ public class ArrayKiteElement extends ContainerKiteElement {
         final int parentLength = context.arrayLength, parentIndex = context.arrayIndex;
 
         // 处理limit功能
-        context.arrayLength = arrayAttributes.limit != null && arrayAttributes.limit < array.length ? arrayAttributes.limit : array.length;
+        context.arrayLength = arrayAttributes.limit != null && arrayAttributes.limit > 0 && arrayAttributes.limit < array.length ? arrayAttributes.limit : array.length;
         for (context.arrayIndex = 0; context.arrayIndex < context.arrayLength; context.arrayIndex++) {
             // 处理map功能
             final Object item = KiteUtils.handleKiteConverter(context.dataModel, arrayAttributes.mapValue, array[context.arrayIndex]);
@@ -86,14 +88,16 @@ public class ArrayKiteElement extends ContainerKiteElement {
                 arrayNodeProxy.addValue(arrayAttributes, item);
             } else if (KiteUtils.objectIsArray(item)) {
                 // 元素任然是数组型
-                assembleArrayItems(context, item, arrayNodeProxy.addArray(arrayAttributes, context));
+                assembleArrayItems(
+                        context,
+                        /* 嵌套数组需要跳过函数处理 */
+                        arrayAttributes.basic(),
+                        item,
+                        arrayNodeProxy.addArray(arrayAttributes, context)
+                );
             } else {
                 // 元素是普通对象
-                context.pushValue(item);
-                context.pushNodeProxy(arrayNodeProxy.addObject(arrayAttributes, context));
-                forEachAssemble(context);
-                context.popNodeProxy();
-                context.popValue();
+                context.prepareNext(arrayNodeProxy.addObject(arrayAttributes, context), item, this::forEachAssemble);
             }
         }
 

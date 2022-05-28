@@ -21,9 +21,9 @@ public class PrototypeKiteElement extends ContentKiteElement {
     public void assemble(AssembleContext context) {
         final Optional<Object> dataValue = KiteUtils.getDataValue(context, this);
         if (dataValue.isPresent()) {
-            context.peekNodeProxy().putPrototype(context, displayName(context), dataValue.get());
+            context.nodeStack.peek().putPrototype(context, displayName(context), dataValue.get());
         } else if (!contentAttributes.nullHidden) {
-            context.peekNodeProxy().putNull(displayName(context));
+            context.nodeStack.peek().putNull(displayName(context));
         }
     }
 }

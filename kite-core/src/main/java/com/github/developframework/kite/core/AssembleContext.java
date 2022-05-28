@@ -10,9 +10,9 @@ import com.github.developframework.kite.core.node.ObjectNodeProxy;
 import com.github.developframework.kite.core.strategy.NamingStrategy;
 import com.github.developframework.kite.core.structs.TemplatePackage;
 import com.github.developframework.kite.core.structs.TemplatePackageRegistry;
-import lombok.Getter;
 
 import java.util.Stack;
+import java.util.function.Consumer;
 
 /**
  * 组装过程上下文
@@ -21,30 +21,32 @@ import java.util.Stack;
  */
 public abstract class AssembleContext {
 
-    private final Stack<Object> valueStack = new Stack<>();
+    public final Stack<Object> valueStack = new Stack<>();
 
-    private final Stack<ObjectNodeProxy> nodeStack = new Stack<>();
+    public final Stack<ObjectNodeProxy> nodeStack = new Stack<>();
 
-    @Getter
-    protected final KiteConfiguration configuration;
+    // 插槽片段 用于extend遍历后跳回原模板
+    public final Stack<Fragment> slotStack = new Stack<>();
 
-    // true 组装json | false 组装xml
-    private final boolean assembleJson;
+    public final KiteConfiguration configuration;
 
-    public DataModel dataModel;
+    public final DataModel dataModel;
+
+    public final Framework<?> framework;
+
+    public final NamingStrategy optionNamingStrategy;
 
     public int arrayIndex;
 
     public int arrayLength;
 
-    // 插槽片段 用于extend遍历后跳回原模板
-    public Stack<Fragment> slotStack = new Stack<>();
-
     public TemplatePackageRegistry extraTemplatePackages = new TemplatePackageRegistry();
 
-    public AssembleContext(KiteConfiguration configuration, boolean assembleJson) {
+    public AssembleContext(KiteConfiguration configuration, DataModel dataModel, boolean assembleJson) {
         this.configuration = configuration;
-        this.assembleJson = assembleJson;
+        this.dataModel = dataModel;
+        this.framework = assembleJson ? configuration.getJsonFramework() : configuration.getXmlFramework();
+        this.optionNamingStrategy = assembleJson ? configuration.getOptions().getJson().getNamingStrategy() : configuration.getOptions().getXml().getNamingStrategy();
     }
 
     /**
@@ -57,40 +59,24 @@ public abstract class AssembleContext {
      */
     public abstract ArrayNodeProxy createArrayNodeProxy();
 
-    /**
-     * 选择实现框架
-     */
-    public Framework<?> switchFramework() {
-        return assembleJson ? configuration.getJsonFramework() : configuration.getXmlFramework();
+    public void prepareNext(ObjectNodeProxy nodeProxy, Object value, Consumer<AssembleContext> consumer) {
+        valueStack.push(value);
+        nodeStack.push(nodeProxy);
+        consumer.accept(this);
+        nodeStack.pop();
+        valueStack.pop();
     }
 
-    public NamingStrategy getOptionNamingStrategy() {
-        final KiteOptions options = configuration.getOptions();
-        return assembleJson ? options.getJson().getNamingStrategy() : options.getXml().getNamingStrategy();
+    public void prepareNextOnlyNode(ObjectNodeProxy nodeProxy, Consumer<AssembleContext> consumer) {
+        nodeStack.push(nodeProxy);
+        consumer.accept(this);
+        nodeStack.pop();
     }
 
-    public void pushNodeProxy(ObjectNodeProxy nodeProxy) {
-        this.nodeStack.push(nodeProxy);
-    }
-
-    public ObjectNodeProxy peekNodeProxy() {
-        return nodeStack.peek();
-    }
-
-    public void popNodeProxy() {
-        this.nodeStack.pop();
-    }
-
-    public void pushValue(Object value) {
-        this.valueStack.push(value);
-    }
-
-    public Object peekValue() {
-        return valueStack.isEmpty() ? null : valueStack.peek();
-    }
-
-    public void popValue() {
-        this.valueStack.pop();
+    public void prepareNextOnlyValue(Object value, Consumer<AssembleContext> consumer) {
+        valueStack.push(value);
+        consumer.accept(this);
+        valueStack.pop();
     }
 
     /**

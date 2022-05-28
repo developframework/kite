@@ -36,7 +36,7 @@ public final class KiteUtils {
     public static Optional<Object> getDataValue(AssembleContext context, ContentKiteElement element) {
         final ContentAttributes contentAttributes = element.getContentAttributes();
         final DataDefinition dataDefinition = contentAttributes.dataDefinition;
-        Object v = context.peekValue();
+        Object v = context.valueStack.peek();
         if (v instanceof DataModel || dataDefinition.getFunctionSign() == FunctionSign.ROOT) {
             v = context.dataModel.getData(dataDefinition.getExpression()).orElse(null);
         } else {

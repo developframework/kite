@@ -47,24 +47,22 @@ public final class LinkKiteElement extends ArrayKiteElement {
             // 处理map功能
             final Object v = KiteUtils.handleKiteConverter(context.dataModel, arrayAttributes.mapValue, array[context.arrayIndex]);
             if (elements.isEmpty()) {
-                context.peekNodeProxy().putValue(displayName(context), v, contentAttributes.xmlCDATA);
+                context.nodeStack.peek().putValue(displayName(context), v, contentAttributes.xmlCDATA);
             } else if (mergeParent) {
-                context.pushValue(v);
-                forEachAssemble(context);
-                context.popValue();
+                context.prepareNextOnlyValue(v, this::forEachAssemble);
             } else {
                 if (v == null) {
-                    context.peekNodeProxy().putNull(displayName(context));
+                    context.nodeStack.peek().putNull(displayName(context));
                 } else {
-                    context.pushValue(v);
-                    context.pushNodeProxy(context.peekNodeProxy().putObjectNode(displayName(context)));
-                    forEachAssemble(context);
-                    context.popNodeProxy();
-                    context.popValue();
+                    context.prepareNext(
+                            context.nodeStack.peek().putObjectNode(displayName(context)),
+                            v,
+                            this::forEachAssemble
+                    );
                 }
             }
         } else if (!contentAttributes.nullHidden) {
-            context.peekNodeProxy().putNull(displayName(context));
+            context.nodeStack.peek().putNull(displayName(context));
         }
     }
 }

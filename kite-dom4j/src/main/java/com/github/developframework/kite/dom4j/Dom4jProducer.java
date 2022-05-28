@@ -5,8 +5,10 @@ import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.data.DataDefinition;
 import com.github.developframework.kite.core.data.DataModel;
+import com.github.developframework.kite.core.element.ArrayKiteElement;
 import com.github.developframework.kite.core.element.Template;
 import com.github.developframework.kite.core.exception.KiteException;
+import com.github.developframework.kite.core.node.NodeProxy;
 import com.github.developframework.kite.core.node.ObjectNodeProxy;
 import com.github.developframework.kite.core.structs.TemplatePackage;
 import com.github.developframework.kite.core.utils.KiteUtils;
@@ -20,7 +22,6 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Dom4j的xml生成器
@@ -38,76 +39,78 @@ public final class Dom4jProducer extends AbstractProducer {
     }
 
     @Override
-    protected AssembleContext buildAssembleContext() {
-        return new Dom4jAssembleContext(configuration);
+    protected AssembleContext buildAssembleContext(DataModel dataModel) {
+        return new Dom4jAssembleContext(configuration, dataModel);
     }
 
     @Override
     public String produce(boolean pretty) {
-        final Document document = buildXmlDocument();
-        if (document == null) return "";
-        try {
-            OutputFormat format = OutputFormat.createCompactFormat();
-            format.setSuppressDeclaration(configuration.getOptions().getXml().isSuppressDeclaration());
-            format.setEncoding(StandardCharsets.UTF_8.name());
-            format.setIndent(pretty);
-            format.setNewlines(pretty);
-            Writer writer = new StringWriter();
-            XMLWriter xmlWriter = new XMLWriter(writer, format);
-            xmlWriter.setEscapeText(true);
-            xmlWriter.write(document);
-            xmlWriter.close();
-            return writer.toString();
-        } catch (IOException e) {
-            throw new KiteException("构建xml失败", e.getMessage());
+        final NodeProxy rootNodeProxy = buildRootNodeProxy();
+        if (rootNodeProxy == null) {
+            return "";
+        } else {
+            try {
+                OutputFormat format = OutputFormat.createCompactFormat();
+                format.setSuppressDeclaration(configuration.getOptions().getXml().isSuppressDeclaration());
+                format.setEncoding(StandardCharsets.UTF_8.name());
+                format.setIndent(pretty);
+                format.setNewlines(pretty);
+                Writer writer = new StringWriter();
+                XMLWriter xmlWriter = new XMLWriter(writer, format);
+                xmlWriter.setEscapeText(true);
+                xmlWriter.write(rootNodeProxy.getNode());
+                xmlWriter.close();
+                return writer.toString();
+            } catch (IOException e) {
+                throw new KiteException("构建xml失败", e.getMessage());
+            }
         }
     }
 
     @Override
     public void output(OutputStream outputStream, Charset charset, boolean pretty) {
-        final Document document = buildXmlDocument();
-        if (document == null) return;
-        try {
-            OutputFormat format = OutputFormat.createCompactFormat();
-            format.setSuppressDeclaration(configuration.getOptions().getXml().isSuppressDeclaration());
-            format.setEncoding(charset == null ? StandardCharsets.UTF_8.name() : charset.name());
-            format.setIndent(pretty);
-            format.setNewlines(pretty);
-            Writer writer = new OutputStreamWriter(outputStream);
-            XMLWriter xmlWriter = new XMLWriter(writer, format);
-            xmlWriter.setEscapeText(true);
-            xmlWriter.write(document);
-            xmlWriter.close();
-        } catch (IOException e) {
-            throw new KiteException("构建xml失败", e.getMessage());
+        final NodeProxy rootNodeProxy = buildRootNodeProxy();
+        if (rootNodeProxy != null) {
+            try {
+                OutputFormat format = OutputFormat.createCompactFormat();
+                format.setSuppressDeclaration(configuration.getOptions().getXml().isSuppressDeclaration());
+                format.setEncoding(charset == null ? StandardCharsets.UTF_8.name() : charset.name());
+                format.setIndent(pretty);
+                format.setNewlines(pretty);
+                Writer writer = new OutputStreamWriter(outputStream);
+                XMLWriter xmlWriter = new XMLWriter(writer, format);
+                xmlWriter.setEscapeText(true);
+                xmlWriter.write(rootNodeProxy.getNode());
+                xmlWriter.close();
+            } catch (IOException e) {
+                throw new KiteException("构建xml失败", e.getMessage());
+            }
         }
     }
 
-    private Document buildXmlDocument() {
+    @Override
+    protected NodeProxy buildRootNodeProxy() {
         final Template template = context.extractTemplate(namespace, templateId);
         final DataDefinition dataDefinition = template.getContentAttributes().dataDefinition;
         Object rootValue = null;
         if (dataDefinition != DataDefinition.EMPTY) {
-            Optional<Object> rootValueOptional = context.dataModel.getData(dataDefinition.getExpression());
-            if (rootValueOptional.isEmpty()) {
+            rootValue = context.dataModel.getData(dataDefinition.getExpression()).orElse(null);
+            if (rootValue == null) {
                 return null;
-            } else {
-                rootValue = rootValueOptional.get();
             }
         }
+        context.valueStack.push(context.dataModel);
         final Document document = DocumentHelper.createDocument();
         final ObjectNodeProxy rootNodeProxy = new Dom4jObjectNodeProxy(document.addElement(template.getXmlRoot()));
-        context.pushValue(context.dataModel);
         if (KiteUtils.objectIsArray(rootValue)) {
-            // 以数组为根
+            // 以数组为根节点
             Dom4jArrayNodeProxy arrayNodeProxy = new Dom4jArrayNodeProxy((Element) rootNodeProxy.getNode());
-            context.pushValue(rootValue);
-            template.getInnerArrayKiteElement().assembleArrayItems(context, rootValue, arrayNodeProxy);
+            ArrayKiteElement innerArrayKiteElement = template.getInnerArrayKiteElement();
+            innerArrayKiteElement.assembleArrayItems(context, innerArrayKiteElement.getArrayAttributes(), rootValue, arrayNodeProxy);
         } else {
-            // 以对象为根
-            context.pushNodeProxy(rootNodeProxy);
-            template.assemble(context);
+            // 以对象为根节点
+            context.prepareNextOnlyNode(rootNodeProxy, template::assemble);
         }
-        return document;
+        return rootNodeProxy;
     }
 }

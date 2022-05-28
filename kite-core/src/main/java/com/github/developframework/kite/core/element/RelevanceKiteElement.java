@@ -88,7 +88,7 @@ public final class RelevanceKiteElement extends ArrayKiteElement {
                 break;
             }
         } else if (!contentAttributes.nullHidden) {
-            context.peekNodeProxy().putNull(displayName(context));
+            context.nodeStack.peek().putNull(displayName(context));
         }
     }
 
@@ -98,22 +98,20 @@ public final class RelevanceKiteElement extends ArrayKiteElement {
     private void assembleSingle(AssembleContext context, Object object) {
         if (mergeParent) {
             if (elements.isEmpty()) {
-                context.peekNodeProxy().putValue(displayName(context), object, contentAttributes.xmlCDATA);
+                context.nodeStack.peek().putValue(displayName(context), object, contentAttributes.xmlCDATA);
             } else {
-                context.pushValue(object);
-                forEachAssemble(context);
-                context.popValue();
+                context.prepareNextOnlyValue(object, this::forEachAssemble);
             }
         } else if (object == null) {
-            context.peekNodeProxy().putNull(displayName(context));
+            context.nodeStack.peek().putNull(displayName(context));
         } else if (KiteUtils.objectIsArray(object)) {
             super.assembleWithArray(context, object);
         } else {
-            context.pushValue(object);
-            context.pushNodeProxy(context.peekNodeProxy().putObjectNode(displayName(context)));
-            forEachAssemble(context);
-            context.popNodeProxy();
-            context.popValue();
+            context.prepareNext(
+                    context.nodeStack.peek().putObjectNode(displayName(context)),
+                    object,
+                    this::forEachAssemble
+            );
         }
     }
 
@@ -122,7 +120,6 @@ public final class RelevanceKiteElement extends ArrayKiteElement {
      */
     @SuppressWarnings("unchecked")
     private List<Object> relevanceMatch(Object v, AssembleContext context) {
-        final Object parentValue = context.peekValue();
         final RelFunction<Object, Object> relFunction = KiteUtils.getComponent(
                 context.dataModel,
                 relValue,
@@ -131,6 +128,7 @@ public final class RelevanceKiteElement extends ArrayKiteElement {
         );
         final Object[] array = KiteUtils.objectToArray(v, contentAttributes.dataDefinition);
         final List<Object> matches = new ArrayList<>(array.length);
+        final Object parentValue = context.valueStack.peek();
         for (int i = 0; i < array.length; i++) {
             if (relFunction.relevant(parentValue, context.arrayIndex, array[i], i)) {
                 matches.add(array[i]);

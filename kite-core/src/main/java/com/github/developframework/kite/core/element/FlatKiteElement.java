@@ -20,8 +20,6 @@ public final class FlatKiteElement extends ContainerKiteElement {
     @Override
     public void assemble(AssembleContext context) {
         final Optional<Object> dataValue = KiteUtils.getDataValue(context, this);
-        context.pushValue(dataValue.orElse(null));
-        super.forEachAssemble(context);
-        context.popValue();
+        context.prepareNextOnlyValue(dataValue.orElse(null), this::forEachAssemble);
     }
 }

@@ -40,7 +40,7 @@ public final class JacksonObjectNodeProxy implements ObjectNodeProxy {
 
     @Override
     public void putPrototype(AssembleContext context, String name, Object prototype) {
-        final ObjectMapper objectMapper = (ObjectMapper) context.getConfiguration().getJsonFramework().getCore();
+        final ObjectMapper objectMapper = (ObjectMapper) context.configuration.getJsonFramework().getCore();
         final JsonNode prototypeNode = objectMapper.valueToTree(prototype);
         node.set(name, prototypeNode);
     }

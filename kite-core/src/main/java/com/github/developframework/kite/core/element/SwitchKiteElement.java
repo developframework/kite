@@ -44,7 +44,7 @@ public final class SwitchKiteElement extends AbstractKiteElement {
 
     @Override
     public void assemble(AssembleContext context) {
-        getCheckDataValue(context, context.peekValue())
+        getCheckDataValue(context, context.valueStack.peek())
                 .ifPresent(v -> {
                     boolean finish = false;
                     for (CaseKiteElement caseElement : caseElements) {

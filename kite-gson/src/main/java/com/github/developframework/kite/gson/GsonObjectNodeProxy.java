@@ -37,7 +37,7 @@ public final class GsonObjectNodeProxy implements ObjectNodeProxy {
 
     @Override
     public void putPrototype(AssembleContext context, String name, Object prototype) {
-        Gson gson = (Gson) context.getConfiguration().getJsonFramework().getCore();
+        Gson gson = (Gson) context.configuration.getJsonFramework().getCore();
         final JsonElement jsonElement = gson.toJsonTree(prototype);
         node.add(name, jsonElement);
     }
