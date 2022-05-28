@@ -50,12 +50,12 @@ public abstract class AssembleContext {
     /**
      * 创建对象节点
      */
-    public abstract ObjectNodeProxy createObjectNodeProxy(Object node);
+    public abstract ObjectNodeProxy createObjectNodeProxy();
 
     /**
      * 创建数组节点
      */
-    public abstract ArrayNodeProxy createArrayNodeProxy(Object node);
+    public abstract ArrayNodeProxy createArrayNodeProxy();
 
     /**
      * 选择实现框架
@@ -75,8 +75,6 @@ public abstract class AssembleContext {
 
     /**
      * 父节点拼接一个对象节点并入栈
-     *
-     * @param name
      */
     public void parentPutNodeProxyAndPush(String name) {
         this.nodeStack.push(nodeStack.peek().putObjectNode(name));

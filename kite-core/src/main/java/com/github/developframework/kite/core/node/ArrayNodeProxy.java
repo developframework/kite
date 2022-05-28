@@ -18,10 +18,18 @@ public interface ArrayNodeProxy extends NodeProxy {
     void addValue(ArrayAttributes arrayAttributes, Object value);
 
     /**
-     * 添加对象元素
+     * 添加对象节点代理
      *
      * @param context 上下文
      * @return 对象元素节点代理
      */
     ObjectNodeProxy addObject(ArrayAttributes arrayAttributes, AssembleContext context);
+
+    /**
+     * 添加数组节点代理
+     *
+     * @param context 上下文
+     * @return 对象元素节点代理
+     */
+    ArrayNodeProxy addArray(ArrayAttributes arrayAttributes, AssembleContext context);
 }

@@ -4,6 +4,7 @@ import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.node.ArrayNodeProxy;
 import com.github.developframework.kite.core.node.ObjectNodeProxy;
 import com.github.developframework.kite.core.structs.ArrayAttributes;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.dom4j.Element;
 
@@ -13,11 +14,12 @@ import org.dom4j.Element;
 @RequiredArgsConstructor
 public final class Dom4jArrayNodeProxy implements ArrayNodeProxy {
 
-    private final Element element;
+    @Getter
+    private final Element node;
 
     @Override
     public void addValue(ArrayAttributes arrayAttributes, Object value) {
-        final Element item = element.addElement(arrayAttributes.xmlItem);
+        final Element item = node.addElement(arrayAttributes.xmlItem);
         if (value != null) {
             item.addText(value.toString());
         }
@@ -25,11 +27,12 @@ public final class Dom4jArrayNodeProxy implements ArrayNodeProxy {
 
     @Override
     public ObjectNodeProxy addObject(ArrayAttributes arrayAttributes, AssembleContext context) {
-        return new Dom4jObjectNodeProxy(element.addElement(arrayAttributes.xmlItem));
+        return new Dom4jObjectNodeProxy(node.addElement(arrayAttributes.xmlItem));
     }
 
     @Override
-    public Object getNode() {
-        return element;
+    public ArrayNodeProxy addArray(ArrayAttributes arrayAttributes, AssembleContext context) {
+        return new Dom4jArrayNodeProxy(node.addElement(arrayAttributes.xmlItem));
     }
+
 }

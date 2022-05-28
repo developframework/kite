@@ -14,12 +14,12 @@ public class FastjsonAssembleContext extends AssembleContext {
     }
 
     @Override
-    public ObjectNodeProxy createObjectNodeProxy(Object node) {
-        return new FastjsonObjectNodeProxy((JSONObject) node);
+    public ObjectNodeProxy createObjectNodeProxy() {
+        return new FastjsonObjectNodeProxy(new JSONObject(true));
     }
 
     @Override
-    public ArrayNodeProxy createArrayNodeProxy(Object node) {
-        return new FastjsonArrayNodeProxy((JSONArray) node);
+    public ArrayNodeProxy createArrayNodeProxy() {
+        return new FastjsonArrayNodeProxy(new JSONArray());
     }
 }

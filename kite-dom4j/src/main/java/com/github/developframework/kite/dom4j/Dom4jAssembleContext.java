@@ -4,7 +4,6 @@ import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.KiteConfiguration;
 import com.github.developframework.kite.core.node.ArrayNodeProxy;
 import com.github.developframework.kite.core.node.ObjectNodeProxy;
-import org.dom4j.Element;
 
 public class Dom4jAssembleContext extends AssembleContext {
 
@@ -13,13 +12,13 @@ public class Dom4jAssembleContext extends AssembleContext {
     }
 
     @Override
-    public ObjectNodeProxy createObjectNodeProxy(Object node) {
-        return new Dom4jObjectNodeProxy((Element) node);
+    public ObjectNodeProxy createObjectNodeProxy() {
+        return new Dom4jObjectNodeProxy(null);
     }
 
     @Override
-    public ArrayNodeProxy createArrayNodeProxy(Object node) {
-        return new Dom4jArrayNodeProxy((Element) node);
+    public ArrayNodeProxy createArrayNodeProxy() {
+        return new Dom4jArrayNodeProxy(null);
     }
 
 }

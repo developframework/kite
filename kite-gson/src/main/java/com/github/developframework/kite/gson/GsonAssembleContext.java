@@ -14,12 +14,12 @@ public class GsonAssembleContext extends AssembleContext {
     }
 
     @Override
-    public ObjectNodeProxy createObjectNodeProxy(Object node) {
-        return new GsonObjectNodeProxy((JsonObject) node);
+    public ObjectNodeProxy createObjectNodeProxy() {
+        return new GsonObjectNodeProxy(new JsonObject());
     }
 
     @Override
-    public ArrayNodeProxy createArrayNodeProxy(Object node) {
-        return new GsonArrayNodeProxy((JsonArray) node);
+    public ArrayNodeProxy createArrayNodeProxy() {
+        return new GsonArrayNodeProxy(new JsonArray());
     }
 }

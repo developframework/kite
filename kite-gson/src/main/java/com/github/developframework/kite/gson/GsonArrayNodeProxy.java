@@ -36,9 +36,16 @@ public final class GsonArrayNodeProxy implements ArrayNodeProxy {
 
     @Override
     public ObjectNodeProxy addObject(ArrayAttributes arrayAttributes, AssembleContext context) {
-        JsonObject jsonObject = new JsonObject();
-        node.add(jsonObject);
-        return new GsonObjectNodeProxy(jsonObject);
+        ObjectNodeProxy objectNodeProxy = context.createObjectNodeProxy();
+        node.add((JsonObject) objectNodeProxy.getNode());
+        return objectNodeProxy;
+    }
+
+    @Override
+    public ArrayNodeProxy addArray(ArrayAttributes arrayAttributes, AssembleContext context) {
+        ArrayNodeProxy arrayNodeProxy = context.createArrayNodeProxy();
+        node.add((JsonArray) arrayNodeProxy.getNode());
+        return arrayNodeProxy;
     }
 
 }

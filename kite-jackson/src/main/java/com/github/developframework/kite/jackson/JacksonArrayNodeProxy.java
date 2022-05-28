@@ -1,8 +1,7 @@
 package com.github.developframework.kite.jackson;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.node.ArrayNodeProxy;
 import com.github.developframework.kite.core.node.ObjectNodeProxy;
@@ -51,9 +50,15 @@ public final class JacksonArrayNodeProxy implements ArrayNodeProxy {
 
     @Override
     public ObjectNodeProxy addObject(ArrayAttributes arrayAttributes, AssembleContext context) {
-        final ObjectMapper objectMapper = (ObjectMapper) context.getConfiguration().getJsonFramework().getCore();
-        final ObjectNode objectNode = objectMapper.createObjectNode();
-        node.add(objectNode);
-        return new JacksonObjectNodeProxy(objectNode);
+        ObjectNodeProxy objectNodeProxy = context.createObjectNodeProxy();
+        node.add((JsonNode) objectNodeProxy.getNode());
+        return objectNodeProxy;
+    }
+
+    @Override
+    public ArrayNodeProxy addArray(ArrayAttributes arrayAttributes, AssembleContext context) {
+        ArrayNodeProxy arrayNodeProxy = context.createArrayNodeProxy();
+        node.add((JsonNode) arrayNodeProxy.getNode());
+        return arrayNodeProxy;
     }
 }

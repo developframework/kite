@@ -90,12 +90,12 @@ public final class JacksonProducer extends AbstractProducer {
         context.pushValue(context.dataModel);
         if (KiteUtils.objectIsArray(rootValue)) {
             // 以数组为根
-            rootNodeProxy = context.createArrayNodeProxy(objectMapper.createArrayNode());
+            rootNodeProxy = context.createArrayNodeProxy();
             context.pushValue(rootValue);
             template.getInnerArrayKiteElement().assembleArrayItems(context, rootValue, (ArrayNodeProxy) rootNodeProxy);
         } else {
             // 以对象为根
-            rootNodeProxy = context.createObjectNodeProxy(objectMapper.createObjectNode());
+            rootNodeProxy = context.createObjectNodeProxy();
             context.pushNodeProxy((ObjectNodeProxy) rootNodeProxy);
             template.assemble(context);
         }

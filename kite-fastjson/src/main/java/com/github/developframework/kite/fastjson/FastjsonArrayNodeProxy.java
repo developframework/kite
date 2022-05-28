@@ -1,7 +1,6 @@
 package com.github.developframework.kite.fastjson;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.node.ArrayNodeProxy;
 import com.github.developframework.kite.core.node.ObjectNodeProxy;
@@ -25,8 +24,15 @@ public final class FastjsonArrayNodeProxy implements ArrayNodeProxy {
 
     @Override
     public ObjectNodeProxy addObject(ArrayAttributes arrayAttributes, AssembleContext context) {
-        final JSONObject object = new JSONObject(true);
-        node.add(object);
-        return new FastjsonObjectNodeProxy(object);
+        ObjectNodeProxy objectNodeProxy = context.createObjectNodeProxy();
+        node.add(objectNodeProxy.getNode());
+        return objectNodeProxy;
+    }
+
+    @Override
+    public ArrayNodeProxy addArray(ArrayAttributes arrayAttributes, AssembleContext context) {
+        ArrayNodeProxy arrayNodeProxy = context.createArrayNodeProxy();
+        node.add(arrayNodeProxy.getNode());
+        return arrayNodeProxy;
     }
 }

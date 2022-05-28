@@ -86,7 +86,7 @@ public class ArrayKiteElement extends ContainerKiteElement {
                 arrayNodeProxy.addValue(arrayAttributes, item);
             } else if (KiteUtils.objectIsArray(item)) {
                 // 元素任然是数组型
-                assembleWithArray(context, item);
+                assembleArrayItems(context, item, arrayNodeProxy.addArray(arrayAttributes, context));
             } else {
                 // 元素是普通对象
                 context.pushValue(item);
