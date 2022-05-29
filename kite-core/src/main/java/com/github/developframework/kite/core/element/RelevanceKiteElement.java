@@ -1,6 +1,7 @@
 package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.AssembleContext;
+import com.github.developframework.kite.core.dynamic.FieldEqualRelFunction;
 import com.github.developframework.kite.core.dynamic.RelFunction;
 import com.github.developframework.kite.core.exception.KiteException;
 import com.github.developframework.kite.core.structs.ElementAttributes;
@@ -28,6 +29,8 @@ public final class RelevanceKiteElement extends ArrayKiteElement {
 
     private String relValue;
 
+    private RelFunction<Object, Object> defaultRelFunction;
+
     private RelevanceType relevanceType;
 
     // 是否合并到父节点
@@ -47,6 +50,7 @@ public final class RelevanceKiteElement extends ArrayKiteElement {
     public void configure(ElementDefinition elementDefinition) {
         super.configure(elementDefinition);
         relValue = elementDefinition.getString(ElementDefinition.Attribute.REL);
+        defaultRelFunction = parseRelValue(relValue);
         relevanceType = elementDefinition.getEnum(ElementDefinition.Attribute.TYPE, RelevanceType.class, RelevanceType.AUTO);
         mergeParent = elementDefinition.getBoolean(ElementDefinition.Attribute.MERGE_PARENT, false);
         unique = elementDefinition.getBoolean(ElementDefinition.Attribute.UNIQUE, false);
@@ -129,12 +133,15 @@ public final class RelevanceKiteElement extends ArrayKiteElement {
      */
     @SuppressWarnings("unchecked")
     private List<Object> relevanceMatch(Object v, AssembleContext context) {
-        final RelFunction<Object, Object> relFunction = KiteUtils.getComponent(
-                context.dataModel,
-                relValue,
-                RelFunction.class,
-                ElementDefinition.Attribute.REL
-        );
+        RelFunction<Object, Object> relFunction = defaultRelFunction;
+        if (relFunction == null) {
+            relFunction = KiteUtils.getComponent(
+                    context.dataModel,
+                    relValue,
+                    RelFunction.class,
+                    ElementDefinition.Attribute.REL
+            );
+        }
         final Object[] array = KiteUtils.objectToArray(v, contentAttributes.dataDefinition);
         final List<Object> matches = new ArrayList<>(array.length);
         final Object parentValue = context.valueStack.peek();
@@ -148,6 +155,17 @@ public final class RelevanceKiteElement extends ArrayKiteElement {
             }
         }
         return matches;
+    }
+
+
+    private RelFunction<Object, Object> parseRelValue(String relValue) {
+        if (relValue != null) {
+            final String[] parts = relValue.split("\\s*=\\s*");
+            if (parts.length == 2) {
+                return new FieldEqualRelFunction(parts[0], parts[1]);
+            }
+        }
+        return null;
     }
 
     /**

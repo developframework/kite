@@ -54,7 +54,7 @@ public abstract class ContainerKiteElement extends ContentKiteElement implements
     /**
      * 处理子节点
      */
-    protected List<KiteElement> childrenElementLoadHandle(ElementDefinition elementDefinition) {
+    private List<KiteElement> childrenElementLoadHandle(ElementDefinition elementDefinition) {
         KiteElement previous = null;
         final List<KiteElement> children = elementDefinition.getChildren();
         final List<KiteElement> list = new ArrayList<>(children.size());

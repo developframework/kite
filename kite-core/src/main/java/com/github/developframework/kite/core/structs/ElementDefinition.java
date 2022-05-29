@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -86,7 +85,7 @@ public final class ElementDefinition {
 
     public <T extends Enum<T>> T getEnum(String attributeName, Class<T> enumClass) {
         final String value = getString(attributeName);
-        return value == null ? null : Enum.valueOf(enumClass, value.toUpperCase(Locale.ROOT).trim());
+        return value == null ? null : Enum.valueOf(enumClass, value.toUpperCase().trim());
     }
 
     public <T extends Enum<T>> T getEnum(String attributeName, Class<T> enumClass, T defaultValue) {
