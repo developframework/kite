@@ -42,7 +42,7 @@ public class ArrayKiteElement extends ContainerKiteElement {
     @Override
     public void assemble(AssembleContext context) {
         final Optional<Object> dataValue = KiteUtils.getDataValue(context, this);
-        assembleWithArray(context, dataValue.orElse(null));
+        assembleArray(context, dataValue.orElse(null));
     }
 
     /**
@@ -51,7 +51,7 @@ public class ArrayKiteElement extends ContainerKiteElement {
      * @param context  上下文
      * @param arrayObj 数组对象
      */
-    public final void assembleWithArray(AssembleContext context, Object arrayObj) {
+    public final void assembleArray(AssembleContext context, Object arrayObj) {
         if (arrayObj != null) {
             final ArrayNodeProxy arrayNodeProxy = context.nodeStack.peek().putArrayNode(displayName(context));
             assembleArrayItems(context, arrayAttributes, arrayObj, arrayNodeProxy);

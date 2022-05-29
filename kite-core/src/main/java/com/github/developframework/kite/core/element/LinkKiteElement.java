@@ -37,26 +37,37 @@ public final class LinkKiteElement extends ArrayKiteElement {
         final Optional<Object> dataValue = KiteUtils.getDataValue(context, this);
         if (dataValue.isPresent()) {
             final Object[] array = KiteUtils.objectToArray(dataValue.get(), contentAttributes.dataDefinition);
-            // 处理comparator功能
-            KiteUtils.handleArrayComparator(context.dataModel, arrayAttributes.comparatorValue, array);
             // 处理limit功能
             final int length = arrayAttributes.limit != null && arrayAttributes.limit < array.length ? arrayAttributes.limit : array.length;
             if (length != context.arrayLength) {
                 throw new LinkSizeNotEqualException(fragmentLocation, length, context.arrayLength);
             }
+            // 处理comparator功能
+            KiteUtils.handleArrayComparator(context.dataModel, arrayAttributes.comparatorValue, array);
             // 处理map功能
-            final Object v = KiteUtils.handleKiteConverter(context.dataModel, arrayAttributes.mapValue, array[context.arrayIndex]);
+            final Object item = KiteUtils.handleKiteConverter(context.dataModel, arrayAttributes.mapValue, array[context.arrayIndex]);
             if (elements.isEmpty()) {
-                context.nodeStack.peek().putValue(displayName(context), v, contentAttributes.xmlCDATA);
-            } else if (mergeParent) {
-                context.prepareNextOnlyValue(v, this::forEachAssemble);
+                context.nodeStack.peek().putValue(displayName(context), item, contentAttributes.xmlCDATA);
             } else {
-                if (v == null) {
+                if (item == null) {
                     context.nodeStack.peek().putNull(displayName(context));
+                } else if (KiteUtils.objectIsArray(item)) {
+                    // 元素任然是数组型
+                    assembleArrayItems(
+                            context,
+                            /* 嵌套数组需要跳过函数处理 */
+                            arrayAttributes.basic(),
+                            item,
+                            context.nodeStack.peek().putArrayNode(displayName(context))
+                    );
+                } else if (mergeParent) {
+                    // 合并到父级
+                    context.prepareNextOnlyValue(item, this::forEachAssemble);
                 } else {
+                    // 元素是普通对象
                     context.prepareNext(
                             context.nodeStack.peek().putObjectNode(displayName(context)),
-                            v,
+                            item,
                             this::forEachAssemble
                     );
                 }

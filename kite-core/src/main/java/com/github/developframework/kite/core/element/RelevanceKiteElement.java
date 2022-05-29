@@ -69,7 +69,7 @@ public final class RelevanceKiteElement extends ArrayKiteElement {
             final int size = matches.size();
             switch (relevanceType) {
                 case MULTIPLE: {
-                    super.assembleWithArray(context, matches);
+                    assembleArray(context, matches);
                 }
                 break;
                 case SINGLE: {
@@ -82,7 +82,7 @@ public final class RelevanceKiteElement extends ArrayKiteElement {
                     } else if (size == 1) {
                         assembleSingle(context, matches.get(0));
                     } else {
-                        super.assembleWithArray(context, matches);
+                        assembleArray(context, matches);
                     }
                 }
                 break;
@@ -95,21 +95,30 @@ public final class RelevanceKiteElement extends ArrayKiteElement {
     /**
      * 组装单个对象
      */
-    private void assembleSingle(AssembleContext context, Object object) {
-        if (mergeParent) {
-            if (elements.isEmpty()) {
-                context.nodeStack.peek().putValue(displayName(context), object, contentAttributes.xmlCDATA);
-            } else {
-                context.prepareNextOnlyValue(object, this::forEachAssemble);
-            }
-        } else if (object == null) {
+    private void assembleSingle(AssembleContext context, Object v) {
+        if (v == null) {
             context.nodeStack.peek().putNull(displayName(context));
-        } else if (KiteUtils.objectIsArray(object)) {
-            super.assembleWithArray(context, object);
+        } else if (KiteUtils.objectIsArray(v)) {
+            // 元素任然是数组型
+            assembleArrayItems(
+                    context,
+                    /* 嵌套数组需要跳过函数处理 */
+                    arrayAttributes.basic(),
+                    v,
+                    context.nodeStack.peek().putArrayNode(displayName(context))
+            );
+        } else if (mergeParent) {
+            // 合并到父级
+            if (elements.isEmpty()) {
+                context.nodeStack.peek().putValue(displayName(context), v, contentAttributes.xmlCDATA);
+            } else {
+                context.prepareNextOnlyValue(v, this::forEachAssemble);
+            }
         } else {
+            // 元素是普通对象
             context.prepareNext(
                     context.nodeStack.peek().putObjectNode(displayName(context)),
-                    object,
+                    v,
                     this::forEachAssemble
             );
         }
