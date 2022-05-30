@@ -83,7 +83,7 @@ public class ArrayKiteElement extends ContainerKiteElement {
         context.arrayLength = arrayAttributes.limit != null && arrayAttributes.limit > 0 && arrayAttributes.limit < array.length ? arrayAttributes.limit : array.length;
         for (context.arrayIndex = 0; context.arrayIndex < context.arrayLength; context.arrayIndex++) {
             // 处理map功能
-            final Object item = KiteUtils.handleKiteConverter(context.dataModel, arrayAttributes.mapValue, array[context.arrayIndex]);
+            final Object item = KiteUtils.handleKiteConverter(context.dataModel, arrayAttributes.mapComponent, array[context.arrayIndex]);
             if (elements.isEmpty()) {
                 arrayNodeProxy.addValue(arrayAttributes, item);
             } else if (KiteUtils.objectIsArray(item)) {

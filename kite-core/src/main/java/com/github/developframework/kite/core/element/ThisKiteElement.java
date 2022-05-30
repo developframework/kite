@@ -18,7 +18,7 @@ public final class ThisKiteElement extends ContainerKiteElement {
     @Override
     public void assemble(AssembleContext context) {
         if (elements.isEmpty()) {
-            final Object v = KiteUtils.handleKiteConverter(context.dataModel, contentAttributes.converterValue, context.valueStack.peek());
+            final Object v = KiteUtils.handleKiteConverter(context.dataModel, contentAttributes.converterComponent, context.valueStack.peek());
             context.nodeStack.peek().putValue(displayName(context), v, contentAttributes.xmlCDATA);
         } else {
             context.prepareNextOnlyNode(

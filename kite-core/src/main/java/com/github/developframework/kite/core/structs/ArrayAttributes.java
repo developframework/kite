@@ -1,5 +1,6 @@
 package com.github.developframework.kite.core.structs;
 
+import com.github.developframework.kite.core.dynamic.KiteConverter;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
@@ -9,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class ArrayAttributes {
 
-    public String mapValue;
+    public KiteComponent<KiteConverter<Object, Object>> mapComponent;
 
     public String comparatorValue;
 
@@ -21,20 +22,24 @@ public class ArrayAttributes {
 
     public String xmlItem;
 
-    public static ArrayAttributes of(ElementDefinition elementDefinition) {
-        ArrayAttributes arrayAttributes = new ArrayAttributes();
-        arrayAttributes.mapValue = elementDefinition.getString(ElementDefinition.Attribute.MAP);
-        arrayAttributes.comparatorValue = elementDefinition.getString(ElementDefinition.Attribute.COMPARATOR);
-        arrayAttributes.limit = elementDefinition.getInteger(ElementDefinition.Attribute.LIMIT);
-        arrayAttributes.relValue = elementDefinition.getString(ElementDefinition.Attribute.REL);
-        arrayAttributes.nullEmpty = elementDefinition.getBoolean(ElementDefinition.Attribute.NULL_EMPTY, false);
-        arrayAttributes.xmlItem = elementDefinition.getString(ElementDefinition.Attribute.XML_ITEM, "item");
-        return arrayAttributes;
-    }
-
     public ArrayAttributes basic() {
         ArrayAttributes arrayAttributes = new ArrayAttributes();
         arrayAttributes.xmlItem = xmlItem;
         return arrayAttributes;
     }
+
+    public static ArrayAttributes of(ElementDefinition elementDefinition) {
+        ArrayAttributes arrayAttributes = new ArrayAttributes();
+        arrayAttributes.comparatorValue = elementDefinition.getString(ElementDefinition.Attribute.COMPARATOR);
+        arrayAttributes.limit = elementDefinition.getInteger(ElementDefinition.Attribute.LIMIT);
+        arrayAttributes.relValue = elementDefinition.getString(ElementDefinition.Attribute.REL);
+        arrayAttributes.nullEmpty = elementDefinition.getBoolean(ElementDefinition.Attribute.NULL_EMPTY, false);
+        arrayAttributes.xmlItem = elementDefinition.getString(ElementDefinition.Attribute.XML_ITEM, "item");
+        arrayAttributes.mapComponent = ContentAttributes.parseConverter(
+                ElementDefinition.Attribute.MAP,
+                elementDefinition.getString(ElementDefinition.Attribute.MAP)
+        );
+        return arrayAttributes;
+    }
 }
+

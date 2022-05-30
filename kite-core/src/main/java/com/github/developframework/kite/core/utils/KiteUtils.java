@@ -13,6 +13,7 @@ import com.github.developframework.kite.core.exception.InvalidAttributeException
 import com.github.developframework.kite.core.exception.KiteException;
 import com.github.developframework.kite.core.structs.ContentAttributes;
 import com.github.developframework.kite.core.structs.ElementDefinition;
+import com.github.developframework.kite.core.structs.KiteComponent;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;
@@ -43,7 +44,7 @@ public final class KiteUtils {
             v = ExpressionUtils.getValue(v, dataDefinition.getExpression());
         }
         // 处理转换器
-        return Optional.ofNullable(handleKiteConverter(context.dataModel, contentAttributes.converterValue, v));
+        return Optional.ofNullable(handleKiteConverter(context.dataModel, contentAttributes.converterComponent, v));
     }
 
     /**
@@ -93,36 +94,25 @@ public final class KiteUtils {
     /**
      * 处理KiteConverter
      */
-    public static Object handleKiteConverter(DataModel dataModel, String converterValue, Object value) {
-        if (converterValue == null) {
+    public static Object handleKiteConverter(DataModel dataModel, KiteComponent<KiteConverter<Object, Object>> converterComponent, Object value) {
+        if (converterComponent == null) {
             return value;
-        } else if (converterValue.startsWith("this.")) {
-            return ExpressionUtils.getValue(value, converterValue.substring(5));
-        } else {
-            return getComponent(dataModel, converterValue, KiteConverter.class, ElementDefinition.Attribute.CONVERTER)
-                    .convert(value);
         }
+        return converterComponent.getComponent(dataModel, ElementDefinition.Attribute.CONVERTER).convert(value);
     }
 
     /**
      * 处理KiteConverter
      */
-    public static List<Object> handleInnerKiteConverter(DataModel dataModel, String innerConverterValue, List<Object> values) {
-        if (innerConverterValue == null) {
+    public static List<Object> handleInnerKiteConverter(DataModel dataModel, KiteComponent<KiteConverter<Object, Object>> innerConverterComponent, List<Object> values) {
+        if (innerConverterComponent == null) {
             return values;
-        } else if (innerConverterValue.startsWith("this.")) {
-            final String field = innerConverterValue.substring(5);
-            return values
-                    .stream()
-                    .map(v -> ExpressionUtils.getValue(v, field))
-                    .collect(Collectors.toList());
-        } else {
-            final KiteConverter<Object, Object> converter = getComponent(dataModel, innerConverterValue, KiteConverter.class, ElementDefinition.Attribute.CONVERTER);
-            return values
-                    .stream()
-                    .map(converter::convert)
-                    .collect(Collectors.toList());
         }
+        final KiteConverter<Object, Object> converter = innerConverterComponent.getComponent(dataModel, ElementDefinition.Attribute.INNER_CONVERTER);
+        return values
+                .stream()
+                .map(converter::convert)
+                .collect(Collectors.toList());
     }
 
     /**

@@ -45,7 +45,7 @@ public final class LinkKiteElement extends ArrayKiteElement {
             // 处理comparator功能
             KiteUtils.handleArrayComparator(context.dataModel, arrayAttributes.comparatorValue, array);
             // 处理map功能
-            final Object item = KiteUtils.handleKiteConverter(context.dataModel, arrayAttributes.mapValue, array[context.arrayIndex]);
+            final Object item = KiteUtils.handleKiteConverter(context.dataModel, arrayAttributes.mapComponent, array[context.arrayIndex]);
             if (elements.isEmpty()) {
                 context.nodeStack.peek().putValue(displayName(context), item, contentAttributes.xmlCDATA);
             } else {
