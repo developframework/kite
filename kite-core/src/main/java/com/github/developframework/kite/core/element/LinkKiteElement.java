@@ -43,7 +43,7 @@ public final class LinkKiteElement extends ArrayKiteElement {
                 throw new LinkSizeNotEqualException(fragmentLocation, length, context.arrayLength);
             }
             // 处理comparator功能
-            KiteUtils.handleArrayComparator(context.dataModel, arrayAttributes.comparatorValue, array);
+            KiteUtils.handleArrayComparator(context.dataModel, arrayAttributes.comparatorComponent, array);
             // 处理map功能
             final Object item = KiteUtils.handleKiteConverter(context.dataModel, arrayAttributes.mapComponent, array[context.arrayIndex]);
             if (elements.isEmpty()) {

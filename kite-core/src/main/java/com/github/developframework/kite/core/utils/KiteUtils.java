@@ -118,25 +118,18 @@ public final class KiteUtils {
     /**
      * 处理CastTest
      */
-    public static boolean handleCastTest(DataModel dataModel, String caseTestFunctionValue, Object value) {
-        final String literal = getLiteral(caseTestFunctionValue);
-        if (literal != null) {
-            // 字面量
-            return Objects.equals(value == null ? null : value.toString(), literal);
-        } else {
-            return getComponent(dataModel, caseTestFunctionValue, CaseTestFunction.class, ElementDefinition.Attribute.CASE_TEST)
-                    .test(value);
-        }
+    public static boolean handleCastTest(DataModel dataModel, KiteComponent<CaseTestFunction<Object>> caseComponent, Object value) {
+        return caseComponent.getComponent(dataModel, ElementDefinition.Attribute.CASE_TEST).test(value);
     }
 
     /**
      * 处理Comparator
      */
-    public static void handleArrayComparator(DataModel dataModel, String comparatorValue, final Object[] array) {
-        if (comparatorValue != null) {
+    public static void handleArrayComparator(DataModel dataModel, KiteComponent<Comparator<Object>> comparatorComponent, final Object[] array) {
+        if (comparatorComponent != null) {
             Arrays.sort(
                     array,
-                    getComponent(dataModel, comparatorValue, Comparator.class, ElementDefinition.Attribute.COMPARATOR)
+                    comparatorComponent.getComponent(dataModel, ElementDefinition.Attribute.COMPARATOR)
             );
         }
     }
@@ -145,8 +138,7 @@ public final class KiteUtils {
      * 处理Condition
      */
     public static boolean handleCondition(DataModel dataModel, String conditionValue, Object parentValue) {
-        return getComponent(dataModel, conditionValue, KiteCondition.class, ElementDefinition.Attribute.CONDITION)
-                .verify(dataModel, parentValue);
+        return getComponent(dataModel, conditionValue, KiteCondition.class, ElementDefinition.Attribute.CONDITION).verify(dataModel, parentValue);
     }
 
     /**

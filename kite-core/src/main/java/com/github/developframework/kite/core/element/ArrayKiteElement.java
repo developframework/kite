@@ -75,7 +75,7 @@ public class ArrayKiteElement extends ContainerKiteElement {
     public final void assembleArrayItems(AssembleContext context, ArrayAttributes arrayAttributes, Object arrayObj, ArrayNodeProxy arrayNodeProxy) {
         final Object[] array = KiteUtils.objectToArray(arrayObj, contentAttributes.dataDefinition);
         // 处理comparator功能
-        KiteUtils.handleArrayComparator(context.dataModel, arrayAttributes.comparatorValue, array);
+        KiteUtils.handleArrayComparator(context.dataModel, arrayAttributes.comparatorComponent, array);
         // 记录上层数组长度和索引
         final int parentLength = context.arrayLength, parentIndex = context.arrayIndex;
 

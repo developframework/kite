@@ -1,9 +1,12 @@
 package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.AssembleContext;
+import com.github.developframework.kite.core.dynamic.CaseTestFunction;
+import com.github.developframework.kite.core.dynamic.LiteralCaseTestFunction;
 import com.github.developframework.kite.core.structs.ElementAttributes;
 import com.github.developframework.kite.core.structs.ElementDefinition;
 import com.github.developframework.kite.core.structs.FragmentLocation;
+import com.github.developframework.kite.core.structs.KiteComponent;
 import com.github.developframework.kite.core.utils.KiteUtils;
 
 /**
@@ -16,7 +19,7 @@ import com.github.developframework.kite.core.utils.KiteUtils;
 })
 public final class CaseKiteElement extends ContainerKiteElement {
 
-    private String caseTestFunctionValue;
+    private KiteComponent<CaseTestFunction<Object>> caseComponent;
 
     public CaseKiteElement(FragmentLocation fragmentLocation) {
         super(fragmentLocation);
@@ -25,7 +28,10 @@ public final class CaseKiteElement extends ContainerKiteElement {
     @Override
     public void configure(ElementDefinition elementDefinition) {
         super.configure(elementDefinition);
-        caseTestFunctionValue = elementDefinition.getString(ElementDefinition.Attribute.CASE_TEST);
+        caseComponent = parseCase(
+                ElementDefinition.Attribute.CASE_TEST,
+                elementDefinition.getString(ElementDefinition.Attribute.CASE_TEST)
+        );
     }
 
     @Override
@@ -34,6 +40,18 @@ public final class CaseKiteElement extends ContainerKiteElement {
     }
 
     public boolean match(AssembleContext context, Object value) {
-        return KiteUtils.handleCastTest(context.dataModel, caseTestFunctionValue, value);
+        return KiteUtils.handleCastTest(context.dataModel, caseComponent, value);
+    }
+
+    private KiteComponent<CaseTestFunction<Object>> parseCase(String attributeName, String caseTestFunctionValue) {
+        return new KiteComponent<>(
+                attributeName,
+                caseTestFunctionValue,
+                CaseTestFunction.class,
+                value -> {
+                    final String literal = KiteUtils.getLiteral(value);
+                    return literal != null ? new LiteralCaseTestFunction(literal) : null;
+                }
+        );
     }
 }
