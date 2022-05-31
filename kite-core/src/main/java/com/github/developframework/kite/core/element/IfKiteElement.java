@@ -1,9 +1,12 @@
 package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.AssembleContext;
+import com.github.developframework.kite.core.dynamic.KiteCondition;
+import com.github.developframework.kite.core.dynamic.LiteralCondition;
 import com.github.developframework.kite.core.structs.ElementAttributes;
 import com.github.developframework.kite.core.structs.ElementDefinition;
 import com.github.developframework.kite.core.structs.FragmentLocation;
+import com.github.developframework.kite.core.structs.KiteComponent;
 import com.github.developframework.kite.core.utils.KiteUtils;
 import lombok.Setter;
 
@@ -15,7 +18,7 @@ import lombok.Setter;
 @ElementAttributes("condition")
 public final class IfKiteElement extends ContainerKiteElement {
 
-    private String conditionValue;
+    private KiteComponent<KiteCondition<Object>> conditionComponent;
 
     @Setter
     private ElseKiteElement elseKiteElement;
@@ -27,22 +30,34 @@ public final class IfKiteElement extends ContainerKiteElement {
     @Override
     public void configure(ElementDefinition elementDefinition) {
         super.configure(elementDefinition);
-        conditionValue = elementDefinition.getString(ElementDefinition.Attribute.CONDITION);
+        conditionComponent = parseCondition(
+                ElementDefinition.Attribute.CONDITION,
+                elementDefinition.getString(ElementDefinition.Attribute.CONDITION)
+        );
+    }
+
+    private KiteComponent<KiteCondition<Object>> parseCondition(String attributeName, String attributeValue) {
+        return new KiteComponent<>(
+                attributeName,
+                attributeValue,
+                KiteCondition.class,
+                value -> KiteUtils.getLiteral(value).map(LiteralCondition::new).orElse(null)
+        );
     }
 
     @Override
     public void assemble(AssembleContext context) {
-        final Object parentValue = context.valueStack.peek();
-        final Boolean flag =
+        final Object currentValue = context.valueStack.peek();
+        final boolean predicate =
                 context.dataModel
-                        .getData(conditionValue)
+                        .getData(conditionComponent.getAttributeValue())
                         .filter(v -> v instanceof Boolean)
                         .map(v -> (Boolean) v)
-                        .orElseGet(() -> KiteUtils.handleCondition(context.dataModel, conditionValue, parentValue));
-        if (flag) {
+                        .orElseGet(() -> KiteUtils.handleCondition(context.dataModel, conditionComponent, currentValue));
+        if (predicate) {
             // 执行条件真的逻辑
-            super.forEachAssemble(context);
-        } else if(elseKiteElement != null){
+            forEachAssemble(context);
+        } else if (elseKiteElement != null) {
             // 执行条件假的逻辑
             elseKiteElement.assemble(context);
         }

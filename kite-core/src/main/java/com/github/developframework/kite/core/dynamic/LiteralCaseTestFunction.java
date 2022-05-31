@@ -16,6 +16,6 @@ public class LiteralCaseTestFunction implements CaseTestFunction<Object> {
 
     @Override
     public boolean test(Object data) {
-        return Objects.equals(data == null ? null : data.toString(), literal);
+        return Objects.equals(literal, data == null ? null : data.toString());
     }
 }

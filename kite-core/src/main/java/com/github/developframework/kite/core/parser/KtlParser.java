@@ -152,7 +152,7 @@ public final class KtlParser extends Parser {
         // 子节点
         private List<LineNode> children = new LinkedList<>();
 
-        protected LineNode(String line) {
+        private LineNode(String line) {
             level = computeLevel(line);
             final String[] parts = line.trim().split("\\s*:\\s*");
             element = parts[0];
@@ -163,8 +163,7 @@ public final class KtlParser extends Parser {
                     if (kv.length != 2) {
                         throw new KiteException("ktl格式错误“%s”", line);
                     }
-                    final String literal = KiteUtils.getLiteral(kv[1]);
-                    attributes.put(kv[0], literal == null ? kv[1] : literal);
+                    attributes.put(kv[0], KiteUtils.getLiteral(kv[1]).orElse(kv[1]));
                 }
             }
         }

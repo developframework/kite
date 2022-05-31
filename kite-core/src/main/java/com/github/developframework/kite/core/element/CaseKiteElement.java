@@ -48,10 +48,7 @@ public final class CaseKiteElement extends ContainerKiteElement {
                 attributeName,
                 caseTestFunctionValue,
                 CaseTestFunction.class,
-                value -> {
-                    final String literal = KiteUtils.getLiteral(value);
-                    return literal != null ? new LiteralCaseTestFunction(literal) : null;
-                }
+                value -> KiteUtils.getLiteral(value).map(LiteralCaseTestFunction::new).orElse(null)
         );
     }
 }

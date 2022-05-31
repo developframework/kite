@@ -131,7 +131,7 @@ public final class RelevanceKiteElement extends ArrayKiteElement {
      * 关联匹配
      */
     private List<Object> relevanceMatch(Object v, AssembleContext context) {
-        final RelFunction<Object, Object> relFunction = relComponent.getComponent(context.dataModel, ElementDefinition.Attribute.REL);
+        final RelFunction<Object, Object> relFunction = relComponent.getComponent(context.dataModel);
         final Object[] array = KiteUtils.objectToArray(v, contentAttributes.dataDefinition);
         final List<Object> matches = new ArrayList<>(array.length);
         final Object parentValue = context.valueStack.peek();

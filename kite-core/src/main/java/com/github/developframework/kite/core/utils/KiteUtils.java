@@ -10,22 +10,17 @@ import com.github.developframework.kite.core.dynamic.KiteCondition;
 import com.github.developframework.kite.core.dynamic.KiteConverter;
 import com.github.developframework.kite.core.element.ContentKiteElement;
 import com.github.developframework.kite.core.exception.InvalidAttributeException;
-import com.github.developframework.kite.core.exception.KiteException;
 import com.github.developframework.kite.core.structs.ContentAttributes;
 import com.github.developframework.kite.core.structs.ElementDefinition;
 import com.github.developframework.kite.core.structs.KiteComponent;
-import lombok.extern.slf4j.Slf4j;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * @author qiushui on 2018-10-17.
  */
-@Slf4j
-@SuppressWarnings("unchecked")
-public final class KiteUtils {
+public abstract class KiteUtils {
 
     /**
      * 获得值
@@ -45,28 +40,6 @@ public final class KiteUtils {
         }
         // 处理转换器
         return Optional.ofNullable(handleKiteConverter(context.dataModel, contentAttributes.converterComponent, v));
-    }
-
-    /**
-     * 获得组件实例
-     */
-    public static <T> T getComponent(DataModel dataModel, String value, Class<T> tClass, String attributeName) {
-        return (T) dataModel.getData(value).orElseGet(() -> {
-            try {
-                Object obj = Class.forName(value).getConstructor().newInstance();
-                if (tClass.isAssignableFrom(obj.getClass())) {
-                    return obj;
-                } else {
-                    throw new InvalidAttributeException(attributeName, value, "没有类“" + tClass.getSimpleName() + "”的实例");
-                }
-            } catch (ClassNotFoundException e) {
-                throw new InvalidAttributeException(attributeName, value, "类不存在，并且也不是一个expression");
-            } catch (IllegalAccessException | InstantiationException e) {
-                throw new KiteException("不能new“" + tClass.getSimpleName() + "”的实例");
-            } catch (NoSuchMethodException | InvocationTargetException e) {
-                throw new KiteException(tClass.getSimpleName() + "没有无参构造方法");
-            }
-        });
     }
 
     /**
@@ -98,7 +71,7 @@ public final class KiteUtils {
         if (converterComponent == null) {
             return value;
         }
-        return converterComponent.getComponent(dataModel, ElementDefinition.Attribute.CONVERTER).convert(value);
+        return converterComponent.getComponent(dataModel).convert(value);
     }
 
     /**
@@ -108,18 +81,15 @@ public final class KiteUtils {
         if (innerConverterComponent == null) {
             return values;
         }
-        final KiteConverter<Object, Object> converter = innerConverterComponent.getComponent(dataModel, ElementDefinition.Attribute.INNER_CONVERTER);
-        return values
-                .stream()
-                .map(converter::convert)
-                .collect(Collectors.toList());
+        final KiteConverter<Object, Object> converter = innerConverterComponent.getComponent(dataModel);
+        return values.stream().map(converter::convert).collect(Collectors.toList());
     }
 
     /**
      * 处理CastTest
      */
     public static boolean handleCastTest(DataModel dataModel, KiteComponent<CaseTestFunction<Object>> caseComponent, Object value) {
-        return caseComponent.getComponent(dataModel, ElementDefinition.Attribute.CASE_TEST).test(value);
+        return caseComponent.getComponent(dataModel).test(value);
     }
 
     /**
@@ -127,31 +97,27 @@ public final class KiteUtils {
      */
     public static void handleArrayComparator(DataModel dataModel, KiteComponent<Comparator<Object>> comparatorComponent, final Object[] array) {
         if (comparatorComponent != null) {
-            Arrays.sort(
-                    array,
-                    comparatorComponent.getComponent(dataModel, ElementDefinition.Attribute.COMPARATOR)
-            );
+            Arrays.sort(array, comparatorComponent.getComponent(dataModel));
         }
     }
 
     /**
      * 处理Condition
      */
-    public static boolean handleCondition(DataModel dataModel, String conditionValue, Object parentValue) {
-        return getComponent(dataModel, conditionValue, KiteCondition.class, ElementDefinition.Attribute.CONDITION).verify(dataModel, parentValue);
-    }
-
-    /**
-     * 判断是否是字面量
-     */
-    private static boolean isLiteral(String content) {
-        return content != null && content.length() > 3 && content.charAt(0) == '\'' && content.charAt(content.length() - 1) == '\'';
+    public static boolean handleCondition(DataModel dataModel, KiteComponent<KiteCondition<Object>> conditionComponent, Object parentValue) {
+        return conditionComponent.getComponent(dataModel).verify(dataModel, parentValue);
     }
 
     /**
      * 获取字面量
      */
-    public static String getLiteral(String content) {
-        return isLiteral(content) ? content.substring(1, content.length() - 1) : null;
+    public static Optional<String> getLiteral(String content) {
+        if (content != null) {
+            final int length = content.length();
+            if (length > 3 && content.charAt(0) == '\'' && content.charAt(length - 1) == '\'') {
+                return Optional.of(content.substring(1, length - 1));
+            }
+        }
+        return Optional.empty();
     }
 }
