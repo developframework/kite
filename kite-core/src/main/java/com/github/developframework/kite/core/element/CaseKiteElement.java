@@ -2,7 +2,9 @@ package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.dynamic.CaseTestFunction;
+import com.github.developframework.kite.core.dynamic.ClassCaseTestFunction;
 import com.github.developframework.kite.core.dynamic.LiteralCaseTestFunction;
+import com.github.developframework.kite.core.exception.InvalidAttributeException;
 import com.github.developframework.kite.core.structs.ElementAttributes;
 import com.github.developframework.kite.core.structs.ElementDefinition;
 import com.github.developframework.kite.core.structs.FragmentLocation;
@@ -48,7 +50,26 @@ public final class CaseKiteElement extends ContainerKiteElement {
                 attributeName,
                 caseTestFunctionValue,
                 CaseTestFunction.class,
-                value -> KiteUtils.getLiteral(value).map(LiteralCaseTestFunction::new).orElse(null)
+                value -> {
+                    /*
+                        支持的简单格式：
+                            instanceof java.lang.Integer
+                            'abc'
+                     */
+                    if (value != null) {
+                        final String[] parts = value.split("\\s+");
+                        if (parts.length == 3 && parts[0].equals("instanceof")) {
+                            try {
+                                return new ClassCaseTestFunction(Class.forName(parts[1]));
+                            } catch (ClassNotFoundException e) {
+                                throw new InvalidAttributeException(attributeName, value, "未找到类");
+                            }
+                        } else {
+                            return KiteUtils.getLiteral(value).map(LiteralCaseTestFunction::new).orElse(null);
+                        }
+                    }
+                    return null;
+                }
         );
     }
 }

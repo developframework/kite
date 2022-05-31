@@ -1,8 +1,11 @@
 package com.github.developframework.kite.core.element;
 
 import com.github.developframework.kite.core.AssembleContext;
+import com.github.developframework.kite.core.data.DataDefinition;
+import com.github.developframework.kite.core.dynamic.ClassCondition;
 import com.github.developframework.kite.core.dynamic.KiteCondition;
 import com.github.developframework.kite.core.dynamic.LiteralCondition;
+import com.github.developframework.kite.core.exception.InvalidAttributeException;
 import com.github.developframework.kite.core.structs.ElementAttributes;
 import com.github.developframework.kite.core.structs.ElementDefinition;
 import com.github.developframework.kite.core.structs.FragmentLocation;
@@ -36,12 +39,39 @@ public final class IfKiteElement extends ContainerKiteElement {
         );
     }
 
-    private KiteComponent<KiteCondition<Object>> parseCondition(String attributeName, String attributeValue) {
+    private KiteComponent<KiteCondition<Object>> parseCondition(String attributeName, String conditionValue) {
         return new KiteComponent<>(
                 attributeName,
-                attributeValue,
+                conditionValue,
                 KiteCondition.class,
-                value -> KiteUtils.getLiteral(value).map(LiteralCondition::new).orElse(null)
+                value -> {
+                    /*
+                        支持的简单格式：
+                            this instanceof java.lang.Integer
+                            v = 'abc'
+                     */
+                    if (value != null) {
+                        final String[] parts = value.split("\\s+");
+                        if (parts.length == 3) {
+                            final DataDefinition dataDefinition = parts[0].equals("this") ? null : new DataDefinition(parts[0]);
+                            switch (parts[1]) {
+                                case "instanceof": {
+                                    try {
+                                        return new ClassCondition(dataDefinition, Class.forName(parts[2]));
+                                    } catch (ClassNotFoundException e) {
+                                        throw new InvalidAttributeException(attributeName, value, "未找到类");
+                                    }
+                                }
+                                case "=": {
+                                    return KiteUtils.getLiteral(parts[2])
+                                            .map(literal -> new LiteralCondition(dataDefinition, literal))
+                                            .orElseThrow(() -> new InvalidAttributeException(attributeName, value, "格式错误"));
+                                }
+                            }
+                        }
+                    }
+                    return null;
+                }
         );
     }
 

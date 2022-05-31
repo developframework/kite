@@ -31,15 +31,17 @@ public abstract class KiteUtils {
      */
     public static Optional<Object> getDataValue(AssembleContext context, ContentKiteElement element) {
         final ContentAttributes contentAttributes = element.getContentAttributes();
-        final DataDefinition dataDefinition = contentAttributes.dataDefinition;
-        Object v = context.valueStack.peek();
-        if (v instanceof DataModel || dataDefinition.getFunctionSign() == FunctionSign.ROOT) {
-            v = context.dataModel.getData(dataDefinition.getExpression()).orElse(null);
-        } else {
-            v = ExpressionUtils.getValue(v, dataDefinition.getExpression());
-        }
+        final Object v = getData(context.dataModel, contentAttributes.dataDefinition, context.valueStack.peek());
         // 处理转换器
         return Optional.ofNullable(handleKiteConverter(context.dataModel, contentAttributes.converterComponent, v));
+    }
+
+    public static Object getData(DataModel dataModel, DataDefinition dataDefinition, Object parentValue) {
+        if (parentValue instanceof DataModel || dataDefinition.getFunctionSign() == FunctionSign.ROOT) {
+            return dataModel.getData(dataDefinition.getExpression()).orElse(null);
+        } else {
+            return ExpressionUtils.getValue(parentValue, dataDefinition.getExpression());
+        }
     }
 
     /**
