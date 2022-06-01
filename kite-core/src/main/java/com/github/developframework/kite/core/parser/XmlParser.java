@@ -25,13 +25,14 @@ import java.util.stream.Collectors;
  *
  * @author qiushui on 2021-06-24.
  */
-public final class XmlParser extends Parser {
+public final class XmlParser implements Parser {
 
     /**
      * 读取一份xml文档解析模板包
      *
      * @param configurationSource 配置源
      */
+    @Override
     public List<TemplatePackage> read(ConfigurationSource configurationSource) throws IOException {
         final List<TemplatePackage> templatePackages = new LinkedList<>();
         final SAXReader reader = new SAXReader();
@@ -61,10 +62,12 @@ public final class XmlParser extends Parser {
 
     private KiteElement readKiteElement(Element element, FragmentLocation fragmentLocation) {
         final List<KiteElement> children = childrenElements(element, fragmentLocation);
-        final Class<? extends AbstractKiteElement> clazz = kiteElementClasses.get(element.getName());
         final AbstractKiteElement kiteElement;
         try {
-            kiteElement = clazz.getConstructor(FragmentLocation.class).newInstance(fragmentLocation);
+            kiteElement = ElementTag.KITE_ELEMENT_CLASSES
+                    .get(element.getName())
+                    .getConstructor(FragmentLocation.class)
+                    .newInstance(fragmentLocation);
         } catch (Exception e) {
             e.printStackTrace();
             throw new KiteException("XML解析失败，错误位置在\"%s\"", fragmentLocation);

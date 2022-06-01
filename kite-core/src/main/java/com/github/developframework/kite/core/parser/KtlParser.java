@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  * @author qiushui on 2021-07-05.
  */
 @RequiredArgsConstructor
-public final class KtlParser extends Parser {
+public final class KtlParser implements Parser {
 
     private final int indent;
 
@@ -75,11 +75,13 @@ public final class KtlParser extends Parser {
 
     private KiteElement readKiteElement(LineNode node, FragmentLocation fragmentLocation) {
         checkAttributes(node);
-        final Class<? extends AbstractKiteElement> clazz = kiteElementClasses.get(node.getElement());
         final List<KiteElement> children = childrenElements(node, fragmentLocation);
         final AbstractKiteElement kiteElement;
         try {
-            kiteElement = clazz.getConstructor(FragmentLocation.class).newInstance(fragmentLocation);
+            kiteElement = ElementTag.KITE_ELEMENT_CLASSES
+                    .get(node.getElement())
+                    .getConstructor(FragmentLocation.class)
+                    .newInstance(fragmentLocation);
         } catch (Exception e) {
             e.printStackTrace();
             throw new KiteException("KTL解析失败，错误位置在\"%s\"", fragmentLocation);

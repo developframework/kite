@@ -44,20 +44,20 @@ public enum ElementTag {
 
     private final Set<String> validAttributes;
 
+    public final static Map<String, Class<? extends AbstractKiteElement>> KITE_ELEMENT_CLASSES = new HashMap<>();
+
+    static {
+        for (ElementTag tag : ElementTag.values()) {
+            if (tag.getElementClass() != null) {
+                KITE_ELEMENT_CLASSES.put(tag.getTag(), tag.getElementClass());
+            }
+        }
+    }
+
     ElementTag(String tag, Class<? extends AbstractKiteElement> elementClass) {
         this.tag = tag;
         this.elementClass = elementClass;
-        validAttributes = getValidAttributes(elementClass);
-    }
-
-    public static Map<String, Class<? extends AbstractKiteElement>> buildMap() {
-        Map<String, Class<? extends AbstractKiteElement>> map = new HashMap<>();
-        for (ElementTag tag : ElementTag.values()) {
-            if (tag.getElementClass() != null) {
-                map.put(tag.getTag(), tag.getElementClass());
-            }
-        }
-        return map;
+        this.validAttributes = getValidAttributes(elementClass);
     }
 
     @SuppressWarnings("unchecked")
