@@ -4,6 +4,8 @@ import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.structs.FragmentLocation;
 
 /**
+ * switch default 元素
+ *
  * @author qiushui on 2021-06-28.
  */
 public final class DefaultKiteElement extends ContainerKiteElement {

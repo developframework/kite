@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * switch 元素
+ *
  * @author qiushui on 2021-06-28.
  */
 @ElementAttributes(ElementDefinition.Attribute.CHECK_DATA)

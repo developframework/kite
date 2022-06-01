@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * 容器元素
+ *
  * @author qiushui on 2021-06-23.
  */
 public abstract class ContainerKiteElement extends ContentKiteElement implements Iterable<KiteElement> {

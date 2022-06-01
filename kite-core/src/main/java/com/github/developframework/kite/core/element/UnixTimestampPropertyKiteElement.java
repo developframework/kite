@@ -3,10 +3,8 @@ package com.github.developframework.kite.core.element;
 import com.github.developframework.kite.core.node.ObjectNodeProxy;
 import com.github.developframework.kite.core.structs.FragmentLocation;
 
-import java.util.Objects;
-
 /**
- * unix时间戳型属性节点处理器
+ * property-unix 时间戳型属性元素
  *
  * @author qiushui on 2021-06-24.
  */
@@ -19,10 +17,10 @@ public class UnixTimestampPropertyKiteElement extends DatePropertyKiteElement {
     @Override
     protected void handle(ObjectNodeProxy parentNode, Object value, String displayName) {
         java.util.Date date = transformDate(value);
-        if (Objects.isNull(date)) {
+        if (date == null) {
             parentNode.putNull(displayName);
-            return;
+        } else {
+            parentNode.putValue(displayName, date.getTime() / 1000, contentAttributes.xmlCDATA);
         }
-        parentNode.putValue(displayName, date.getTime() / 1000, contentAttributes.xmlCDATA);
     }
 }

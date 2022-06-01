@@ -7,7 +7,7 @@ import com.github.developframework.kite.core.utils.KiteUtils;
 import java.util.Optional;
 
 /**
- * 扁平化节点
+ * flat 扁平化节点
  *
  * @author qiushui on 2021-07-16.
  */

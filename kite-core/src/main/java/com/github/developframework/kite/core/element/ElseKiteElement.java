@@ -4,7 +4,7 @@ import com.github.developframework.kite.core.AssembleContext;
 import com.github.developframework.kite.core.structs.FragmentLocation;
 
 /**
- * else 节点
+ * else 元素
  *
  * @author qiushui on 2021-06-27.
  */

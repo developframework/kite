@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * 关联节点
+ * relevance 关联元素
  *
  * @author qiushui on 2021-06-25.
  */

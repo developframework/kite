@@ -11,6 +11,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * property-date 日期时间元素
+ *
  * @author qiushui on 2021-06-24.
  */
 @ElementAttributes(ElementDefinition.Attribute.PATTERN)

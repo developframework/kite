@@ -8,6 +8,8 @@ import com.github.developframework.kite.core.utils.KiteUtils;
 import java.util.Optional;
 
 /**
+ * property-enum 元素
+ *
  * @author qiushui on 2021-06-24.
  */
 public class EnumPropertyKiteElement extends ContainerKiteElement {

@@ -12,7 +12,7 @@ import lombok.Getter;
 import java.util.Optional;
 
 /**
- * 数组节点
+ * array 数组节点
  *
  * @author qiushui on 2021-06-24.
  */

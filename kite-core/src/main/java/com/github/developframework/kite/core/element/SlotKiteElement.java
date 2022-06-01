@@ -5,7 +5,7 @@ import com.github.developframework.kite.core.structs.ElementDefinition;
 import com.github.developframework.kite.core.structs.FragmentLocation;
 
 /**
- * 插槽节点
+ * slot 插槽元素
  *
  * @author qiushui on 2021-06-28.
  */

@@ -7,7 +7,7 @@ import com.github.developframework.kite.core.utils.KiteUtils;
 import java.util.Optional;
 
 /**
- * 对象元素
+ * object 对象元素
  *
  * @author qiushui on 2021-06-24.
  */

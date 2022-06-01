@@ -7,7 +7,7 @@ import com.github.developframework.kite.core.structs.FragmentLocation;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * 包含功能节点
+ * include 包含功能元素
  *
  * @author qiushui on 2021-06-24.
  */
@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 })
 public class IncludeKiteElement extends AbstractKiteElement {
 
+    // 目标片段位置
     private FragmentLocation targetFragmentLocation;
 
     public IncludeKiteElement(FragmentLocation fragmentLocation) {

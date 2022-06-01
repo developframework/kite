@@ -4,7 +4,7 @@ import com.github.developframework.kite.core.node.ObjectNodeProxy;
 import com.github.developframework.kite.core.structs.FragmentLocation;
 
 /**
- * 普通属性节点
+ * property 普通属性元素
  *
  * @author qiushui on 2021-06-23.
  */

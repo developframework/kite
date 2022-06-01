@@ -7,14 +7,18 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
+ * 抽象元素
+ *
  * @author qiushui on 2021-06-23.
  */
 @Getter
 @RequiredArgsConstructor
 public abstract class AbstractKiteElement implements KiteElement {
 
+    // 片段位置
     protected final FragmentLocation fragmentLocation;
 
+    // 子元素命名策略
     protected NamingStrategy childrenNamingStrategy;
 
     /**

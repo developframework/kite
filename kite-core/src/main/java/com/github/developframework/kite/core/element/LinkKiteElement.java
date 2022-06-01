@@ -10,7 +10,7 @@ import com.github.developframework.kite.core.utils.KiteUtils;
 import java.util.Optional;
 
 /**
- * 一对一链接节点
+ * link 一对一链接元素
  *
  * @author qiushui on 2021-06-24.
  */

@@ -5,7 +5,7 @@ import com.github.developframework.kite.core.structs.FragmentLocation;
 import com.github.developframework.kite.core.utils.KiteUtils;
 
 /**
- * this节点
+ * this 元素
  *
  * @author qiushui on 2021-06-30.
  */

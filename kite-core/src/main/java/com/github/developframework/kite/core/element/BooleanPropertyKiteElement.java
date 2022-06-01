@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * 布尔型属性节点处理器
+ * property-boolean 布尔型属性节点处理器
  *
  * @author qiushui on 2021-06-24.
  */

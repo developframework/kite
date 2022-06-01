@@ -7,7 +7,7 @@ import com.github.developframework.kite.core.utils.KiteUtils;
 import java.util.Optional;
 
 /**
- * 原生节点
+ * prototype 原生元素
  *
  * @author qiushui on 2021-06-29.
  */

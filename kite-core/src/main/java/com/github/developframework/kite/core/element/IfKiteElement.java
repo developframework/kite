@@ -14,7 +14,7 @@ import com.github.developframework.kite.core.utils.KiteUtils;
 import lombok.Setter;
 
 /**
- * if 节点
+ * if 元素
  *
  * @author qiushui on 2021-06-27.
  */

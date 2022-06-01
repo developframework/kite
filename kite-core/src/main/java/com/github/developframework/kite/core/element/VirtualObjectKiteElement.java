@@ -6,7 +6,7 @@ import com.github.developframework.kite.core.structs.ElementDefinition;
 import com.github.developframework.kite.core.structs.FragmentLocation;
 
 /**
- * 虚拟对象节点
+ * virtual-object 虚拟对象元素
  *
  * @author qiushui on 2021-06-24.
  */

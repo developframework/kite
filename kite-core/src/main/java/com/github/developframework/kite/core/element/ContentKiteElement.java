@@ -16,6 +16,8 @@ import lombok.Getter;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
+ * 内容元素
+ *
  * @author qiushui on 2021-06-23.
  */
 @ElementAttributes({
@@ -28,6 +30,7 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 })
 public abstract class ContentKiteElement extends AbstractKiteElement {
 
+    // 内容属性
     @Getter
     protected ContentAttributes contentAttributes;
 

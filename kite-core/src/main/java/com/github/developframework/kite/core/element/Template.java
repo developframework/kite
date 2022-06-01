@@ -7,7 +7,7 @@ import com.github.developframework.kite.core.structs.FragmentLocation;
 import lombok.Getter;
 
 /**
- * 模板
+ * template 模板
  *
  * @author qiushui on 2021-06-23.
  */

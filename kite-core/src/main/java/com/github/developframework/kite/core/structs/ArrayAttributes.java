@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import java.util.Comparator;
 
 /**
+ * 数组属性
+ *
  * @author qiushui on 2021-06-24.
  */
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -17,8 +19,6 @@ public class ArrayAttributes {
     public KiteComponent<KiteConverter<Object, Object>> mapComponent;
 
     public KiteComponent<Comparator<Object>> comparatorComponent;
-
-    public String relValue;
 
     public Integer limit;
 
@@ -35,7 +35,6 @@ public class ArrayAttributes {
     public static ArrayAttributes of(ElementDefinition elementDefinition) {
         ArrayAttributes arrayAttributes = new ArrayAttributes();
         arrayAttributes.limit = elementDefinition.getInteger(ElementDefinition.Attribute.LIMIT);
-        arrayAttributes.relValue = elementDefinition.getString(ElementDefinition.Attribute.REL);
         arrayAttributes.nullEmpty = elementDefinition.getBoolean(ElementDefinition.Attribute.NULL_EMPTY, false);
         arrayAttributes.xmlItem = elementDefinition.getString(ElementDefinition.Attribute.XML_ITEM, "item");
         arrayAttributes.mapComponent = ContentAttributes.parseConverter(

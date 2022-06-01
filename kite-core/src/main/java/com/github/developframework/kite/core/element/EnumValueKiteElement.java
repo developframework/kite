@@ -7,6 +7,8 @@ import com.github.developframework.kite.core.structs.FragmentLocation;
 import lombok.Getter;
 
 /**
+ * enum 元素
+ *
  * @author qiushui on 2021-06-24.
  */
 @ElementAttributes({

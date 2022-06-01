@@ -12,7 +12,7 @@ import com.github.developframework.kite.core.structs.KiteComponent;
 import com.github.developframework.kite.core.utils.KiteUtils;
 
 /**
- * case节点
+ * switch case元素
  *
  * @author qiushui on 2021-06-28.
  */
