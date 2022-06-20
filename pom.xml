@@ -5,7 +5,7 @@
     <groupId>com.github.developframework</groupId>
     <artifactId>kite</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <modules>
         <module>kite-core</module>
         <module>kite-spring</module>
@@ -126,32 +126,32 @@
             <dependency>
                 <groupId>com.github.developframework</groupId>
                 <artifactId>kite-core</artifactId>
-                <version>1.0.2-SNAPSHOT</version>
+                <version>1.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.github.developframework</groupId>
                 <artifactId>kite-spring</artifactId>
-                <version>1.0.2-SNAPSHOT</version>
+                <version>1.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.github.developframework</groupId>
                 <artifactId>kite-jackson</artifactId>
-                <version>1.0.2-SNAPSHOT</version>
+                <version>1.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.github.developframework</groupId>
                 <artifactId>kite-fastjson</artifactId>
-                <version>1.0.2-SNAPSHOT</version>
+                <version>1.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.github.developframework</groupId>
                 <artifactId>kite-gson</artifactId>
-                <version>1.0.2-SNAPSHOT</version>
+                <version>1.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.github.developframework</groupId>
                 <artifactId>kite-dom4j</artifactId>
-                <version>1.0.2-SNAPSHOT</version>
+                <version>1.0.1-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
