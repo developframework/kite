@@ -61,7 +61,7 @@
         <version.dom4j>2.1.3</version.dom4j>
         <version.slf4j-api>1.7.30</version.slf4j-api>
         <version.servlet-api>3.1.0</version.servlet-api>
-        <version.spring>5.3.3</version.spring>
+        <version.spring>5.3.18</version.spring>
         <version.spring-boot>2.4.2</version.spring-boot>
     </properties>
 
