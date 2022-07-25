@@ -13,6 +13,9 @@ import com.github.developframework.kite.core.structs.ElementDefinition;
 import com.github.developframework.kite.core.structs.FragmentLocation;
 import lombok.Getter;
 
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
@@ -65,14 +68,10 @@ public abstract class ContentKiteElement extends AbstractKiteElement {
      */
     private String determineNameFromExpression() {
         Expression expression = contentAttributes.dataDefinition.getExpression();
-        if (expression instanceof ObjectExpression) {
-            return ((ObjectExpression) expression).getPropertyName();
+        if (expression instanceof ObjectExpression || expression instanceof MethodExpression) {
+            return expression.getName();
         } else if (expression instanceof ArrayExpression) {
-            ArrayExpression arrayExpression = ((ArrayExpression) expression);
-            return arrayExpression.getPropertyName() + "_" + arrayExpression.getIndex();
-        } else if (expression instanceof MethodExpression) {
-            MethodExpression methodExpression = ((MethodExpression) expression);
-            return methodExpression.getMethodName();
+            return expression.getName() + IntStream.of(((ArrayExpression) expression).getIndexArray()).mapToObj(i -> "_" + i).collect(Collectors.joining());
         } else {
             throw new AssertionError();
         }
