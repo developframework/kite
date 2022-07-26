@@ -1,6 +1,5 @@
 package com.github.developframework.kite.jackson;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.util.RawValue;
@@ -11,6 +10,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /**
  * 使用Jackson实现节点代理
@@ -41,8 +41,7 @@ public final class JacksonObjectNodeProxy implements ObjectNodeProxy {
     @Override
     public void putPrototype(AssembleContext context, String name, Object prototype) {
         final ObjectMapper objectMapper = (ObjectMapper) context.configuration.getJsonFramework().getCore();
-        final JsonNode prototypeNode = objectMapper.valueToTree(prototype);
-        node.set(name, prototypeNode);
+        node.set(name, objectMapper.valueToTree(prototype));
     }
 
     @Override
@@ -62,6 +61,10 @@ public final class JacksonObjectNodeProxy implements ObjectNodeProxy {
             node.put(name, (Double) value);
         } else if (valueClass == BigDecimal.class) {
             node.put(name, (BigDecimal) value);
+        } else if (valueClass == BigInteger.class) {
+            node.put(name, (BigInteger) value);
+        } else if (valueClass == Short.class) {
+            node.put(name, (Short) value);
         } else {
             node.put(name, value.toString());
         }
