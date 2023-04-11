@@ -52,17 +52,18 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
 
         <version.lombok>1.18.24</version.lombok>
-        <version.expression>1.6.0-SNAPSHOT</version.expression>
-        <version.jackson>2.11.4</version.jackson>
+        <version.expression>1.6.0</version.expression>
+        <version.jackson>2.12.6</version.jackson>
         <version.fastjson>1.2.76</version.fastjson>
         <version.gson>2.8.7</version.gson>
         <version.dom4j>2.1.3</version.dom4j>
         <version.slf4j-api>1.7.30</version.slf4j-api>
         <version.servlet-api>3.1.0</version.servlet-api>
-        <version.spring>5.3.3</version.spring>
-        <version.spring-boot>2.4.2</version.spring-boot>
+        <version.spring>5.3.20</version.spring>
+        <version.spring-boot>2.5.14</version.spring-boot>
     </properties>
 
     <dependencyManagement>
