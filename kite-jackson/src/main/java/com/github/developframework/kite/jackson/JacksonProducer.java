@@ -54,7 +54,7 @@ public final class JacksonProducer extends AbstractProducer {
             try {
                 return pretty ? objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(rootNode) : objectMapper.writeValueAsString(rootNode);
             } catch (JsonProcessingException e) {
-                throw new KiteException("构建json失败");
+                throw new KiteException("produce json failed");
             }
         }
     }
@@ -68,7 +68,7 @@ public final class JacksonProducer extends AbstractProducer {
                 final JsonGenerator generator = objectMapper.getFactory().createGenerator(outputStream, getJsonEncoding(charset));
                 writer.writeValue(generator, rootNodeProxy.getNode());
             } catch (IOException e) {
-                throw new KiteException("构建json失败");
+                throw new KiteException("produce json failed");
             }
         }
     }

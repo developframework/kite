@@ -85,7 +85,7 @@ public final class KtlParser implements Parser {
                     .newInstance(fragmentLocation);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new KiteException("KTL解析失败，错误位置在\"%s\"", fragmentLocation);
+            throw new KiteException("KTL parse failed，error location at \"%s\"", fragmentLocation);
         }
         kiteElement.configure(new ElementDefinition(node.getAttributes(), children));
         return kiteElement;
@@ -164,7 +164,7 @@ public final class KtlParser implements Parser {
                 for (String str : parameterStrs) {
                     final String[] kv = str.split("\\s*=\\s*");
                     if (kv.length != 2) {
-                        throw new KiteException("ktl格式错误“%s”", line);
+                        throw new KiteException("ktl format invalid \"%s\"", line);
                     }
                     attributes.put(kv[0], KiteUtils.getLiteral(kv[1]).orElse(kv[1]));
                 }
@@ -187,7 +187,7 @@ public final class KtlParser implements Parser {
             if (ind % indent == 0) {
                 return ind / indent;
             }
-            throw new KiteParseException("ktl解析失败，行“%s”缩进错误：%d", line, ind);
+            throw new KiteParseException("ktl parse failed，line \"%s\" indent error: %d", line, ind);
         }
     }
 }

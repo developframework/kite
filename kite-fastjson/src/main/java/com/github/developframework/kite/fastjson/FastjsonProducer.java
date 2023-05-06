@@ -55,7 +55,7 @@ public final class FastjsonProducer extends AbstractProducer {
                 outputStream.write(json.getBytes(charset));
                 outputStream.flush();
             } catch (IOException e) {
-                throw new KiteException("构建json失败：", e.getMessage());
+                throw new KiteException("produce json failed: ", e.getMessage());
             }
         }
     }

@@ -40,7 +40,7 @@ public final class XmlParser implements Parser {
         try {
             document = reader.read(configurationSource.getInputStream());
         } catch (DocumentException e) {
-            throw new KiteException("XML解析失败：%s", e.getMessage());
+            throw new KiteException("XML parse failed: %s", e.getMessage());
         }
         final Element rootElement = document.getRootElement();
         final List<Element> templatePackageElements = rootElement.elements(ElementTag.TEMPLATE_PACKAGE.getTag());
@@ -70,7 +70,7 @@ public final class XmlParser implements Parser {
                     .newInstance(fragmentLocation);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new KiteException("XML解析失败，错误位置在\"%s\"", fragmentLocation);
+            throw new KiteException("XML parse failed，error location at\"%s\"", fragmentLocation);
         }
         final Map<String, String> attributesMap = attributesMap(element);
         kiteElement.configure(new ElementDefinition(attributesMap, children));

@@ -37,13 +37,13 @@ public final class Dom4jObjectNodeProxy implements ObjectNodeProxy {
         try {
             element.addElement(name).add(DocumentHelper.parseText(raw).getRootElement());
         } catch (DocumentException e) {
-            throw new KiteException("XML解析失败");
+            throw new KiteException("XML parse failed");
         }
     }
 
     @Override
     public void putPrototype(AssembleContext context, String name, Object prototype) {
-        throw new KiteException("dom4j不支持prototype功能");
+        throw new KiteException("dom4j no support \"prototype\"");
     }
 
     @Override

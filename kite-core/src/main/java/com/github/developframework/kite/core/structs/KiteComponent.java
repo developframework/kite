@@ -35,9 +35,9 @@ public final class KiteComponent<T> {
             } catch (ClassNotFoundException e) {
                 // 不处理
             } catch (IllegalAccessException | InstantiationException e) {
-                throw new KiteException("不能new“" + tClass.getSimpleName() + "”的实例");
+                throw new KiteException("Cannot new an %s instance", tClass.getSimpleName());
             } catch (NoSuchMethodException | InvocationTargetException e) {
-                throw new KiteException(tClass.getSimpleName() + "没有无参构造方法");
+                throw new KiteException(tClass.getSimpleName() + "is no parameterless constructors");
             }
         }
     }
@@ -47,6 +47,6 @@ public final class KiteComponent<T> {
         if (component != null) {
             return component;
         }
-        return (T) dataModel.getData(attributeValue).orElseThrow(() -> new InvalidAttributeException(attributeName, attributeValue, "组件未定义"));
+        return (T) dataModel.getData(attributeValue).orElseThrow(() -> new InvalidAttributeException(attributeName, attributeValue, "undefined"));
     }
 }

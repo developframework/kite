@@ -44,7 +44,7 @@ public class KiteFactory {
     public Producer getJsonProducer(DataModel dataModel, String namespace, String templateId) {
         final Framework<?> framework = configuration.getJsonFramework();
         if (framework == null) {
-            throw new KiteException("没有初始化序列化Json的Framework");
+            throw new KiteException("uninitialized Json Framework");
         }
         return framework.buildProducer(configuration, dataModel, namespace, templateId);
     }
@@ -57,7 +57,7 @@ public class KiteFactory {
     public Producer getJsonProducer(DataModel dataModel, String... ktl) {
         final Framework<?> framework = configuration.getJsonFramework();
         if (framework == null) {
-            throw new KiteException("没有初始化序列化Json的Framework");
+            throw new KiteException("uninitialized Json Framework");
         }
         try {
             final StringConfigurationSource configurationSource = new StringConfigurationSource(String.join("\n", ktl), StandardCharsets.UTF_8);
@@ -65,7 +65,7 @@ public class KiteFactory {
             return framework.buildProducer(configuration, dataModel, templatePackages);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new KiteException("ktl解析失败");
+            throw new KiteException("ktl parse failed");
         }
     }
 
@@ -77,7 +77,7 @@ public class KiteFactory {
     public Producer getXmlProducer(DataModel dataModel, String namespace, String templateId) {
         final Framework<?> framework = configuration.getXmlFramework();
         if (framework == null) {
-            throw new KiteException("没有初始化序列化Xml的Framework");
+            throw new KiteException("uninitialized Xml Framework");
         }
         return framework.buildProducer(configuration, dataModel, namespace, templateId);
     }
@@ -90,7 +90,7 @@ public class KiteFactory {
     public Producer getXmlProducer(DataModel dataModel, String... ktl) {
         final Framework<?> framework = configuration.getXmlFramework();
         if (framework == null) {
-            throw new KiteException("没有初始化序列化Xml的Framework");
+            throw new KiteException("uninitialized Xml Framework");
         }
         try {
             final StringConfigurationSource configurationSource = new StringConfigurationSource(String.join("\n", ktl), StandardCharsets.UTF_8);
@@ -98,7 +98,7 @@ public class KiteFactory {
             return framework.buildProducer(configuration, dataModel, templatePackages);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new KiteException("ktl解析失败");
+            throw new KiteException("ktl parse failed");
         }
     }
 }

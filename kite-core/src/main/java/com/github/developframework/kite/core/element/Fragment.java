@@ -68,8 +68,13 @@ public class Fragment extends ContainerKiteElement {
      * 解析extend指向的模板地址
      */
     private FragmentLocation parseExtend(ElementDefinition elementDefinition) {
-        final String extend = elementDefinition.getString(ElementDefinition.Attribute.EXTEND);
+        String extend = elementDefinition.getString(ElementDefinition.Attribute.EXTEND);
         if (extend != null) {
+            // 兼容老版本
+            final int i = extend.lastIndexOf(":");
+            if (i > 0) {
+                extend = extend.substring(0, i);
+            }
             if (extend.matches("^(.+\\.)?.+$")) {
                 final String[] parts = extend.split("\\.");
                 if (parts.length == 1) {

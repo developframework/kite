@@ -69,7 +69,7 @@ public class TemplatePackage extends HashMap<String, Fragment> {
                 .map(f -> (Template) f)
                 .toArray(Template[]::new);
         if (templates.length != 1) {
-            throw new KiteException("使用ktl模式下template-package有且只能有一个template");
+            throw new KiteException("template-package in ktl mode has and can have only one template");
         } else {
             return templates[0];
         }

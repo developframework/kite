@@ -8,6 +8,6 @@ package com.github.developframework.kite.core.exception;
 public class ConfigurationSourceException extends KiteException {
 
     public ConfigurationSourceException(String source) {
-        super("配置源“%s”不存在", source);
+        super("configuration source “%s” is not exists", source);
     }
 }

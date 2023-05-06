@@ -8,6 +8,6 @@ package com.github.developframework.kite.core.exception;
 public class ResourceNotUniqueException extends KiteException {
 
     public ResourceNotUniqueException(String resourceName, String name) {
-        super("%s “%s”已被定义", resourceName, name);
+        super("%s \"%s\" has been defined", resourceName, name);
     }
 }

@@ -62,7 +62,7 @@ public final class Dom4jProducer extends AbstractProducer {
                 xmlWriter.close();
                 return writer.toString();
             } catch (IOException e) {
-                throw new KiteException("构建xml失败", e.getMessage());
+                throw new KiteException("produce xml failed", e.getMessage());
             }
         }
     }
@@ -83,7 +83,7 @@ public final class Dom4jProducer extends AbstractProducer {
                 xmlWriter.write(rootNodeProxy.getNode());
                 xmlWriter.close();
             } catch (IOException e) {
-                throw new KiteException("构建xml失败", e.getMessage());
+                throw new KiteException("produce xml failed", e.getMessage());
             }
         }
     }
