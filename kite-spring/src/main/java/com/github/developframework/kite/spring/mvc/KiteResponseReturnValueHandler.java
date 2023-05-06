@@ -5,12 +5,14 @@ import com.github.developframework.kite.spring.mvc.annotation.TemplateType;
 import com.github.developframework.kite.spring.mvc.response.KiteResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.MethodParameter;
+import org.springframework.stereotype.Component;
 
 /**
  * 处理KiteResponse的ReturnValueHandler
  *
  * @author qiuzhenhao
  */
+@Component
 public final class KiteResponseReturnValueHandler extends AnnotationKiteReturnValueHandler<KiteResponse> {
 
     @Override

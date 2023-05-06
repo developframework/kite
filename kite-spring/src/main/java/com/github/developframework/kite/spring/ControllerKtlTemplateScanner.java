@@ -47,7 +47,7 @@ public final class ControllerKtlTemplateScanner {
             try {
                 ktlTemplatePackages = kiteFactory.getKtlParser().read(new StringConfigurationSource(ktl, StandardCharsets.UTF_8));
             } catch (IOException e) {
-                throw new KiteException("KTL解析失败");
+                throw new KiteException("KTL parse failed");
             }
             final String namespace = getNamespace(handlerMethod);
             final TemplatePackageRegistry registry = kiteFactory.getConfiguration().getTemplatePackageRegistry();
@@ -75,7 +75,7 @@ public final class ControllerKtlTemplateScanner {
             final Class<?> controllerClass = handlerMethod.getBeanType();
             kiteNamespace = controllerClass.getAnnotation(KiteNamespace.class);
             if (kiteNamespace == null) {
-                throw new KiteException("在“%s”方法“%s”上没标注@KiteNamespace，或者在Controller类上标注全局@KiteNamespace", controllerClass.getName(), handlerMethod.getMethod().getName());
+                throw new KiteException("@KiteNamespace is not marked on the \"%s\" method, or @KiteNamespace is globally marked on the Controller class", controllerClass.getName() + "." + handlerMethod.getMethod().getName());
             }
         }
         return kiteNamespace.value();

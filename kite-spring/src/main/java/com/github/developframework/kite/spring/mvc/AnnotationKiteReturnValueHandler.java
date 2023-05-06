@@ -6,11 +6,11 @@ import com.github.developframework.kite.spring.mvc.annotation.KiteNamespace;
 import com.github.developframework.kite.spring.mvc.annotation.TemplateId;
 import com.github.developframework.kite.spring.mvc.annotation.TemplateKTL;
 import com.github.developframework.kite.spring.mvc.annotation.TemplateType;
-import lombok.Setter;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -20,8 +20,11 @@ import java.util.Map;
  */
 public abstract class AnnotationKiteReturnValueHandler<T> extends AbstractKiteReturnValueHandler<T> {
 
-    @Setter
-    protected Map<Method, FragmentLocation> fragmentLocationMap;
+    protected Map<Method, FragmentLocation> fragmentLocationMap = new HashMap<>();
+
+    public void addFragmentLocations(Map<Method, FragmentLocation> fragmentLocationMap) {
+        this.fragmentLocationMap.putAll(fragmentLocationMap);
+    }
 
     @Override
     protected String namespace(T returnValue, MethodParameter methodParameter) {
@@ -29,7 +32,7 @@ public abstract class AnnotationKiteReturnValueHandler<T> extends AbstractKiteRe
         if (annotation == null) {
             annotation = AnnotationUtils.findAnnotation(methodParameter.getContainingClass(), KiteNamespace.class);
             if (annotation == null) {
-                throw new KiteException("在“%s”方法“%s”上没标注@KiteNamespace，或者在Controller类上标注全局@KiteNamespace", methodParameter.getContainingClass(), methodParameter.getMethod().getName());
+                throw new KiteException("\"%s\" is no notation @KiteNamespace", methodParameter.getContainingClass() + "." + methodParameter.getMethod().getName());
             }
         }
         return annotation.value();
@@ -43,7 +46,7 @@ public abstract class AnnotationKiteReturnValueHandler<T> extends AbstractKiteRe
         }
         final TemplateKTL templateKTL = methodParameter.getMethodAnnotation(TemplateKTL.class);
         if (templateKTL == null) {
-            throw new KiteException("在“%s”方法“%s”上没标注@TemplateId或@TemplateKTL", methodParameter.getContainingClass(), methodParameter.getMethod().getName());
+            throw new KiteException("\"%s\" is no notation @TemplateId or @TemplateKTL", methodParameter.getContainingClass() + "." + methodParameter.getMethod().getName());
         }
         final FragmentLocation fragmentLocation = fragmentLocationMap.get(methodParameter.getMethod());
         return fragmentLocation.getFragmentId();
@@ -57,7 +60,7 @@ public abstract class AnnotationKiteReturnValueHandler<T> extends AbstractKiteRe
         }
         final TemplateKTL templateKTL = methodParameter.getMethodAnnotation(TemplateKTL.class);
         if (templateKTL == null) {
-            throw new KiteException("在“%s”方法“%s”上没标注@TemplateId或@TemplateKTL", methodParameter.getContainingClass(), methodParameter.getMethod().getName());
+            throw new KiteException("\"%s\" is no notation @TemplateId or @TemplateKTL", methodParameter.getContainingClass() + "." + methodParameter.getMethod().getName());
         }
         return templateKTL.type();
     }
