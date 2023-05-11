@@ -100,7 +100,9 @@ public final class RelevanceKiteElement extends ArrayKiteElement {
      */
     private void assembleSingle(AssembleContext context, Object v) {
         if (v == null) {
-            context.nodeStack.peek().putNull(displayName(context));
+            if (!contentAttributes.nullHidden) {
+                context.nodeStack.peek().putNull(displayName(context));
+            }
         } else if (KiteUtils.objectIsArray(v)) {
             // 元素任然是数组型
             assembleArrayItems(
@@ -110,13 +112,11 @@ public final class RelevanceKiteElement extends ArrayKiteElement {
                     v,
                     context.nodeStack.peek().putArrayNode(displayName(context))
             );
+        } else if (elements.isEmpty()) {
+            context.nodeStack.peek().putValue(displayName(context), v, contentAttributes.xmlCDATA);
         } else if (mergeParent) {
             // 合并到父级
-            if (elements.isEmpty()) {
-                context.nodeStack.peek().putValue(displayName(context), v, contentAttributes.xmlCDATA);
-            } else {
-                context.prepareNextOnlyValue(v, this::forEachAssemble);
-            }
+            context.prepareNextOnlyValue(v, this::forEachAssemble);
         } else {
             // 元素是普通对象
             context.prepareNext(
