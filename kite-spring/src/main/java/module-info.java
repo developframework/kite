@@ -2,7 +2,7 @@
  * @author qiushui on 2021-06-29.
  */
 module kite.spring {
-    requires javax.servlet.api;
+    requires org.apache.tomcat.embed.core;
     requires kite.core;
     requires lombok;
     requires org.apache.commons.lang3;

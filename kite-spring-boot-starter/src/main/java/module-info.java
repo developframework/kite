@@ -16,6 +16,7 @@ module kite.spring.boot.starter {
     requires kite.jackson;
     requires kite.dom4j;
     requires dom4j;
+    requires org.slf4j;
 
 
     exports com.github.developframework.kite.boot;
