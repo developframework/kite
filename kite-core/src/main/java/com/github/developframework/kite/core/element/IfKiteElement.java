@@ -59,13 +59,13 @@ public final class IfKiteElement extends ContainerKiteElement {
                                     try {
                                         return new ClassCondition(dataDefinition, Class.forName(parts[2]));
                                     } catch (ClassNotFoundException e) {
-                                        throw new InvalidAttributeException(attributeName, value, "未找到类");
+                                        throw new InvalidAttributeException(attributeName, value, "not found class");
                                     }
                                 }
                                 case "=": {
                                     return KiteUtils.getLiteral(parts[2])
                                             .map(literal -> new LiteralCondition(dataDefinition, literal))
-                                            .orElseThrow(() -> new InvalidAttributeException(attributeName, value, "格式错误"));
+                                            .orElseThrow(() -> new InvalidAttributeException(attributeName, value, "format invalid"));
                                 }
                             }
                         }
@@ -78,12 +78,15 @@ public final class IfKiteElement extends ContainerKiteElement {
     @Override
     public void assemble(AssembleContext context) {
         final Object currentValue = context.valueStack.peek();
-        final boolean predicate =
-                context.dataModel
-                        .getData(conditionComponent.getAttributeValue())
-                        .filter(v -> v instanceof Boolean)
-                        .map(v -> (Boolean) v)
-                        .orElseGet(() -> KiteUtils.handleCondition(context.dataModel, conditionComponent, currentValue));
+        boolean predicate = false;
+        if (context.dataModel.containsKey(conditionComponent.getAttributeValue())) {
+            predicate =
+                    context.dataModel
+                            .getData(conditionComponent.getAttributeValue())
+                            .filter(v -> v instanceof Boolean)
+                            .map(v -> (Boolean) v)
+                            .orElseGet(() -> KiteUtils.handleCondition(context.dataModel, conditionComponent, currentValue));
+        }
         if (predicate) {
             // 执行条件真的逻辑
             forEachAssemble(context);

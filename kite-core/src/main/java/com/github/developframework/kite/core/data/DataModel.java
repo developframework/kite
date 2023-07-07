@@ -29,6 +29,16 @@ public class DataModel {
     }
 
     /**
+     * 判断存在
+     *
+     * @param dataName 数据名称
+     * @return 存在
+     */
+    public boolean containsKey(String dataName) {
+        return this.dataMap.containsKey(dataName);
+    }
+
+    /**
      * 放入数据
      *
      * @param dataName 数据名称
