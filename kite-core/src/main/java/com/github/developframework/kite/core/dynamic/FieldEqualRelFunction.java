@@ -17,8 +17,8 @@ public final class FieldEqualRelFunction implements RelFunction<Object, Object> 
 
     @Override
     public boolean relevant(Object sourceItem, int sourceIndex, Object target, int targetIndex) {
-        final Object sourceValue = ExpressionUtils.getValue(sourceItem, sourceField);
-        final Object targetValue = ExpressionUtils.getValue(target, targetField);
+        final Object sourceValue = sourceField.equals("this") ? sourceItem : ExpressionUtils.getValue(sourceItem, sourceField);
+        final Object targetValue = targetField.equals("this") ? target : ExpressionUtils.getValue(target, targetField);
         return Objects.equals(sourceValue, targetValue);
     }
 }
