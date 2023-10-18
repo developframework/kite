@@ -27,12 +27,10 @@
         <dependency>
             <groupId>com.github.developframework</groupId>
             <artifactId>kite-jackson</artifactId>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.github.developframework</groupId>
             <artifactId>kite-dom4j</artifactId>
-            <optional>true</optional>
         </dependency>
     </dependencies>
 
