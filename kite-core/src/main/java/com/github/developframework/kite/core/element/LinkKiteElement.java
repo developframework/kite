@@ -46,31 +46,31 @@ public final class LinkKiteElement extends ArrayKiteElement {
             KiteUtils.handleArrayComparator(context.dataModel, arrayAttributes.comparatorComponent, array);
             // 处理map功能
             final Object item = KiteUtils.handleKiteConverter(context.dataModel, arrayAttributes.mapComponent, array[context.arrayIndex]);
-            if (elements.isEmpty()) {
+            if (item == null && !contentAttributes.nullHidden) {
+                context.nodeStack.peek().putNull(displayName(context));
+            }
+
+            if (KiteUtils.objectIsArray(item)) {
+                // 元素任然是数组型
+                assembleArrayItems(
+                        context,
+                        /* 嵌套数组需要跳过函数处理 */
+                        arrayAttributes.basic(),
+                        item,
+                        context.nodeStack.peek().putArrayNode(displayName(context))
+                );
+            } else if (elements.isEmpty()) {
                 context.nodeStack.peek().putValue(displayName(context), item, contentAttributes.xmlCDATA);
+            } else if (mergeParent) {
+                // 合并到父级
+                context.prepareNextOnlyValue(item, this::forEachAssemble);
             } else {
-                if (item == null) {
-                    context.nodeStack.peek().putNull(displayName(context));
-                } else if (KiteUtils.objectIsArray(item)) {
-                    // 元素任然是数组型
-                    assembleArrayItems(
-                            context,
-                            /* 嵌套数组需要跳过函数处理 */
-                            arrayAttributes.basic(),
-                            item,
-                            context.nodeStack.peek().putArrayNode(displayName(context))
-                    );
-                } else if (mergeParent) {
-                    // 合并到父级
-                    context.prepareNextOnlyValue(item, this::forEachAssemble);
-                } else {
-                    // 元素是普通对象
-                    context.prepareNext(
-                            context.nodeStack.peek().putObjectNode(displayName(context)),
-                            item,
-                            this::forEachAssemble
-                    );
-                }
+                // 元素是普通对象
+                context.prepareNext(
+                        context.nodeStack.peek().putObjectNode(displayName(context)),
+                        item,
+                        this::forEachAssemble
+                );
             }
         } else if (!contentAttributes.nullHidden) {
             context.nodeStack.peek().putNull(displayName(context));
