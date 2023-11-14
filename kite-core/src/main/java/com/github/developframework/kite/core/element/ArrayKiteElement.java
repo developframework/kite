@@ -84,9 +84,7 @@ public class ArrayKiteElement extends ContainerKiteElement {
         for (context.arrayIndex = 0; context.arrayIndex < context.arrayLength; context.arrayIndex++) {
             // 处理map功能
             final Object item = KiteUtils.handleKiteConverter(context.dataModel, arrayAttributes.mapComponent, array[context.arrayIndex]);
-            if (elements.isEmpty()) {
-                arrayNodeProxy.addValue(arrayAttributes, item);
-            } else if (KiteUtils.objectIsArray(item)) {
+            if (KiteUtils.objectIsArray(item)) {
                 // 元素任然是数组型
                 assembleArrayItems(
                         context,
@@ -95,6 +93,8 @@ public class ArrayKiteElement extends ContainerKiteElement {
                         item,
                         arrayNodeProxy.addArray(arrayAttributes, context)
                 );
+            } else if (elements.isEmpty()) {
+                arrayNodeProxy.addValue(arrayAttributes, item);
             } else {
                 // 元素是普通对象
                 context.prepareNext(arrayNodeProxy.addObject(arrayAttributes, context), item, this::forEachAssemble);
