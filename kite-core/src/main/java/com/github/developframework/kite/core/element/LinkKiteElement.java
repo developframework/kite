@@ -46,11 +46,11 @@ public final class LinkKiteElement extends ArrayKiteElement {
             KiteUtils.handleArrayComparator(context.dataModel, arrayAttributes.comparatorComponent, array);
             // 处理map功能
             final Object item = KiteUtils.handleKiteConverter(context.dataModel, arrayAttributes.mapComponent, array[context.arrayIndex]);
-            if (item == null && !contentAttributes.nullHidden) {
-                context.nodeStack.peek().putNull(displayName(context));
-            }
-
-            if (KiteUtils.objectIsArray(item)) {
+            if (item == null) {
+                if (!contentAttributes.nullHidden) {
+                    context.nodeStack.peek().putNull(displayName(context));
+                }
+            } else if (KiteUtils.objectIsArray(item)) {
                 // 元素任然是数组型
                 assembleArrayItems(
                         context,
